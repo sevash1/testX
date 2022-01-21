@@ -36,8 +36,8 @@ public class Btn_shield
 		border.setTranslationZ(1022);
 
 		prop.setShield(this);
-		prop.world.addView(border);
-		prop.world.addView(shield);
+		prop.playerAndUi.addView(border);
+		prop.playerAndUi.addView(shield);
 
 	}
 

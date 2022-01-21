@@ -85,7 +85,7 @@ public class Player implements Entity
 			load_textures();
 			player.setTranslationX((screenW/2)-64*2);
 			player.setTranslationY((screenH/2)-64*2);
-			prop.world.addView(player);
+			prop.playerAndUi.addView(player);
 			thread1=new Thread(run3);
 			thread1.setDaemon(true);
 			thread1.start();
@@ -252,8 +252,8 @@ public class Player implements Entity
 		try{
 			for(Skeleton skel:prop.skeletons){
 				if(player.getRotationY()==0)
-			if(Math.sqrt(Math.pow((player.getTranslationX()-skel.iv.getTranslationX()),2)
-						 +Math.pow((player.getTranslationY()-skel.iv.getTranslationY()),2))<200){
+				if(Math.sqrt(Math.pow((player.getTranslationX()-(skel.iv.getTranslationX()-prop.world.getScrollX())),2)
+						  +Math.pow((player.getTranslationY()-(skel.iv.getTranslationY()-prop.world.getScrollY())),2))<200){
 			attacked=true;
 		}
 			

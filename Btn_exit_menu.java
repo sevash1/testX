@@ -55,7 +55,7 @@ public class Btn_exit_menu extends Ui
 			try{
 				prop.stage.setStage(Game_stage.MENU);
 				prop.menu.setVisibility(View.VISIBLE);
-				prop.world.setVisibility(View.GONE);
+				prop.playerAndUi.setVisibility(View.GONE);
 				prop.bl.setVisibility(View.GONE);
 				prop.money.setType(Money.Type.MENU);
 			}catch(Exception e){

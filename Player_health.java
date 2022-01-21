@@ -66,10 +66,10 @@ public class Player_health extends Ui
 		tv.setTextColor(Color.RED);
 		tv.setTypeface(prop.ttf);
 		
-		prop.world.addView(back);
-		prop.world.addView(progress);
-		prop.world.addView(border);
-		prop.world.addView(tv);
+		prop.playerAndUi.addView(back);
+		prop.playerAndUi.addView(progress);
+		prop.playerAndUi.addView(border);
+		prop.playerAndUi.addView(tv);
 		
 	}
 	

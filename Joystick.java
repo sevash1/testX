@@ -70,9 +70,9 @@ public class Joystick extends Ui
 		border.setVisibility(View.INVISIBLE);
 		joystick.setVisibility(View.INVISIBLE);
 		
-		prop.world.addView(border);
-		prop.world.addView(joystick);
-		prop.world.addView(lay);
+		prop.playerAndUi.addView(border);
+		prop.playerAndUi.addView(joystick);
+		prop.playerAndUi.addView(lay);
 		
 		prop.setJoystick(this);
 	}

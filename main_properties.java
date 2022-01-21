@@ -32,11 +32,14 @@ public class main_properties
 	public List skeletons;
 	public Btn_shield shield;
 	public Btn_roll roll;
+	public RelativeLayout playerAndUi;
+	public Btn_Inventory inv;
+	public Shop shop;
 	
 	public main_properties(
 	RelativeLayout main,
 	RelativeLayout menu,
-	RelativeLayout world,
+		RelativeLayout playerAndUi,
 	Context context,
 	Activity activity,
 	float screenW,
@@ -53,7 +56,7 @@ public class main_properties
 		
 		this.main=main;
 		this.menu=menu;
-		this.world=world;
+	this.playerAndUi=playerAndUi;
 		this.context=context;
 		this.activity=activity;
 		this.screenW=screenW;
@@ -67,6 +70,7 @@ public class main_properties
 		this.menu_music=menu_music;
 		this.playerPosX=playerPosX;
 		this.skeletons=skeletons;
+
 	}
 	public void setPlayer(Player player){
 		this.player=player;
@@ -89,5 +93,13 @@ public class main_properties
 	public void setRoll(Btn_roll roll){
 		this.roll=roll;
 	}
-	
+	public void setWorld(RelativeLayout world){
+		this.world=world;
+	}
+	public void setInventory(Btn_Inventory inv){
+		this.inv=inv;
+	}
+	public void setShop(Shop shp){
+		this.shop=shp;
+	}
 }

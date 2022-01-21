@@ -41,8 +41,8 @@ public class Btn_roll
 		pressed=false;
 		isActive=false;
 		prop.setRoll(this);
-		prop.world.addView(border);
-		prop.world.addView(shield);
+		prop.playerAndUi.addView(border);
+		prop.playerAndUi.addView(shield);
 
 	}
 

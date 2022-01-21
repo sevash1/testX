@@ -55,8 +55,8 @@ public class Skeleton extends Mob
 		iv.setImageBitmap((Bitmap)anim_idle.get(0));
 		this.posX=posX+prop.screenW/2-150;
 		this.posY=posY+prop.screenH/2-150;
-		iv.setTranslationX(this.posX-prop.playerPosX);
-		iv.setTranslationY(this.posY-prop.playerPosY);
+		iv.setTranslationX(this.posX);
+		iv.setTranslationY(this.posY);
 		hp.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.hp_bar_progress,prop.options)));
 	    hp.setLayoutParams(params2);
 		hp.setScaleType(ScaleType.FIT_XY);
@@ -100,8 +100,10 @@ public class Skeleton extends Mob
 		public void run()
 		{
 			try{
-			iv.setTranslationX(posX-playerPosX);
-			iv.setTranslationY(posY-playerPosY);
+				prop.world.setScrollX((int)playerPosX);
+				prop.world.setScrollY((int)playerPosY);
+		//	iv.setTranslationX(posX-playerPosX);
+		//	iv.setTranslationY(posY-playerPosY);
 			
 			hp.setTranslationX(iv.getTranslationX()+iv.getWidth()/2-hp.getWidth()/2);
 			hp.setTranslationY(iv.getTranslationY()+30);

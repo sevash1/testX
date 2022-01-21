@@ -1,7 +1,7 @@
 package sevash.testx;
 import android.widget.*;
 import android.content.*;
-import android.widget.Toolbar.*;
+import android.widget.RelativeLayout.*;
 import android.graphics.*;
 import android.widget.ImageView.*;
 import android.view.*;
@@ -33,6 +33,7 @@ public class Money extends Ui
 		iv.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.items,prop.options),48*5,48*7,48,48));
 		iv.setLayoutParams(params);
 		iv.setScaleType(ScaleType.FIT_XY);
+		iv.setOnTouchListener(touch);
 		iv.setTranslationZ(1023);
 		tv.setText(String.valueOf(money_count));
 		tv.setTextSize(20);
@@ -43,6 +44,8 @@ public class Money extends Ui
 		tv.setTextColor(Color.YELLOW);
 		tv.setTypeface(prop.ttf);
 		setType(type);
+		
+		
 		}
 		
 		public void setType(Type type){
@@ -82,8 +85,8 @@ public class Money extends Ui
 
 			tv.setGravity(Gravity.RIGHT);
 			
-			prop.world.addView(iv);
-			prop.world.addView(tv);
+			prop.playerAndUi.addView(iv);
+			prop.playerAndUi.addView(tv);
 		}
 
 			
@@ -94,8 +97,8 @@ public class Money extends Ui
 		@Override
 		public void run()
 		{
-			prop.world.removeView(iv);
-			prop.world.removeView(tv);
+			prop.playerAndUi.removeView(iv);
+			prop.playerAndUi.removeView(tv);
 			iv.setTranslationX(64);
 			tv.setGravity(Gravity.LEFT);
 			tv.setTranslationX(48*2+16+64);
@@ -126,4 +129,28 @@ public class Money extends Ui
 
 			
 		};
+		
+	OnTouchListener touch=new OnTouchListener(){
+
+		@Override
+		public boolean onTouch(View p1, MotionEvent p2)
+		{
+			try{
+				if(prop.stage.getStage_in_world()==Game_stage.PAUSE) return false;
+				switch (p2.getAction()){
+
+					case MotionEvent.ACTION_UP:{
+							prop.shop.openShop();
+							break;
+						}
+				}
+				return true;
+			}catch(Exception e){
+				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				return true;
+			}
+		}
+
+
+	};
 }

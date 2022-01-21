@@ -36,8 +36,8 @@ public class Btn_attack
 		border.setTranslationY(prop.screenH/1.6f-50);
 		border.setTranslationZ(1022);
 		
-		prop.world.addView(border);
-		prop.world.addView(attack);
+		prop.playerAndUi.addView(border);
+		prop.playerAndUi.addView(attack);
 		
 	}
 	

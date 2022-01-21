@@ -24,6 +24,8 @@ public class MainActivity extends Activity
 	RelativeLayout main;
 	RelativeLayout menu;
 	RelativeLayout world;
+	RelativeLayout playerAndUi;
+	RelativeLayout grass_layout;
 	main_properties prop;
 	Display disp;
 	LayoutParams params1=new LayoutParams(256,256);
@@ -47,7 +49,7 @@ public class MainActivity extends Activity
 	int fps=0;
 	Money money;
 	Thread thread;
-	RelativeLayout grass_layout;
+	
 	Context context;
 	MediaPlayer music;
 	Game_stage stage;
@@ -209,10 +211,10 @@ public class MainActivity extends Activity
 		{
 			try{
 			if(!run1_c){
-			main.addView(world,params2);
+				main.addView(playerAndUi,params2);
 			run1_c=true;
 			}
-				prop.world.setVisibility(View.VISIBLE);
+				prop.playerAndUi.setVisibility(View.VISIBLE);
 				prop.menu.setVisibility(View.GONE);
 				
 			}catch(Exception e){
@@ -247,7 +249,7 @@ public class MainActivity extends Activity
 			context=getApplicationContext();
 			main=findViewById(R.id.main);
 			menu=new RelativeLayout(context);
-			world=new RelativeLayout(context);
+				playerAndUi=new RelativeLayout(context);
 				pause_lay=new RelativeLayout(context);
 			
 			files.readFile(read,getExternalFilesDir("")+"/f.txt");
@@ -276,7 +278,7 @@ public class MainActivity extends Activity
 				disp=getWindowManager().getDefaultDisplay();
 				stage=new Game_stage(Game_stage.MENU);
 				music=MediaPlayer.create(context,R.raw.music1);
-				prop=new main_properties(main,menu,world,context,activity,disp.getWidth(),disp.getHeight(),op,face,thread,stage,pause_lay,run,music,player_posX,skeletons);
+				prop=new main_properties(main,menu,playerAndUi,context,activity,disp.getWidth(),disp.getHeight(),op,face,thread,stage,pause_lay,run,music,player_posX,skeletons);
 			money=new Money(prop,Money.Type.MENU);
 			new Player(prop,Player.type.MENU);
 				Btn_play btn_play=new Btn_play(prop);
@@ -285,11 +287,16 @@ public class MainActivity extends Activity
 			coords.setTranslationZ(1023);
 			coords.setTextColor(Color.RED);
 			coords.setTypeface(face); 
-			world.addView(coords);
+				playerAndUi.addView(coords);
 			prop.setMoney(money);
 			menu.setVisibility(View.VISIBLE);
-			world.setVisibility(View.GONE);
+				playerAndUi.setVisibility(View.GONE);
 			runOnUiThread(run5);
+			world=new RelativeLayout(context);
+				world.setLayoutParams(params2);
+			    world.setTranslationZ(-0);
+				prop.setWorld(world);
+			playerAndUi.addView(world);
 			
 				grass_layout=new RelativeLayout(prop.context);
 				grass_layout.setLayoutParams(params2);
@@ -299,7 +306,7 @@ public class MainActivity extends Activity
 						grass_layout.addView(imm[i][j],params1);
 					}
 				}
-				world.addView(grass_layout);
+				playerAndUi.addView(grass_layout);
 				abc();
 				new Player(prop,Player.type.WORLD);
 				new Player_health(prop);
@@ -311,7 +318,9 @@ public class MainActivity extends Activity
 				new Btn_continue(prop);
 				new Btn_exit_menu(prop);
 				new Btn_exit_game(prop);
-				world.addView(pause_lay,params2);
+				new Btn_Inventory(prop);
+				new Shop(prop);
+				playerAndUi.addView(pause_lay,params2);
 				btn_play.world_load_complete=true;
 			}catch(Exception e){
 				files.writeFile(getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
@@ -350,6 +359,10 @@ public class MainActivity extends Activity
 		
 		else if(stage.getStage()==Game_stage.WORLD){
 			if(prop.stage.getStage_in_world()==Game_stage.NOT_PAUSE){
+				if(prop.inv.isOpen){
+					prop.inv.closeInventory();
+					return;
+				}
 				pause_lay.setVisibility(View.VISIBLE);
 			prop.joystick.lay.setVisibility(View.GONE);
 			prop.stage.setStage_in_world(Game_stage.PAUSE);
