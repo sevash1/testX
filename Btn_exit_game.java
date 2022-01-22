@@ -20,7 +20,7 @@ public class Btn_exit_game extends Ui
 
 	Btn_exit_game(main_properties prop){
 		this.prop=prop;
-		this.world=prop.menu;
+		this.world=prop.menuLayout;
 		this.context=prop.context;
 		this.screenW=prop.screenW;
 		this.screenH=prop.screenH;
@@ -56,7 +56,7 @@ public class Btn_exit_game extends Ui
 				prop.activity.finish();
 				System.exit(0);
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 
 			}

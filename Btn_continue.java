@@ -20,7 +20,7 @@ public class Btn_continue extends Ui
 
 	Btn_continue(main_properties prop){
 		this.prop=prop;
-		this.world=prop.menu;
+		this.world=prop.menuLayout;
 		this.context=prop.context;
 		this.screenW=prop.screenW;
 		this.screenH=prop.screenH;
@@ -57,8 +57,9 @@ public class Btn_continue extends Ui
 				prop.bl.setVisibility(View.GONE);
 				prop.stage.setStage_in_world(Game_stage.NOT_PAUSE);
 				prop.joystick.lay.setVisibility(View.VISIBLE);
+				
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 
 			}
@@ -66,4 +67,7 @@ public class Btn_continue extends Ui
 
 
 	};
+	
+	
+	
 }

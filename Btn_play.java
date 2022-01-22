@@ -17,13 +17,12 @@ public class Btn_play extends Ui
 	TextView tv;
 	main_properties prop;
 	Thread worldThread;
-	public boolean world_load_complete=false;
 	
 	Btn_play(main_properties prop){
 		try{
 			
 		this.prop=prop;
-		this.menu=prop.menu;
+			this.menu=prop.menuLayout;
 		this.context=prop.context;
 		this.screenW=prop.screenW;
 		this.screenH=prop.screenH;
@@ -45,10 +44,10 @@ public class Btn_play extends Ui
 		tv.setTextColor(Color.BLUE);
 		tv.setTypeface(prop.ttf);
 		
-		prop.menu.addView(btn);
-		prop.menu.addView(tv);
+			prop.menuLayout.addView(btn);
+			prop.menuLayout.addView(tv);
 		}catch(Exception e){
-			files.writeFile(prop.activity.getExternalFilesDir("").toString(),"erro.txt",(new String[]{e.toString()}));
+			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"erro.txt",(new String[]{e.toString()}));
 		}
 	}
 	
@@ -59,7 +58,7 @@ public class Btn_play extends Ui
 		public void onClick(View p1)
 		{
 			try{
-				while(!world_load_complete){}
+				if(!prop.stage.world_load_complete)return;
 				prop.stage.setStage(Game_stage.WORLD);
 				
 				prop.worldThread=new Thread(prop.worldThreadRun);
@@ -69,7 +68,7 @@ public class Btn_play extends Ui
 				prop.stage.setStage_in_world(Game_stage.NOT_PAUSE);
 				prop.joystick.lay.setVisibility(View.VISIBLE);
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				
 
 			}

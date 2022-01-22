@@ -6,6 +6,7 @@ import android.graphics.*;
 import android.widget.RelativeLayout.*;
 import android.widget.ImageView.*;
 import android.view.*;
+import android.media.*;
 
 public class Player implements Entity
 {
@@ -63,7 +64,6 @@ public class Player implements Entity
 		this.prop=prop;
 		player=new ImageView(prop.context);
 		player.setPivotX(128);
-		player.setTranslationZ(1);
 		load_textures_idle();
 		player.setImageBitmap((Bitmap)anim_idle.get(0));
 		player.setLayoutParams(params1);
@@ -211,24 +211,37 @@ public class Player implements Entity
 		public void run()
 		{
 			
-			prop.menu.addView(player);
+			prop.menuLayout.addView(player);
 		}
 		
 		};
 	int s=0;
-	Runnable run2=new Runnable(){
+	void playM(){
+		Random r= new Random();
+		prop.music=(MediaPlayer)prop.musicList.get(r.nextInt(48));
+		prop.music.setVolume(0.5f,0.5f);
 
+		prop.music.seekTo(0);
+
+		prop.music.start();
+		prop.music.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
+				@Override
+				public void onCompletion(MediaPlayer mp){
+					playM();
+				}
+			});
+	}
+	
+	
+	Runnable run2=new Runnable(){
+		
 		@Override
 		public void run()
 		{
-			prop.menu_music.setVolume(0.5f,0.5f);
-
-				prop.menu_music.seekTo(0);
-
-			prop.menu_music.start();
+			playM();
 			
 			while(true){
-				
+				if(Game_stage.EXIT==prop.stage.getStage()) thread1.stop();
 				try{
 					Thread.sleep(250);
 					if(prop.stage.getStage()==Game_stage.MENU){
@@ -239,7 +252,7 @@ public class Player implements Entity
 						
 					}
 				}catch(Exception e){
-					files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 					
 				}
 			}
@@ -251,7 +264,7 @@ public class Player implements Entity
 	void attack(){
 		try{
 			for(Skeleton skel:prop.skeletons){
-				if(player.getRotationY()==0)
+				//if(player.getRotationY()==0)
 				if(Math.sqrt(Math.pow((player.getTranslationX()-(skel.iv.getTranslationX()-prop.world.getScrollX())),2)
 						  +Math.pow((player.getTranslationY()-(skel.iv.getTranslationY()-prop.world.getScrollY())),2))<200){
 			attacked=true;
@@ -260,7 +273,7 @@ public class Player implements Entity
 		else attacked=false;
 		}
 		}catch(Exception e){
-			files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 		}
 	}
@@ -272,7 +285,8 @@ public class Player implements Entity
 		{
 			
 			while(true){
-
+				if(Game_stage.EXIT==prop.stage.getStage()) thread1.stop();
+				
 				try{
 					Thread.sleep(125);
 					if(prop.stage.getStage()==Game_stage.WORLD){
@@ -315,7 +329,7 @@ public class Player implements Entity
 						anim_stage++;
 					}
 				}catch(Exception e){
-					files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 					
 				}
 				
@@ -333,7 +347,7 @@ public class Player implements Entity
 				
 			player.setImageBitmap((Bitmap)anim.get(anim_stage));
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 			}
 		}

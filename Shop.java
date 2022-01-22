@@ -101,4 +101,20 @@ public class Shop
 				}
 				}
 	}
+	
+	public void closeShop(){
+		prop.activity.runOnUiThread(run1);
+	}
+	Runnable run1=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			shop.setVisibility(View.INVISIBLE);
+			isOpen=false;
+			// TODO: Implement this method
+		}
+
+
+	};
 }

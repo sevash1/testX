@@ -63,6 +63,7 @@ public class Btn_Inventory
 					
 					case MotionEvent.ACTION_UP:{
 						if(inven.getVisibility()==View.INVISIBLE){
+							if(prop.shop.isOpen)break;
 							inven.setVisibility(View.VISIBLE);
 							isOpen=true;
 							}
@@ -75,7 +76,7 @@ public class Btn_Inventory
 				}
 				return true;
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				return true;
 			}
 		}

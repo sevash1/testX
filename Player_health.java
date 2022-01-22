@@ -27,13 +27,13 @@ public class Player_health extends Ui
 	Player_health(main_properties prop){
 		
 		this.prop=prop;
-		this.menu=prop.menu;
+		this.menu=prop.menuLayout;
 		this.context=prop.context;
 		this.screenW=prop.screenW;
 		this.screenH=prop.screenH;
 		
 		progress=new ImageView(prop.context);
-		progress.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.hp_bar_progress,prop.options)));
+		progress.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.red_bar,prop.options)));
 		progress.setLayoutParams(params2);
 	    progress.setScaleType(ScaleType.FIT_XY);
 		progress.setTranslationX(30);
@@ -41,7 +41,7 @@ public class Player_health extends Ui
 		progress.setTranslationZ(1023);
 		
 		back=new ImageView(prop.context);
-		back.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.hp_bar_back,prop.options)));
+		back.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.black_bar,prop.options)));
 		back.setLayoutParams(params3);
 		back.setScaleType(ScaleType.FIT_XY);
 		back.setTranslationX(30);

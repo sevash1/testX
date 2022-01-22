@@ -20,7 +20,7 @@ public class Btn_exit_menu extends Ui
 
 	Btn_exit_menu(main_properties prop){
 		this.prop=prop;
-		this.world=prop.menu;
+		this.world=prop.menuLayout;
 		this.context=prop.context;
 		this.screenW=prop.screenW;
 		this.screenH=prop.screenH;
@@ -54,12 +54,12 @@ public class Btn_exit_menu extends Ui
 		{
 			try{
 				prop.stage.setStage(Game_stage.MENU);
-				prop.menu.setVisibility(View.VISIBLE);
+				prop.menuLayout.setVisibility(View.VISIBLE);
 				prop.playerAndUi.setVisibility(View.GONE);
 				prop.bl.setVisibility(View.GONE);
 				prop.money.setType(Money.Type.MENU);
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				
 
 			}

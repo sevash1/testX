@@ -9,7 +9,7 @@ import java.util.*;
 public class main_properties
 {
 	public RelativeLayout main;
-	public RelativeLayout menu;
+	public RelativeLayout menuLayout;
 	public RelativeLayout world;
 	public Context context;
 	public Activity activity;
@@ -23,7 +23,7 @@ public class main_properties
 	public Game_stage stage;
 	public RelativeLayout bl;
 	public Runnable worldThreadRun;
-	public MediaPlayer menu_music;
+	public MediaPlayer music;
 	public Player player;
 	public Joystick joystick;
 	public Money money;
@@ -35,10 +35,15 @@ public class main_properties
 	public RelativeLayout playerAndUi;
 	public Btn_Inventory inv;
 	public Shop shop;
+	public LoadBar loadBar;
+	public List musicList=new ArrayList<MediaPlayer>();
+	public List treesList=new ArrayList<Bitmap>();
+	public Menu menu;
+	
 	
 	public main_properties(
 	RelativeLayout main,
-	RelativeLayout menu,
+	RelativeLayout menuLayout,
 		RelativeLayout playerAndUi,
 	Context context,
 	Activity activity,
@@ -55,8 +60,8 @@ public class main_properties
 	List skeletons){
 		
 		this.main=main;
-		this.menu=menu;
-	this.playerAndUi=playerAndUi;
+	this.menuLayout=menuLayout;
+    	this.playerAndUi=playerAndUi;
 		this.context=context;
 		this.activity=activity;
 		this.screenW=screenW;
@@ -67,7 +72,7 @@ public class main_properties
 		this.stage=stage;
 		this.bl=bl;
 		this.worldThreadRun=run;
-		this.menu_music=menu_music;
+		this.music=menu_music;
 		this.playerPosX=playerPosX;
 		this.skeletons=skeletons;
 
@@ -101,5 +106,17 @@ public class main_properties
 	}
 	public void setShop(Shop shp){
 		this.shop=shp;
+	}
+	public void setLoadBar(LoadBar bar){
+		this.loadBar=bar;
+	}
+	public void addMusic(MediaPlayer music){
+		this.musicList.add(music);
+	}
+	public void addTree(ImageView tree){
+		this.treesList.add(tree);
+	}
+	public void setMenu(Menu menu){
+		this.menu=menu;
 	}
 }

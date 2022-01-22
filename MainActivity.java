@@ -47,11 +47,10 @@ public class MainActivity extends Activity
 	float last_playerPosX=0;
 	float last_playerPosY=0;
 	int fps=0;
-	Money money;
 	Thread thread;
-	
 	Context context;
 	MediaPlayer music;
+	boolean isPause=false;
 	Game_stage stage;
 	RelativeLayout pause_lay;
 	Activity activity;
@@ -83,7 +82,7 @@ public class MainActivity extends Activity
 			new Thread(run4).start();
 			}
 		catch(Exception e){
-			files.writeFile(getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+			files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 		}
 	}
 
@@ -91,6 +90,7 @@ public class MainActivity extends Activity
 	protected void onDestroy()
 	{
 		stage.setStage(Game_stage.EXIT);
+		prop.music.stop();
 		
 		super.onDestroy();
 		System.exit(0);
@@ -99,7 +99,12 @@ public class MainActivity extends Activity
 	@Override
 	protected void onPause()
 	{
-		files.writeFile(getExternalFilesDir("").toString(),"f.txt",new String[]{Float.toString(player_posX),Float.toString(player_posY),Integer.toString(money.money_count)});
+		if(prop.music != null && prop.music.isPlaying()){
+			isPause=true;
+			prop.music.pause();
+	
+			}
+		files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{Float.toString(player_posX),Float.toString(player_posY),Integer.toString(prop.money.money_count)});
 		
 		super.onPause();
 	}
@@ -112,8 +117,9 @@ public class MainActivity extends Activity
 				
 				runOnUiThread(run1);
 				while(!run1_c){}
-			money.setType(Money.Type.WORLD);
+			prop.money.setType(Money.Type.WORLD);
 			while(stage.getStage()==Game_stage.WORLD){
+				if(Game_stage.EXIT==prop.stage.getStage()) thread.stop();
 				
 				try{
 					time1=System.currentTimeMillis();
@@ -124,7 +130,7 @@ public class MainActivity extends Activity
 					
 					fps++;
 					
-			
+					
 					if(prop.player.a_anim==Player.active_anim.ATTACK){
 					   if(!prop.joystick.joystick_pressed
 					&&!Float.isNaN(prop.joystick.attackX)){
@@ -174,6 +180,9 @@ public class MainActivity extends Activity
 						last_playerPosY=player_posY;
 						grass_layout.setScrollX((int)player_posX-((int)(player_posX/256))*256+256*6);
 						grass_layout.setScrollY((int)player_posY-((int)(player_posY/256))*256+256*3);
+						prop.world.setScrollX((int)player_posX);
+						prop.world.setScrollY((int)player_posY);
+						
 					}
 					
 					for(Skeleton skeleton:skeletons){
@@ -183,7 +192,7 @@ public class MainActivity extends Activity
 					time5+=time3;
 					if(time5>1000){
 						time5=0;
-						files.writeFile(getExternalFilesDir("").toString(),"f.txt",new String[]{Float.toString(player_posX),Float.toString(player_posY),Integer.toString(money.money_count)});
+						files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{Float.toString(player_posX),Float.toString(player_posY),Integer.toString(prop.money.money_count)});
 						coord="X:"+(int)player_posX+"\n"+"Y:"+(int)player_posY+"\n"+String.valueOf(time3)+"\n"+fps+"\n";
 						fps=0;
 						Log.d("seva",String.valueOf(
@@ -195,10 +204,10 @@ public class MainActivity extends Activity
 						}
 						
 				}catch(Exception e){
-					files.writeFile(getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+					files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				}}
 		}catch(Exception e){
-			files.writeFile(getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+			files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 		}
 		}
 		};
@@ -215,10 +224,10 @@ public class MainActivity extends Activity
 			run1_c=true;
 			}
 				prop.playerAndUi.setVisibility(View.VISIBLE);
-				prop.menu.setVisibility(View.GONE);
+				prop.menuLayout.setVisibility(View.GONE);
 				
 			}catch(Exception e){
-				files.writeFile(getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));		
+				files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));		
 			}
 		}
 		};
@@ -233,7 +242,7 @@ public class MainActivity extends Activity
 				coords.setText(coord);
 			}
 			catch(Exception e){
-				files.writeFile(getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 			}
 			
 		}
@@ -249,6 +258,7 @@ public class MainActivity extends Activity
 			context=getApplicationContext();
 			main=findViewById(R.id.main);
 			menu=new RelativeLayout(context);
+			
 				playerAndUi=new RelativeLayout(context);
 				pause_lay=new RelativeLayout(context);
 			
@@ -277,53 +287,91 @@ public class MainActivity extends Activity
 				Typeface face=Typeface.createFromAsset(getAssets(), "fonts/blazma_regular.ttf"); 
 				disp=getWindowManager().getDefaultDisplay();
 				stage=new Game_stage(Game_stage.MENU);
-				music=MediaPlayer.create(context,R.raw.music1);
+				music=MediaPlayer.create(context,R.raw.music01);
 				prop=new main_properties(main,menu,playerAndUi,context,activity,disp.getWidth(),disp.getHeight(),op,face,thread,stage,pause_lay,run,music,player_posX,skeletons);
-			money=new Money(prop,Money.Type.MENU);
-			new Player(prop,Player.type.MENU);
-				Btn_play btn_play=new Btn_play(prop);
-			coords=new TextView(context);
-			coords.setTranslationY(750);
-			coords.setTranslationZ(1023);
-			coords.setTextColor(Color.RED);
-			coords.setTypeface(face); 
+				
+				new Menu(prop);
+				prop.loadBar.addPoint();
+				
+				prop.loadBar.addPoint();
+				coords=new TextView(context);
+				prop.loadBar.addPoint();
+				coords.setTranslationY(750);
+				prop.loadBar.addPoint();
+				coords.setTranslationZ(1023);
+				prop.loadBar.addPoint();
+				coords.setTextColor(Color.RED);
+				prop.loadBar.addPoint();
+				coords.setTypeface(face); 
+				prop.loadBar.addPoint();
 				playerAndUi.addView(coords);
-			prop.setMoney(money);
-			menu.setVisibility(View.VISIBLE);
+				prop.loadBar.addPoint();
+				prop.setMoney(prop.money);
+				prop.loadBar.addPoint();
+				menu.setVisibility(View.VISIBLE);
+				prop.loadBar.addPoint();
 				playerAndUi.setVisibility(View.GONE);
-			runOnUiThread(run5);
-			world=new RelativeLayout(context);
+				prop.loadBar.addPoint();
+				runOnUiThread(run5);
+				prop.loadBar.addPoint();
+				world=new RelativeLayout(context);
+				prop.loadBar.addPoint();
 				world.setLayoutParams(params2);
+				prop.loadBar.addPoint();
 			    world.setTranslationZ(-0);
+				prop.loadBar.addPoint();
 				prop.setWorld(world);
-			playerAndUi.addView(world);
+				prop.loadBar.addPoint();
+				playerAndUi.addView(world);
+				prop.loadBar.addPoint();
 			
 				grass_layout=new RelativeLayout(prop.context);
+				prop.loadBar.addPoint();
 				grass_layout.setLayoutParams(params2);
+				prop.loadBar.addPoint();
 			    grass_layout.setTranslationZ(-1);
+				prop.loadBar.addPoint();
 				for(int i=0;i<20;i++){
 					for(int j=0;j<10;j++){
 						grass_layout.addView(imm[i][j],params1);
 					}
 				}
+				prop.loadBar.addPoint();
 				playerAndUi.addView(grass_layout);
+				prop.loadBar.addPoint();
 				abc();
+				World.loadTrees(prop);
+				Grass.load(prop);
+				prop.loadBar.addPoint();
 				new Player(prop,Player.type.WORLD);
+				prop.loadBar.addPoint();
 				new Player_health(prop);
+				prop.loadBar.addPoint();
 				new Joystick(prop);
+				prop.loadBar.addPoint();
 				new Skeleton(prop,0,0);
+				prop.loadBar.addPoint();
 				new Btn_attack(prop);
+				prop.loadBar.addPoint();
 				new Btn_shield(prop);
+				prop.loadBar.addPoint();
 				new Btn_roll(prop);
+				prop.loadBar.addPoint();
 				new Btn_continue(prop);
+				prop.loadBar.addPoint();
 				new Btn_exit_menu(prop);
+				prop.loadBar.addPoint();
 				new Btn_exit_game(prop);
+				prop.loadBar.addPoint();
 				new Btn_Inventory(prop);
+				prop.loadBar.addPoint();
 				new Shop(prop);
+				prop.loadBar.addPoint();
 				playerAndUi.addView(pause_lay,params2);
-				btn_play.world_load_complete=true;
+				prop.loadBar.addPoint();
+				prop.stage.world_load_complete=true;
 			}catch(Exception e){
-				files.writeFile(getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 			}
 }
 		
@@ -344,12 +392,16 @@ public class MainActivity extends Activity
 	{
 		try{
 		if(stage.getStage()==Game_stage.MENU){
+			if(prop.menu.settingsIsOpen){
+				prop.menu.settings.closeSettings();
+				return;
+			}
 			
 		last_back_pressed_time2=System.currentTimeMillis();
 		if(last_back_pressed_time2-last_back_pressed_time1<2000){
+			
 			finish();
-			stage.setStage(Game_stage.EXIT);
-			System.exit(0);
+			
 		}else{
 			Toast.makeText(context,"еще раз..",Toast.LENGTH_SHORT).show();
 		}
@@ -361,6 +413,10 @@ public class MainActivity extends Activity
 			if(prop.stage.getStage_in_world()==Game_stage.NOT_PAUSE){
 				if(prop.inv.isOpen){
 					prop.inv.closeInventory();
+					return;
+				}
+				if(prop.shop.isOpen){
+					prop.shop.closeShop();
 					return;
 				}
 				pause_lay.setVisibility(View.VISIBLE);
@@ -375,7 +431,7 @@ public class MainActivity extends Activity
 				}
 		}
 		}catch(Exception e){
-		files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+		files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 	}
 	}
@@ -399,16 +455,37 @@ public class MainActivity extends Activity
 				}
 				if(s2[0].contentEquals("money:")){
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")) continue;
-					money.setMoneyCount(Integer.parseInt(s2[1]));
+					prop.money.setMoneyCount(Integer.parseInt(s2[1]));
 
 				}
 				
+					if(s2[0].contentEquals("musicVolume:")){
+						if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")) continue;
+						prop.menu.settings.musicVolume.volume=(Float.parseFloat(s2[1]));
+						prop.menu.settings.musicVolume.updatePoint();
+					}
 			
 				}
 				}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 			}
+		}
+
+		@Override
+		protected void onResume()
+		{
+			try{
+			
+			super.onResume();
+				if(isPause){
+					isPause=false;
+				prop.music.start();
+				}
+		}catch(Exception e){
+			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+
+		}
 		}
 	
     

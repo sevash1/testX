@@ -40,7 +40,7 @@ public class Joystick extends Ui
 
 	Joystick(main_properties prop){
 		this.prop=prop;
-		this.world=prop.menu;
+		this.world=prop.menuLayout;
 		this.context=prop.context;
 		this.screenW=prop.screenW;
 		this.screenH=prop.screenH;
@@ -156,7 +156,7 @@ public class Joystick extends Ui
 				}
 				
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				
 			}
 			return true;
@@ -181,11 +181,11 @@ public class Joystick extends Ui
 				joystick.setVisibility(View.INVISIBLE);
 				
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				
 				border.setVisibility(View.INVISIBLE);
 				joystick.setVisibility(View.INVISIBLE);
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				
 			}
 		}
@@ -207,7 +207,7 @@ public class Joystick extends Ui
 			border.setVisibility(View.VISIBLE);
 			joystick.setVisibility(View.VISIBLE);
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 			}
 		}
@@ -224,7 +224,7 @@ public class Joystick extends Ui
 			joystick.setTranslationX(border.getTranslationX());
 			joystick.setTranslationY(border.getTranslationY());
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 			}
 		}
@@ -242,7 +242,7 @@ public class Joystick extends Ui
 			joystick.setTranslationX(joystickX-95);
 			joystick.setTranslationY(joystickY+centr);
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 			}
 		}
@@ -262,7 +262,7 @@ public class Joystick extends Ui
 			if(ratioX<0)prop.player.player.setRotationY(180);
 			else if(ratioX>0) prop.player.player.setRotationY(0);
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 			}
 		}

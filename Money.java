@@ -34,12 +34,9 @@ public class Money extends Ui
 		iv.setLayoutParams(params);
 		iv.setScaleType(ScaleType.FIT_XY);
 		iv.setOnTouchListener(touch);
-		iv.setTranslationZ(1023);
 		tv.setText(String.valueOf(money_count));
 		tv.setTextSize(20);
-		
 		tv.setTranslationY(10);
-		tv.setTranslationZ(1023);
 		tv.setLayoutParams(params2);
 		tv.setTextColor(Color.YELLOW);
 		tv.setTypeface(prop.ttf);
@@ -78,8 +75,8 @@ public class Money extends Ui
 		@Override
 		public void run()
 		{
-			prop.menu.removeView(iv);
-			prop.menu.removeView(tv);
+			prop.menuLayout.removeView(iv);
+			prop.menuLayout.removeView(tv);
 			iv.setTranslationX(prop.screenW-iv.getWidth()-30);
 			tv.setTranslationX(prop.screenW-iv.getWidth()-48*6-40);
 
@@ -103,8 +100,8 @@ public class Money extends Ui
 			tv.setGravity(Gravity.LEFT);
 			tv.setTranslationX(48*2+16+64);
 
-			prop.menu.addView(iv);
-			prop.menu.addView(tv);
+			prop.menuLayout.addView(iv);
+			prop.menuLayout.addView(tv);
 		}
 
 
@@ -122,7 +119,7 @@ public class Money extends Ui
 			try{
 			tv.setText(String.valueOf(money_count));
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				}
 			// TODO: Implement this method
 		}
@@ -140,13 +137,14 @@ public class Money extends Ui
 				switch (p2.getAction()){
 
 					case MotionEvent.ACTION_UP:{
+						if(!prop.inv.isOpen)
 							prop.shop.openShop();
 							break;
 						}
 				}
 				return true;
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				return true;
 			}
 		}

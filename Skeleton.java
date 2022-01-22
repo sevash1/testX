@@ -57,7 +57,7 @@ public class Skeleton extends Mob
 		this.posY=posY+prop.screenH/2-150;
 		iv.setTranslationX(this.posX);
 		iv.setTranslationY(this.posY);
-		hp.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.hp_bar_progress,prop.options)));
+		hp.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.red_bar,prop.options)));
 	    hp.setLayoutParams(params2);
 		hp.setScaleType(ScaleType.FIT_XY);
 		hp.setTranslationX(iv.getTranslationX()+iv.getWidth()/2-hp.getWidth()/2);
@@ -76,7 +76,7 @@ public class Skeleton extends Mob
 		playerPosY=y;
 		prop.activity.runOnUiThread(run1);
 		}catch(Exception e){
-			files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 		}
 	}
@@ -100,15 +100,14 @@ public class Skeleton extends Mob
 		public void run()
 		{
 			try{
-				prop.world.setScrollX((int)playerPosX);
-				prop.world.setScrollY((int)playerPosY);
+				
 		//	iv.setTranslationX(posX-playerPosX);
 		//	iv.setTranslationY(posY-playerPosY);
 			
 			hp.setTranslationX(iv.getTranslationX()+iv.getWidth()/2-hp.getWidth()/2);
 			hp.setTranslationY(iv.getTranslationY()+30);
 			}catch(Exception e){
-			files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 		}
 		}
@@ -120,7 +119,7 @@ public class Skeleton extends Mob
 		health=health-count;
 		checkHealth();
 		}catch(Exception e){
-		files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+		files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 	}
 	}
@@ -131,6 +130,7 @@ public class Skeleton extends Mob
 			prop.activity.runOnUiThread(run0);
 		if(health<=0){
 			isLife=false;
+			prop.skeletons.remove(this);
 			Random rand=new Random();
 			prop.skeletons.add( new Skeleton(prop,rand.nextInt(1000)-500,rand.nextInt(1000)-500));
 			anim_etap=0;
@@ -141,7 +141,7 @@ public class Skeleton extends Mob
 		}
 		
 		}catch(Exception e){
-			files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 		}
 	}
@@ -229,6 +229,8 @@ public class Skeleton extends Mob
 		{
 			anim=anim_idle;
 			while(true){
+				if(Game_stage.EXIT==prop.stage.getStage())th.stop();
+				
 				try{
 					Thread.sleep(250);
 					
@@ -245,7 +247,7 @@ public class Skeleton extends Mob
 	
 					
 				}catch(Exception e){
-					files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 					
 				}
 			}
@@ -286,14 +288,14 @@ public class Skeleton extends Mob
 					Thread.sleep(15);
 			prop.activity.runOnUiThread(run5);
 				}catch(Exception e){
-					files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 				}
 				
 			}
 				prop.money.addMoney(1);
 			}catch(Exception e){
-			files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 		}
 	
@@ -313,7 +315,7 @@ public class Skeleton extends Mob
 			money.setVisibility(View.VISIBLE);
 			
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 			}
 		}
@@ -329,7 +331,7 @@ public class Skeleton extends Mob
 				money.setTranslationX(money.getTranslationX()+ratioX*ss);
 				money.setTranslationY(money.getTranslationY()+ratioY*ss);
 			}catch(Exception e){
-				files.writeFile(prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 			}
 		}

@@ -12,6 +12,7 @@ public class Game_stage
 	
 	int stage=0;
 	int stage_in_world=0;
+	public boolean world_load_complete=false;
 	
 	Game_stage(int stage){
 		this.stage=stage;

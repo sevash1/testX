@@ -6,7 +6,7 @@ import java.util.*;
 public class files
 {
 	
-		static void writeFile(String dir,String sfile,String[] args) {
+		static void writeFile(main_properties prop, String dir,String sfile,String[] args) {
 			
 			if(sfile.contentEquals("f.txt")){
 			try {
@@ -22,6 +22,7 @@ public class files
 				bw.write("player_position_x: "+args[0]+"\n");
 				bw.write("player_position_y: "+args[1]+"\n");
 				bw.write("money: "+args[2]+"\n");
+				bw.write("musicVolume: "+Float.toString(prop.menu.settings.musicVolume.volume));
 				bw.close();
 				return;
 			} catch (Exception ignore) {}
