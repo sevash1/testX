@@ -132,7 +132,7 @@ public class Skeleton extends Mob
 			isLife=false;
 			prop.skeletons.remove(this);
 			Random rand=new Random();
-			prop.skeletons.add( new Skeleton(prop,rand.nextInt(1000)-500,rand.nextInt(1000)-500));
+			new Skeleton(prop,rand.nextInt(1000)-500,rand.nextInt(1000)-500);
 			anim_etap=0;
 			anim=anim_death;
 			Thread th=new Thread(run3);

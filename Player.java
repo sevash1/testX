@@ -322,7 +322,10 @@ public class Player implements Entity
 							if(anim_stage>anim.size()-3){
 								
 								prop.roll.isActive=false;
-								prop.player.a_anim=Player.active_anim.IDLE;
+								if(prop.joystick.joystick_pressed)
+									prop.player.a_anim=Player.active_anim.RUN;
+								else
+								    prop.player.a_anim=Player.active_anim.IDLE;
 						
 						}
 						}

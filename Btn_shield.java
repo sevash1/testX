@@ -24,7 +24,7 @@ public class Btn_shield
 		shield.setScaleType(ScaleType.FIT_XY);
 		shield.setTranslationX(prop.screenW-675);
 		shield.setTranslationY(prop.screenH/1.2f);
-		shield.setTranslationZ(1023);
+		shield.setTranslationZ(2);
 		shield.setOnTouchListener(touch);
 		
 		border=new ImageView(prop.context);
@@ -33,7 +33,7 @@ public class Btn_shield
 		border.setScaleType(ScaleType.FIT_XY);
 		border.setTranslationX(shield.getTranslationX()+((int)(160*0.6)/2-(int)(260*0.6)/2));
 		border.setTranslationY(shield.getTranslationY()+((int)(160*0.6)/2-(int)(260*0.6)/2));
-		border.setTranslationZ(1022);
+		border.setTranslationZ(1);
 
 		prop.setShield(this);
 		prop.playerAndUi.addView(border);

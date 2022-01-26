@@ -40,7 +40,7 @@ public class Menu
 		
 		Settings(){
 			set=new ImageView(prop.context);
-			
+		//	files.updateWorld(prop.activity.getExternalFilesDir("").toString(),"world/","0_0");
 			set.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.settings_button,prop.options)));
 			set.setTranslationX(prop.screenW-250);
 			set.setTranslationY(60);

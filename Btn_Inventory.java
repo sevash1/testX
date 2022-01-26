@@ -28,10 +28,10 @@ public class Btn_Inventory
 		inv.setScaleType(ScaleType.FIT_XY);
 		inv.setTranslationX(prop.screenW-250);
 		inv.setTranslationY(prop.screenH/8f);
-		inv.setTranslationZ(1023);
+		inv.setTranslationZ(2);
 		inv.setOnTouchListener(touch);
 		inven=new RelativeLayout(prop.context);
-		inven.setTranslationZ(10);
+		inven.setTranslationZ(1);
 		inven.setVisibility(View.INVISIBLE);
 		inven.setBackgroundColor(Color.argb(64,0,0,0));
 		

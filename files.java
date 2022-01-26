@@ -69,6 +69,64 @@ public class files
 		}
 		}
 		
+	public static void updateWorld(String dir1,String dir2, String fileName, String text1){
+			if(dir2.contentEquals("world/")){
+				try {
+					File file1 = new File(dir1,dir2);
+					file1.mkdirs();
+					File file=new File(file1,fileName+".sso");
+					try {
+						if(!file.exists()){
+							file.createNewFile();
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					String[] text=text1.split(" ");
+					BufferedWriter bw = new BufferedWriter(new FileWriter(file,true));
+					bw.write(text[0]+" "+text[1]+" "+text[2]+"\n");
+					bw.close();
+					return;
+				} catch (Exception ignore) {}
+			}
+		}
+		public static boolean check(String dir1, String dir2,String s,main_properties prop){
+			if(dir2.contentEquals("/world/")){
+				try {
+					File file1 = new File(dir1,dir2);
+					if(!file1.exists())return false;
+					File file=new File(file1,s+".sso");
+					if(file.exists())return true;
+					else return false;
+					}
+					catch(Exception e){
+						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+					
+						return false;}
+					}
+					return false;
+		}
+		
+	public static void readWorld(List list1,String fileName) {
+        try {
+
+            FileInputStream inputStream = new FileInputStream(new File(fileName));
+
+            if (inputStream != null) {
+                InputStreamReader isr = new InputStreamReader(inputStream);
+                BufferedReader reader = new BufferedReader(isr);
+                String line;
+
+                while ((line = reader.readLine()) != null) {
+                    list1.add(line);
+                }
+                inputStream.close();
+			}
+        } catch (Exception e) {
+
+		}
+    }
+		
 	public static void readFile(List list1,String fileName) {
         try {
 			

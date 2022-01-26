@@ -24,7 +24,7 @@ public class Btn_attack
 		attack.setScaleType(ScaleType.FIT_XY);
 		attack.setTranslationX(prop.screenW-450);
 		attack.setTranslationY(prop.screenH/1.6f);
-		attack.setTranslationZ(1023);
+		attack.setTranslationZ(2);
 		attack.setOnTouchListener(touch);
 		prop.setAttack(this);
 		
@@ -34,7 +34,7 @@ public class Btn_attack
 		border.setScaleType(ScaleType.FIT_XY);
 		border.setTranslationX(prop.screenW-450-50);
 		border.setTranslationY(prop.screenH/1.6f-50);
-		border.setTranslationZ(1022);
+		border.setTranslationZ(1);
 		
 		prop.playerAndUi.addView(border);
 		prop.playerAndUi.addView(attack);

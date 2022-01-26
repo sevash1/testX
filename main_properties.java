@@ -5,6 +5,7 @@ import android.app.*;
 import android.graphics.*;
 import android.media.*;
 import java.util.*;
+import android.view.*;
 
 public class main_properties
 {
@@ -13,7 +14,7 @@ public class main_properties
 	public RelativeLayout world;
 	public Context context;
 	public Activity activity;
-	public float playerPosX;
+	public float playerPosX=0;
 	public float playerPosY=0;
 	public float screenW=0;
 	public float screenH=0;
@@ -119,4 +120,38 @@ public class main_properties
 	public void setMenu(Menu menu){
 		this.menu=menu;
 	}
+	public void vanishGameButtons(){
+	activity.runOnUiThread(r1);
+	}
+	public void showGameButtons(){
+		activity.runOnUiThread(r2);
+	}
+	Runnable r1=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			attack.attack.setVisibility(View.INVISIBLE);
+			shield.shield.setVisibility(View.INVISIBLE);
+			roll.roll.setVisibility(View.INVISIBLE);
+			attack.border.setVisibility(View.INVISIBLE);
+			shield.border.setVisibility(View.INVISIBLE);
+			roll.border.setVisibility(View.INVISIBLE);
+			
+		}
+	};
+	Runnable r2=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			attack.attack.setVisibility(View.VISIBLE);
+			shield.shield.setVisibility(View.VISIBLE);
+			roll.roll.setVisibility(View.VISIBLE);
+			attack.border.setVisibility(View.VISIBLE);
+			shield.border.setVisibility(View.VISIBLE);
+			roll.border.setVisibility(View.VISIBLE);
+			
+		}
+	};
 }

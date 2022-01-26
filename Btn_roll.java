@@ -9,7 +9,7 @@ public class Btn_roll
 {
 	
 	main_properties prop;
-	public ImageView shield;
+	public ImageView roll;
 	public boolean pressed=false;
 	public boolean isActive=false;
 	public boolean isRunning=false;
@@ -22,27 +22,27 @@ public class Btn_roll
 
 	Btn_roll(main_properties prop){
 		this.prop=prop;
-		shield=new ImageView(prop.context);
-		shield.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.pearl_01c,prop.options)));
-		shield.setLayoutParams(params);
-		shield.setScaleType(ScaleType.FIT_XY);
-		shield.setTranslationX(prop.screenW-500);
-		shield.setTranslationY(prop.screenH/1.2f);
-		shield.setTranslationZ(1023);
-		shield.setOnTouchListener(touch);
+		roll=new ImageView(prop.context);
+		roll.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.pearl_01c,prop.options)));
+		roll.setLayoutParams(params);
+		roll.setScaleType(ScaleType.FIT_XY);
+		roll.setTranslationX(prop.screenW-500);
+		roll.setTranslationY(prop.screenH/1.2f);
+		roll.setTranslationZ(2);
+	    roll.setOnTouchListener(touch);
 
 		border=new ImageView(prop.context);
 		border.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.circle01,prop.options)));
 		border.setLayoutParams(params2);
 		border.setScaleType(ScaleType.FIT_XY);
-		border.setTranslationX(shield.getTranslationX()+((int)(160*0.6)/2-(int)(260*0.6)/2));
-		border.setTranslationY(shield.getTranslationY()+((int)(160*0.6)/2-(int)(260*0.6)/2));
-		border.setTranslationZ(1022);
+		border.setTranslationX(roll.getTranslationX()+((int)(160*0.6)/2-(int)(260*0.6)/2));
+		border.setTranslationY(roll.getTranslationY()+((int)(160*0.6)/2-(int)(260*0.6)/2));
+		border.setTranslationZ(1);
 		pressed=false;
 		isActive=false;
 		prop.setRoll(this);
 		prop.playerAndUi.addView(border);
-		prop.playerAndUi.addView(shield);
+		prop.playerAndUi.addView(roll);
 
 	}
 

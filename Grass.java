@@ -9,38 +9,42 @@ public class Grass
 {
 	main_properties prop;
 	ImageView gr;
-	LayoutParams params=new LayoutParams(256,256);
+	static LayoutParams params=new LayoutParams(256,256);
 	
-	public Grass(main_properties prop,int code1, int code2){
+	public Grass(main_properties prop,int code1, int code2, int n){
 		this.prop=prop;
 		gr=new ImageView(prop.context);
-		gr.setImageBitmap((Bitmap)(prop.treesList.get(Math.abs(code1+code2)%27)));
+		gr.setImageBitmap((Bitmap)(prop.treesList.get(n)));
 		gr.setScaleType(ScaleType.FIT_XY);
-		gr.setTranslationX(code1*600+code2*code2/10);
-		gr.setTranslationY(code2*600+code1*code1/10);
+		gr.setTranslationX(code1);
+		gr.setTranslationY(code2);
 		gr.setRotationY(10);
-		prop.activity.runOnUiThread(r1);
+		gr.setLayoutParams(params);
+	//	prop.activity.runOnUiThread(r1);
 	}
 	
+	static class Load{
+		
+	main_properties prop;
+	 List l;
+	 Load(List l,main_properties prop){
+		this.prop=prop;
+		this.l=l;
+		prop.activity.runOnUiThread(r1);
+		}
 
 	Runnable r1=new Runnable(){
 
 		@Override
 		public void run()
 		{
-			prop.world.addView(gr,params);
-			// TODO: Implement this method
-		}
-
-		
-	};
-	
-	public static void load(main_properties prop){
-		for(int i=-50;i<50;i++){
-			for(int j=-50;j<50;j++){
-				//if(i+j==0||i*j==0)continue;
-				new Grass(prop,i,j);
+			for(Grass iv:l){
+			prop.world.addView(iv.gr,params);
 			}
+			l.clear();
 		}
+	};
 	}
+	
+	
 }

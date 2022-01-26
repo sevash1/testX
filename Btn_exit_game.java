@@ -54,7 +54,7 @@ public class Btn_exit_game extends Ui
 		{
 			try{
 				prop.activity.finish();
-				System.exit(0);
+				
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 

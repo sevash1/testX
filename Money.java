@@ -37,6 +37,8 @@ public class Money extends Ui
 		tv.setText(String.valueOf(money_count));
 		tv.setTextSize(20);
 		tv.setTranslationY(10);
+		tv.setTranslationZ(1);
+		iv.setTranslationZ(1);
 		tv.setLayoutParams(params2);
 		tv.setTextColor(Color.YELLOW);
 		tv.setTypeface(prop.ttf);
@@ -79,7 +81,6 @@ public class Money extends Ui
 			prop.menuLayout.removeView(tv);
 			iv.setTranslationX(prop.screenW-iv.getWidth()-30);
 			tv.setTranslationX(prop.screenW-iv.getWidth()-48*6-40);
-
 			tv.setGravity(Gravity.RIGHT);
 			
 			prop.playerAndUi.addView(iv);
@@ -133,13 +134,16 @@ public class Money extends Ui
 		public boolean onTouch(View p1, MotionEvent p2)
 		{
 			try{
-				if(prop.stage.getStage_in_world()==Game_stage.PAUSE) return false;
 				switch (p2.getAction()){
 
 					case MotionEvent.ACTION_UP:{
-						if(!prop.inv.isOpen)
+						if(!prop.inv.isOpen&&!prop.shop.isOpen){
 							prop.shop.openShop();
 							break;
+						}else if(prop.shop.isOpen){
+							prop.shop.closeShop();
+							break;
+						}
 						}
 				}
 				return true;

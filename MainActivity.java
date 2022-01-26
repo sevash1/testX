@@ -93,7 +93,6 @@ public class MainActivity extends Activity
 		prop.music.stop();
 		
 		super.onDestroy();
-		System.exit(0);
 	}
 
 	@Override
@@ -184,7 +183,8 @@ public class MainActivity extends Activity
 						prop.world.setScrollY((int)player_posY);
 						
 					}
-					
+					prop.playerPosX=player_posX;
+					prop.playerPosY=player_posY;
 					for(Skeleton skeleton:skeletons){
 						skeleton.update(player_posX,player_posY);
 					}
@@ -337,16 +337,19 @@ public class MainActivity extends Activity
 					}
 				}
 				prop.loadBar.addPoint();
+				
 				playerAndUi.addView(grass_layout);
+				
 				prop.loadBar.addPoint();
 				abc();
 				World.loadTrees(prop);
-				Grass.load(prop);
+
 				prop.loadBar.addPoint();
 				new Player(prop,Player.type.WORLD);
 				prop.loadBar.addPoint();
 				new Player_health(prop);
 				prop.loadBar.addPoint();
+				new World().start(prop);
 				new Joystick(prop);
 				prop.loadBar.addPoint();
 				new Skeleton(prop,0,0);
@@ -392,6 +395,10 @@ public class MainActivity extends Activity
 	{
 		try{
 		if(stage.getStage()==Game_stage.MENU){
+			if(prop.shop.isOpen){
+				prop.shop.closeShop();
+				return;
+			}
 			if(prop.menu.settingsIsOpen){
 				prop.menu.settings.closeSettings();
 				return;
