@@ -33,7 +33,7 @@ public class Btn_exit_menu extends Ui
 		btn.setTranslationX(50);
 		btn.setTranslationY(screenH/2);
 		btn.setOnClickListener(click);
-		tv.setText(" Выйти в меню ");
+		tv.setText(prop.words.get(Words.words.EXIT_MENU));
 		tv.setGravity(Gravity.CENTER);
 		tv.setTextSize(16);
 		tv.setTranslationX(50);

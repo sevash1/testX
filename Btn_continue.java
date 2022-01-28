@@ -33,7 +33,7 @@ public class Btn_continue extends Ui
 		btn.setTranslationX(50);
 		btn.setTranslationY(screenH/2-60*3);
 		btn.setOnClickListener(click);
-		tv.setText(" Продолжить ");
+		tv.setText(prop.words.get(Words.words.CONTINUE));
 		tv.setGravity(Gravity.CENTER);
 		tv.setTextSize(16);
 		tv.setTranslationX(50);

@@ -26,6 +26,7 @@ public class Menu
 		new Player(prop,Player.type.MENU);
 		new Btn_play(prop);
 		settings =new Settings();
+		Item.loadItems(prop);
 	}
 	
 	

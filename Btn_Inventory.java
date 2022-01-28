@@ -16,6 +16,9 @@ public class Btn_Inventory
 	LayoutParams params=new LayoutParams(96,96);
 	LayoutParams params2=new LayoutParams(96,96);
 	LayoutParams params3=new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
+	LayoutParams params4=new LayoutParams(96+48,96+48);
+	LayoutParams params5=new LayoutParams(90+45,90+45);
+	
 	RelativeLayout lay;
 	
 	ImageView[][] in=new ImageView[10][10];
@@ -34,6 +37,7 @@ public class Btn_Inventory
 		inven.setTranslationZ(1);
 		inven.setVisibility(View.INVISIBLE);
 		inven.setBackgroundColor(Color.argb(64,0,0,0));
+		inven.setOnTouchListener(t2);
 		
 		for(int i=0;i<10;i++){
 			for(int j=0;j<5;j++){
@@ -46,12 +50,28 @@ public class Btn_Inventory
 				inven.addView(in[i][j],params);
 			}
 		}
+		slot_0();
+		slot_1();
+		slot_2();
+		slot_3();
+		//slot_4();
+		
 		prop.setInventory(this);
+		
 		prop.playerAndUi.addView(inv);
 		prop.playerAndUi.addView(inven,params3);
-
+		
 	}
 
+	OnTouchListener t2=new OnTouchListener(){
+
+		@Override
+		public boolean onTouch(View p1, MotionEvent p2)
+		{
+			return true;
+		}
+	};
+	
 	OnTouchListener touch=new OnTouchListener(){
 
 		@Override
@@ -64,10 +84,12 @@ public class Btn_Inventory
 					case MotionEvent.ACTION_UP:{
 						if(inven.getVisibility()==View.INVISIBLE){
 							if(prop.shop.isOpen)break;
+							prop.vanishGameButtons();
 							inven.setVisibility(View.VISIBLE);
 							isOpen=true;
 							}
 						else{
+							prop.showGameButtons();
 							 inven.setVisibility(View.INVISIBLE);
 							isOpen=false;
 							 }
@@ -94,8 +116,99 @@ public class Btn_Inventory
 			inven.setVisibility(View.INVISIBLE);
 			isOpen=false;
 			// TODO: Implement this method
-		}
-
-	 
+		} 
  };
+ 
+ 
+ void slot_0(){
+	 ImageView ground=new ImageView(prop.context);
+	 ground.setImageDrawable(in[0][0].getDrawable());
+	 ground.setTranslationX(prop.screenW-prop.screenW*3/10);
+	 ground.setTranslationY(prop.screenH*2/10);
+	 ground.setTranslationZ(9999);
+	 ground.setAlpha(192);
+	 ground.setLayoutParams(params4);
+	 inven.addView(ground);
+	 ImageView helmet=new ImageView(prop.context);
+	 helmet.setImageResource(R.drawable.helmet_01c);
+	 helmet.setTranslationX(ground.getTranslationX()+4.5f);
+	 helmet.setTranslationY(ground.getY()+4.5f);
+	 helmet.setTranslationZ(9999);
+	 helmet.setImageAlpha(48);
+	 helmet.setLayoutParams(params5);
+	 inven.addView(helmet);
+ }
+ void slot_1(){
+	 ImageView ground=new ImageView(prop.context);
+	 ground.setImageDrawable(in[0][0].getDrawable());
+	 ground.setTranslationX(prop.screenW-prop.screenW*3/10);
+	 ground.setTranslationY(prop.screenH*4/10);
+	 ground.setTranslationZ(9999);
+	 ground.setAlpha(192);
+	 ground.setLayoutParams(params4);
+	 inven.addView(ground);
+	 ImageView arm=new ImageView(prop.context);
+	 arm.setImageResource(R.drawable.armor_01c);
+	 arm.setTranslationX(ground.getTranslationX()+4.5f);
+	 arm.setTranslationY(ground.getY()+4.5f);
+	 arm.setTranslationZ(9999);
+	 arm.setImageAlpha(48);
+	 arm.setLayoutParams(params5);
+	 inven.addView(arm);
+ }
+ void slot_2(){
+	 ImageView ground=new ImageView(prop.context);
+	 ground.setImageDrawable(in[0][0].getDrawable());
+	 ground.setTranslationX(prop.screenW-prop.screenW*3/10);
+	 ground.setTranslationY(prop.screenH*6/10);
+	 ground.setTranslationZ(9999);
+	 ground.setAlpha(192);
+	 ground.setLayoutParams(params4);
+	 inven.addView(ground);
+	 ImageView boots=new ImageView(prop.context);
+	 boots.setImageResource(R.drawable.boots_01c);
+	 boots.setTranslationX(ground.getTranslationX()+4.5f);
+	 boots.setTranslationY(ground.getY()+4.5f);
+	 boots.setTranslationZ(9999);
+	 boots.setImageAlpha(48);
+	 boots.setLayoutParams(params5);
+	 inven.addView(boots);
+ }
+ void slot_3(){
+	 ImageView ground=new ImageView(prop.context);
+	 ground.setImageDrawable(in[0][0].getDrawable());
+	 ground.setTranslationX(prop.screenW-prop.screenW*2/10);
+	 ground.setTranslationY(prop.screenH*4/10);
+	 ground.setTranslationZ(9999);
+	 ground.setAlpha(192);
+	 ground.setLayoutParams(params4);
+	 inven.addView(ground);
+	 ImageView gloves=new ImageView(prop.context);
+	 gloves.setImageResource(R.drawable.gloves_01c);
+	 gloves.setTranslationX(ground.getTranslationX()+4.5f);
+	 gloves.setTranslationY(ground.getY()+4.5f);
+	 gloves.setTranslationZ(9999);
+	 gloves.setImageAlpha(48);
+	 gloves.setLayoutParams(params5);
+	 inven.addView(gloves);
+ }
+ void slot_4(){
+	 ImageView ground=new ImageView(prop.context);
+	 ground.setImageDrawable(in[0][0].getDrawable());
+	 ground.setTranslationX(prop.screenW-prop.screenW*2/6);
+	 ground.setTranslationY(prop.screenH/6);
+	 ground.setTranslationZ(9999);
+	 ground.setAlpha(192);
+	 ground.setLayoutParams(params4);
+	 inven.addView(ground);
+	 ImageView arm=new ImageView(prop.context);
+	 arm.setImageResource(R.drawable.armor_01c);
+	 arm.setTranslationX(ground.getTranslationX()+4.5f);
+	 arm.setTranslationY(ground.getY()+4.5f);
+	 arm.setTranslationZ(9999);
+	 arm.setImageAlpha(48);
+	 arm.setLayoutParams(params5);
+	 inven.addView(arm);
+ }
+ 
 }

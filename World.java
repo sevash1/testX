@@ -3,6 +3,7 @@ import android.widget.*;
 import android.graphics.*;
 import java.util.*;
 import android.widget.RelativeLayout.*;
+import android.view.*;
 
 public class World
 {
@@ -14,13 +15,15 @@ public class World
 	boolean e=false;
 	List ll=new ArrayList<Grass>();
 	Random r=new Random();
+	main_properties prop;
 	
 	public void start(main_properties prop){
-		save(prop);
+		this.prop=prop;
+		check(prop);
 		new lW(prop);
 	}
 	
-	public void loadWorld(main_properties prop,int x, int y){
+	public void loadFromFiles(main_properties prop,int x, int y){
 		
 		List l=new ArrayList<String>();
 		files.readWorld(l,prop.activity.getExternalFilesDir("").toString()+"/world/"+x+"_"+y+".sso");
@@ -30,7 +33,7 @@ public class World
 		}		
 	}
 	
-	public  void save(main_properties prop){
+	public void check(main_properties prop){
 		pX=(int)(prop.playerPosX/500);
 		pY=(int)(prop.playerPosY/500);
 		cordXY cord;
@@ -47,30 +50,30 @@ public class World
 				   e=false;
 				   continue;
 			   }
-			   new cordXY(i,j);   
+			   new cordXY(i,j,cords);   
 		       if(files.check(prop.activity.getExternalFilesDir("").toString(),"/world/",i+"_"+j,prop))		
-		       loadWorld(prop,i,j);	
+		       loadFromFiles(prop,i,j);	
 		       else {
 		     	for(int ii=0;ii<r.nextInt(5)+1;ii++){				
-			       ll.add(new Grass(prop,x=i*500+r.nextInt(500),y=j*500+r.nextInt(500),k=r.nextInt(27)));
+			       ll.add(new Grass(prop,x=i*500+r.nextInt(500),y=j*500+r.nextInt(500),k=r.nextInt(42)));
 				   files.updateWorld(prop.activity.getExternalFilesDir("").toString(),"world/",i+"_"+j,String.valueOf(k)+" "+String.valueOf(x)+" "+String.valueOf(y)+" ");		
 		      	 }	
 		   	  }	
 		   }
 		   }
-			new Grass.Load(ll,prop);
+			loadGrs();
 	}
 	
-	static List cords=new ArrayList<cordXY>();
+	 List cords=new ArrayList<cordXY>();
 	
    static class cordXY{
 	   int xx=0;
 	   int yy=0;
 	   
-	   cordXY(int x, int y){
+	   cordXY(int x, int y,List cl){
 		   xx=x;
 		   yy=y;
-		   cords.add(this);
+		   cl.add(this);
 	   }
    }
 	
@@ -97,7 +100,7 @@ public class World
 						 continue;
 					}
 					
-						 new World().save(prop);
+						 check(prop);
 						Thread.sleep(1000);
 					 }catch(Exception e){
 							 files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
@@ -110,6 +113,26 @@ public class World
 	
 	
 
+		 void loadGrs(){
+		
+			prop.activity.runOnUiThread(r1);
+		}
+
+		Runnable r1=new Runnable(){
+
+			@Override
+			public void run()
+			{
+
+				for(Grass iv:ll){
+					prop.world.addView(iv.gr);
+				}
+				ll.clear();
+			}
+		};
+	
+	
+	
 	public static void loadTrees(main_properties prop){
 		
 		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.tree01,prop.options)));
@@ -139,7 +162,22 @@ public class World
 		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.tree25,prop.options)));
 		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.tree26,prop.options)));
 		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.tree27,prop.options)));
-	
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.object_tree,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.object_tree2,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.object_smallwall,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.object_rock,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.object_flag,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.ground_1,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.ground_2,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.ground_3,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.grass_4,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.ground_5,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.ground_6,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.grass_1,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.grass_2,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.grass_3,prop.options)));
+		prop.treesList.add(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.grass_4,prop.options)));
+		
 		
 		
 	}

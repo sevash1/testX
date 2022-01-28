@@ -21,8 +21,8 @@ public class files
 				BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 				bw.write("player_position_x: "+args[0]+"\n");
 				bw.write("player_position_y: "+args[1]+"\n");
-				bw.write("money: "+args[2]+"\n");
-				bw.write("musicVolume: "+Float.toString(prop.menu.settings.musicVolume.volume));
+				bw.write("money: "+String.valueOf(prop.money.money_count)+"\n");
+				bw.write("musicVolume: "+String.valueOf(prop.menu.settings.musicVolume.volume));
 				bw.close();
 				return;
 			} catch (Exception ignore) {}

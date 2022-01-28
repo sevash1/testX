@@ -62,6 +62,7 @@ public class Skeleton extends Mob
 		hp.setScaleType(ScaleType.FIT_XY);
 		hp.setTranslationX(iv.getTranslationX()+iv.getWidth()/2-hp.getWidth()/2);
 		hp.setTranslationY(iv.getTranslationY()+30);
+		hp.setZ(12);
 		
 		th=new Thread(run2);
 		th.setDaemon(true);

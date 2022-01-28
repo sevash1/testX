@@ -10,16 +10,15 @@ public class Shop
 	RelativeLayout shop;
 	main_properties prop;
 	LayoutParams params=new LayoutParams(96,96);
-	LayoutParams params1=new LayoutParams(90,90);
 	LayoutParams params4=new LayoutParams(90*2,90*2);
 	float y=0;
-	List items=new ArrayList<ImageView>();
 	LayoutParams params3=new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 	public boolean isOpen=false;
-	ImageView[][] in=new ImageView[10][35];
 	ImageView temp;
 	RelativeLayout shopItems;
 	TargetItem ti;
+	String tmpName="";
+	List itemPictures=new ArrayList<ImageView>();
 	
 	Shop(main_properties prop){
 		this.prop=prop;
@@ -31,30 +30,30 @@ public class Shop
 	shop.setBackgroundColor(Color.argb(64,0,0,0));
 		shop.addView(shopItems);
 	
-	
-	load_items();
-	int f=0;
+	ImageView in;
 		for(int i=0;i<10;i++){
 			for(int j=0;j<35;j++){
-				in[i][j]=new ImageView(prop.context);
-				in[i][j].setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.cell01,prop.options)));
-				in[i][j].setTranslationX(200+i*106);
-				in[i][j].setTranslationY(100+j*106);
-				in[i][j].setTranslationZ(3);
-				in[i][j].setAlpha(192);
-				shopItems.addView(in[i][j],params);
+				in=new ImageView(prop.context);
+				in.setImageDrawable(((Item)prop.items.get(0)).picture.getDrawable());
+				in.setX(200+i*106);
+				in.setY(100+j*106);
+				in.setZ(3);
+				in.setAlpha(192);
+				shopItems.addView(in,params);
 			
 			}
 		}
-		for(int i=0;i<35;i++){
-			for(int j=0;j<10;j++){
-				((ImageView)items.get(f)).setTranslationX(200+3+j*106);
-				((ImageView)items.get(f)).setTranslationY(100+3+i*106);
-				((ImageView)items.get(f)).setTranslationZ(4);
-				((ImageView)items.get(f)).setOnTouchListener(t2);
-				shopItems.addView((ImageView)items.get(f),params1);
-				f++;
-				}
+		ImageView it;
+		for(int i=1;i<prop.items.size();i++){
+			    it=new ImageView(prop.context);
+				it.setX(200+3+(i-i/10)*106);
+				it.setY(100+3+(i/10)*106);
+				it.setZ(4);
+			    it.setOnTouchListener(t2);
+				it.setImageDrawable(((ImageView)((Item)prop.items.get(i)).picture).getDrawable());
+				itemPictures.add(it);
+				shopItems.addView(it,Item.params1);
+				
 				}
 	ti=new TargetItem();
 	prop.setShop(this);
@@ -91,7 +90,6 @@ public class Shop
 		@Override
 		public boolean onTouch(View p1, MotionEvent p2)
 		{
-		
 			return true;
 		}
 
@@ -109,6 +107,10 @@ public class Shop
 					break;
 				}
 				case MotionEvent.ACTION_MOVE:{
+						if((y-p2.getY())>(34*106-350)
+							
+						   ||(y-(p2.getY())<-150))return true;
+						
 					shopItems.setScrollY((int)(y-p2.getY()));
 				}
 			}
@@ -119,18 +121,6 @@ public class Shop
 		
 	};
 	
-	
-	void load_items(){
-		
-		for(int i=0;i<22;i++){
-			for(int j=0;j<16;j++){
-				temp=new ImageView(prop.context);
-				temp.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.items,prop.options),48*j,48*i,48,48));
-				
-				items.add(temp);
-				}
-				}
-	}
 	
 	public void closeShop(){
 		prop.activity.runOnUiThread(run1);
@@ -160,11 +150,13 @@ public class Shop
 		public boolean onTouch(View p1,MotionEvent p2)
 		{
 		    if(p2.getAction()==MotionEvent.ACTION_DOWN){
-				y=shopItems.getScrollY()+p2.getY()+p1.getTranslationY();
+				y=p2.getY()+p1.getTranslationY();
 				
 			}
 			if(p2.getAction()==MotionEvent.ACTION_MOVE){
-					shopItems.setScrollY((int)(y-(p2.getY()+p1.getTranslationY())));
+				if(((shopItems.getScrollY()+y)-(p2.getY()+p1.getTranslationY())>(-350+34*106))
+				   ||(shopItems.getScrollY()+y)-(p2.getY()+p1.getTranslationY())<-150) return true;
+					shopItems.setScrollY((int)((shopItems.getScrollY()+y)-(p2.getY()+p1.getTranslationY())));
 			}
 			if(p2.getAction()==MotionEvent.ACTION_UP){
 			ti.setItem((ImageView)p1);
@@ -182,6 +174,10 @@ public class Shop
 		RelativeLayout descriptionL;
 		ImageView target;
 		ImageView it;
+		TextView name;
+		TextView price;
+		int tmpPrice=-1;
+		Item item;
 		
 		TargetItem(){
 			lay=new RelativeLayout(prop.context);
@@ -195,37 +191,78 @@ public class Shop
 			itemL.setLayoutParams(new LayoutParams(300,300));
 			itemL.setTranslationX(15);
 			itemL.setTranslationY(15);
-			itemL.setBackgroundColor(Color.argb(64,64,64,240));
+			itemL.setBackgroundColor(Color.argb(192,64,64,240));
 			lay.addView(itemL);
 			
 			priceL=new RelativeLayout(prop.context);
 			priceL.setLayoutParams(new LayoutParams(300,300));
 			priceL.setTranslationX(430);
 			priceL.setTranslationY(15);
-			priceL.setBackgroundColor(Color.argb(64,64,240,64));
+			priceL.setBackgroundColor(Color.argb(192,64,240,64));
 			lay.addView(priceL);
 			
 			descriptionL=new RelativeLayout(prop.context);
 			descriptionL.setLayoutParams(new LayoutParams(715,600));
 			descriptionL.setTranslationX(15);
 			descriptionL.setTranslationY(330);
-			descriptionL.setBackgroundColor(Color.argb(64,240,192,150));
+			descriptionL.setBackgroundColor(Color.argb(192,240,192,150));
 			lay.addView(descriptionL);
+			
+			name=new TextView(prop.context);
+			name.setText(" Продолжить ");
+			name.setGravity(Gravity.CENTER);
+			name.setTextSize(24);
+			name.setTranslationX(15);
+			name.setTranslationY(20);
+			name.setLayoutParams(new LayoutParams(685,LayoutParams.WRAP_CONTENT));
+			name.setTextColor(Color.BLUE);
+			name.setTypeface(prop.ttf);
+			descriptionL.addView(name);
+			
+			ImageView btn_buy=new ImageView(prop.context);
+			btn_buy.setX(25);
+			btn_buy.setY(225);
+			btn_buy.setImageResource(R.drawable.btns_background);
+			btn_buy.setLayoutParams(new LayoutParams(250,50));
+			TextView buy=new TextView(prop.context);
+			buy.setText(" купить ");
+			buy.setGravity(Gravity.CENTER);
+			buy.setTextSize(9);
+			buy.setTranslationX(btn_buy.getX());
+			buy.setTranslationY(btn_buy.getY());
+			buy.setLayoutParams(new LayoutParams(250,50));
+			buy.setTextColor(Color.YELLOW);
+			buy.setTypeface(prop.ttf);
+			price=new TextView(prop.context);
+		    price.setText("0");
+			price.setGravity(Gravity.RIGHT);
+			price.setTextSize(14);
+			price.setTranslationX(25);
+			price.setTranslationY(25);
+			price.setLayoutParams(new LayoutParams(250,175));
+			price.setTextColor(Color.RED);
+			price.setTypeface(prop.ttf);
+			priceL.addView(btn_buy);
+			priceL.addView(buy);
+			priceL.addView(price);
 			
 			target=new ImageView(prop.context);
 			target.setLayoutParams(params4);
 			target.setTranslationX(50);
 			target.setTranslationY(65);
 			target.setTranslationZ(4);
-			itemL.addView(target)
-			;
+			itemL.addView(target);
 			prop.activity.runOnUiThread(r3);
 			}
 			
 	void setItem(ImageView t){
 		it=t;
+		item=findItem(prop,t,itemPictures,item);
+		tmpName=item.name; 
+		tmpPrice=item.price;
 		prop.activity.runOnUiThread(r4);
 	}
+	
 	
 		Runnable r3=new Runnable(){
 
@@ -233,6 +270,7 @@ public class Shop
 			public void run()
 			{
 				shop.addView(lay);
+				
 			}
 	};
 	
@@ -241,8 +279,26 @@ public class Shop
 			@Override
 			public void run()
 			{
-				target.setImageDrawable(it.getDrawable());
-			}
+				target.setImageDrawable(item.picture.getDrawable());
+				name.setText(item.name);
+				price.setText(String.valueOf(item.price));
+		}
 	};
+
 	}
+	
+	
+	static Item findItem(main_properties prop,ImageView pic,List il,Item item){
+		int i=1;
+		for(ImageView item1:il){
+			if(item1==pic){
+				return (Item)prop.items.get(i);
+			}
+			i++;
+		}
+		return null;
+	}
+	
+	
+	
 }

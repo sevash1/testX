@@ -33,7 +33,7 @@ public class Btn_exit_game extends Ui
 		btn.setTranslationX(50);
 		btn.setTranslationY(screenH/2+60*3);
 		btn.setOnClickListener(click);
-		tv.setText(" Выйти из игры ");
+		tv.setText(prop.words.get(Words.words.EXIT_GAME));
 		tv.setGravity(Gravity.CENTER);
 		tv.setTextSize(16);
 		tv.setTranslationX(50);
@@ -53,6 +53,8 @@ public class Btn_exit_game extends Ui
 		public void onClick(View p1)
 		{
 			try{
+				prop.stage.setStage(Game_stage.EXIT);
+				prop.music.stop();
 				prop.activity.finish();
 				
 			}catch(Exception e){

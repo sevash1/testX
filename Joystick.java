@@ -23,8 +23,6 @@ public class Joystick extends Ui
 	float joystick_downY=0;
 	float joystickX=0;
 	float joystickY=0;
-	float vectorX=0;
-	float vectorY=0;
 	float lengthX=0;
 	float lengthY=0;
 	float length=0;
@@ -36,6 +34,9 @@ public class Joystick extends Ui
 	public boolean joystick_pressed=false;
 	public RelativeLayout lay;
 	float centr=0;
+	public float screenSpX=0;
+	public float screenSpY=0;
+	
 	List motion=new ArrayList<MotionEvent>();
 
 	Joystick(main_properties prop){
@@ -164,9 +165,6 @@ public class Joystick extends Ui
 		
 		
 	};
-	
-	
-	
 
 	
 	Runnable run=new Runnable(){

@@ -40,6 +40,8 @@ public class main_properties
 	public List musicList=new ArrayList<MediaPlayer>();
 	public List treesList=new ArrayList<Bitmap>();
 	public Menu menu;
+	public List items=new ArrayList<Item>();
+	public Words words;
 	
 	
 	public main_properties(
@@ -125,6 +127,9 @@ public class main_properties
 	}
 	public void showGameButtons(){
 		activity.runOnUiThread(r2);
+	}
+	public void setWords(Words words){
+		this.words=words;
 	}
 	Runnable r1=new Runnable(){
 

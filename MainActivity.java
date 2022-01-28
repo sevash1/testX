@@ -103,7 +103,7 @@ public class MainActivity extends Activity
 			prop.music.pause();
 	
 			}
-		files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{Float.toString(player_posX),Float.toString(player_posY),Integer.toString(prop.money.money_count)});
+		files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{Float.toString(player_posX),String.valueOf(player_posY),String.valueOf(prop.money.money_count)});
 		
 		super.onPause();
 	}
@@ -177,10 +177,10 @@ public class MainActivity extends Activity
 					else {
 						last_playerPosX=player_posX;
 						last_playerPosY=player_posY;
-						grass_layout.setScrollX((int)player_posX-((int)(player_posX/256))*256+256*6);
-						grass_layout.setScrollY((int)player_posY-((int)(player_posY/256))*256+256*3);
-						prop.world.setScrollX((int)player_posX);
-						prop.world.setScrollY((int)player_posY);
+						grass_layout.setScrollX((int)(player_posX+prop.joystick.screenSpX-((int)(player_posX/256))*256+256*6));
+						grass_layout.setScrollY((int)(player_posY+prop.joystick.screenSpY-((int)(player_posY/256))*256+256*3));
+						prop.world.setScrollX((int)(player_posX+prop.joystick.screenSpX));
+						prop.world.setScrollY((int)(player_posY+prop.joystick.screenSpY));
 						
 					}
 					prop.playerPosX=player_posX;
@@ -267,7 +267,7 @@ public class MainActivity extends Activity
 			menu.setBackgroundResource(R.drawable.menu_background);
 				pause_lay.setVisibility(View.GONE);
 				pause_lay.setBackgroundColor(Color.argb(63,0,0,0));
-				pause_lay.setTranslationZ(1);
+				pause_lay.setTranslationZ(11111);
 			BitmapFactory.Options op=new BitmapFactory.Options();
 			op.inScaled=false;
 			op.inPreferQualityOverSpeed=true;
@@ -280,7 +280,7 @@ public class MainActivity extends Activity
 					imm[i][j].setTranslationX(background_posX[i]);
 					imm[i][j].setTranslationY(background_posY[j]);
 					imm[i][j].setScaleType(ScaleType.FIT_XY);
-					imm[i][j].setTranslationZ(-1);
+					imm[i][j].setTranslationZ(-1111);
 				}
 			}
 			thread =new Thread(run);
@@ -289,7 +289,7 @@ public class MainActivity extends Activity
 				stage=new Game_stage(Game_stage.MENU);
 				music=MediaPlayer.create(context,R.raw.music01);
 				prop=new main_properties(main,menu,playerAndUi,context,activity,disp.getWidth(),disp.getHeight(),op,face,thread,stage,pause_lay,run,music,player_posX,skeletons);
-				
+				new Words(prop);
 				new Menu(prop);
 				prop.loadBar.addPoint();
 				
@@ -366,9 +366,10 @@ public class MainActivity extends Activity
 				prop.loadBar.addPoint();
 				new Btn_exit_game(prop);
 				prop.loadBar.addPoint();
+				new Shop(prop);
 				new Btn_Inventory(prop);
 				prop.loadBar.addPoint();
-				new Shop(prop);
+				
 				prop.loadBar.addPoint();
 				playerAndUi.addView(pause_lay,params2);
 				prop.loadBar.addPoint();

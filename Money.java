@@ -134,6 +134,9 @@ public class Money extends Ui
 		public boolean onTouch(View p1, MotionEvent p2)
 		{
 			try{
+				if(prop.stage.getStage_in_world()==Game_stage.PAUSE&&
+				prop.stage.getStage()!=Game_stage.MENU) return false;
+				
 				switch (p2.getAction()){
 
 					case MotionEvent.ACTION_UP:{

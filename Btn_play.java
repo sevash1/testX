@@ -35,7 +35,7 @@ public class Btn_play extends Ui
 		btn.setTranslationX((screenW/2)-105*4);
 		btn.setTranslationY(screenH-75*4);
 		btn.setOnClickListener(click);
-		tv.setText(" PLAY ");
+		tv.setText(Words.getRu(Words.words.PLAY));
 		tv.setGravity(Gravity.CENTER);
 		tv.setTextSize(32);
 		tv.setTranslationX((screenW/2)-105*4);
