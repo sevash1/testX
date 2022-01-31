@@ -217,12 +217,14 @@ public class Player implements Entity
 		};
 	int s=0;
 	void playM(){
+		if(Game_stage.EXIT==prop.stage.getStage()) return;
+		
 		Random r= new Random();
 		prop.music=(MediaPlayer)prop.musicList.get(r.nextInt(48));
 		prop.music.setVolume(0.5f,0.5f);
 
 		prop.music.seekTo(0);
-
+		if(prop.music.isPlaying())return;
 		prop.music.start();
 		prop.music.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
 				@Override
@@ -241,7 +243,7 @@ public class Player implements Entity
 			playM();
 			
 			while(true){
-				if(Game_stage.EXIT==prop.stage.getStage()) thread1.stop();
+				if(Game_stage.EXIT==prop.stage.getStage()) Thread.currentThread().stop();
 				try{
 					Thread.sleep(250);
 					if(prop.stage.getStage()==Game_stage.MENU){
@@ -285,7 +287,7 @@ public class Player implements Entity
 		{
 			
 			while(true){
-				if(Game_stage.EXIT==prop.stage.getStage()) thread1.stop();
+				if(Game_stage.EXIT==prop.stage.getStage()) Thread.currentThread().stop();
 				
 				try{
 					Thread.sleep(125);

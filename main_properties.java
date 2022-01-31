@@ -34,7 +34,7 @@ public class main_properties
 	public Btn_shield shield;
 	public Btn_roll roll;
 	public RelativeLayout playerAndUi;
-	public Btn_Inventory inv;
+	public Inventory inv;
 	public Shop shop;
 	public LoadBar loadBar;
 	public List musicList=new ArrayList<MediaPlayer>();
@@ -59,7 +59,6 @@ public class main_properties
 	RelativeLayout bl,
 	Runnable run,
 	MediaPlayer menu_music,
-	float playerPosX,
 	List skeletons){
 		
 		this.main=main;
@@ -76,7 +75,6 @@ public class main_properties
 		this.bl=bl;
 		this.worldThreadRun=run;
 		this.music=menu_music;
-		this.playerPosX=playerPosX;
 		this.skeletons=skeletons;
 
 	}
@@ -104,7 +102,7 @@ public class main_properties
 	public void setWorld(RelativeLayout world){
 		this.world=world;
 	}
-	public void setInventory(Btn_Inventory inv){
+	public void setInventory(Inventory inv){
 		this.inv=inv;
 	}
 	public void setShop(Shop shp){

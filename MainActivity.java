@@ -30,8 +30,6 @@ public class MainActivity extends Activity
 	Display disp;
 	LayoutParams params1=new LayoutParams(256,256);
 	LayoutParams params2=new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
-	float player_posX=0;
-	float player_posY=0;
 	List read=new ArrayList<String>();
 	float[] background_posX=new float[32];
 	float[] background_posY=new float[16];
@@ -91,7 +89,7 @@ public class MainActivity extends Activity
 	{
 		stage.setStage(Game_stage.EXIT);
 		prop.music.stop();
-		
+		finish();
 		super.onDestroy();
 	}
 
@@ -103,7 +101,7 @@ public class MainActivity extends Activity
 			prop.music.pause();
 	
 			}
-		files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{Float.toString(player_posX),String.valueOf(player_posY),String.valueOf(prop.money.money_count)});
+		files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{Float.toString(prop.playerPosX),String.valueOf(prop.playerPosY),String.valueOf(prop.money.money_count)});
 		
 		super.onPause();
 	}
@@ -118,7 +116,7 @@ public class MainActivity extends Activity
 				while(!run1_c){}
 			prop.money.setType(Money.Type.WORLD);
 			while(stage.getStage()==Game_stage.WORLD){
-				if(Game_stage.EXIT==prop.stage.getStage()) thread.stop();
+				if(Game_stage.EXIT==prop.stage.getStage()) Thread.currentThread().stop();
 				
 				try{
 					time1=System.currentTimeMillis();
@@ -133,11 +131,11 @@ public class MainActivity extends Activity
 					if(prop.player.a_anim==Player.active_anim.ATTACK){
 					   if(!prop.joystick.joystick_pressed
 					&&!Float.isNaN(prop.joystick.attackX)){
-						player_posX=player_posX+prop.joystick.attackX*time3;
+					 prop.playerPosX=prop.playerPosX+prop.joystick.attackX*time3;
 					}
 					else if(prop.attack.pressed
 					&&!Float.isNaN(prop.joystick.attackX)){
-						player_posX=player_posX+prop.joystick.attackX*time3;
+				prop.playerPosX=prop.playerPosX+prop.joystick.attackX*time3;
 						}
 						}
 						
@@ -149,17 +147,17 @@ public class MainActivity extends Activity
 						if(prop.joystick.ratioX==0&&prop.joystick.ratioY==0
 							||(Float.isNaN(prop.joystick.ratioX)
 							||Float.isNaN(prop.joystick.ratioY)
-							||Float.isNaN(player_posX)
-							||Float.isNaN(player_posX))){}
+						   ||Float.isNaN(prop.playerPosX)
+						   ||Float.isNaN(prop.playerPosY))){}
 							}
 					if(prop.player.a_anim==Player.active_anim.ROLL){
 						if(prop.joystick.ratioX==0&&prop.joystick.ratioY==0
 						   ||(Float.isNaN(prop.joystick.ratioX)
 						   ||Float.isNaN(prop.joystick.ratioY)
-						   ||Float.isNaN(player_posX)
-						   ||Float.isNaN(player_posX))){}else{
-							player_posX=player_posX+prop.joystick.ratioX*time3;
-							player_posY=player_posY+prop.joystick.ratioY*time3;
+						   ||Float.isNaN(prop.playerPosX)
+						   ||Float.isNaN(prop.playerPosY))){}else{
+							prop.playerPosX=prop.playerPosX+prop.joystick.ratioX*time3;
+							prop.playerPosY=prop.playerPosY+prop.joystick.ratioY*time3;
 
 						}}
 					
@@ -167,33 +165,31 @@ public class MainActivity extends Activity
 						if(prop.joystick.ratioX==0&&prop.joystick.ratioY==0
 						   ||(Float.isNaN(prop.joystick.ratioX)
 						   ||Float.isNaN(prop.joystick.ratioY)
-						   ||Float.isNaN(player_posX)
-						   ||Float.isNaN(player_posX))){}else{
-						player_posX=player_posX+prop.joystick.ratioX*time3;
-					player_posY=player_posY+prop.joystick.ratioY*time3;	
+						   ||Float.isNaN(prop.playerPosX)
+						   ||Float.isNaN(prop.playerPosY))){}else{
+							prop.playerPosX=prop.playerPosX+prop.joystick.ratioX*time3;
+							prop.playerPosY=prop.playerPosY+prop.joystick.ratioY*time3;	
 					}}
 				
-					if(last_playerPosX==player_posX&&last_playerPosY==player_posY){}
+					if(last_playerPosX==prop.playerPosX&&last_playerPosY==prop.playerPosY){}
 					else {
-						last_playerPosX=player_posX;
-						last_playerPosY=player_posY;
-						grass_layout.setScrollX((int)(player_posX+prop.joystick.screenSpX-((int)(player_posX/256))*256+256*6));
-						grass_layout.setScrollY((int)(player_posY+prop.joystick.screenSpY-((int)(player_posY/256))*256+256*3));
-						prop.world.setScrollX((int)(player_posX+prop.joystick.screenSpX));
-						prop.world.setScrollY((int)(player_posY+prop.joystick.screenSpY));
+						last_playerPosX=prop.playerPosX;
+						last_playerPosY=prop.playerPosY;
+						grass_layout.setScrollX((int)(prop.playerPosX+prop.joystick.screenSpX-((int)(prop.playerPosX/256))*256+256*6));
+						grass_layout.setScrollY((int)(prop.playerPosY+prop.joystick.screenSpY-((int)(prop.playerPosY/256))*256+256*3));
+						prop.world.setScrollX((int)(prop.playerPosX+prop.joystick.screenSpX));
+						prop.world.setScrollY((int)(prop.playerPosY+prop.joystick.screenSpY));
 						
 					}
-					prop.playerPosX=player_posX;
-					prop.playerPosY=player_posY;
 					for(Skeleton skeleton:skeletons){
-						skeleton.update(player_posX,player_posY);
+						skeleton.update(prop.playerPosX,prop.playerPosY);
 					}
 				
 					time5+=time3;
 					if(time5>1000){
 						time5=0;
-						files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{Float.toString(player_posX),Float.toString(player_posY),Integer.toString(prop.money.money_count)});
-						coord="X:"+(int)player_posX+"\n"+"Y:"+(int)player_posY+"\n"+String.valueOf(time3)+"\n"+fps+"\n";
+						files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{Float.toString(prop.playerPosY),Float.toString(prop.playerPosY),Integer.toString(prop.money.money_count)});
+						coord="X:"+(int)prop.playerPosX+"\n"+"Y:"+(int)prop.playerPosY+"\n"+String.valueOf(time3)+"\n"+fps+"\n";
 						fps=0;
 						Log.d("seva",String.valueOf(
 						Runtime.getRuntime().totalMemory()/1048576));
@@ -288,11 +284,12 @@ public class MainActivity extends Activity
 				disp=getWindowManager().getDefaultDisplay();
 				stage=new Game_stage(Game_stage.MENU);
 				music=MediaPlayer.create(context,R.raw.music01);
-				prop=new main_properties(main,menu,playerAndUi,context,activity,disp.getWidth(),disp.getHeight(),op,face,thread,stage,pause_lay,run,music,player_posX,skeletons);
+				
+				prop=new main_properties(main,menu,playerAndUi,context,activity,disp.getWidth(),disp.getHeight(),op,face,thread,stage,pause_lay,run,music,skeletons);
 				new Words(prop);
 				new Menu(prop);
 				prop.loadBar.addPoint();
-				
+				abc();
 				prop.loadBar.addPoint();
 				coords=new TextView(context);
 				prop.loadBar.addPoint();
@@ -341,7 +338,7 @@ public class MainActivity extends Activity
 				playerAndUi.addView(grass_layout);
 				
 				prop.loadBar.addPoint();
-				abc();
+				
 				World.loadTrees(prop);
 
 				prop.loadBar.addPoint();
@@ -367,7 +364,7 @@ public class MainActivity extends Activity
 				new Btn_exit_game(prop);
 				prop.loadBar.addPoint();
 				new Shop(prop);
-				new Btn_Inventory(prop);
+				new Inventory(prop);
 				prop.loadBar.addPoint();
 				
 				prop.loadBar.addPoint();
@@ -452,13 +449,13 @@ public class MainActivity extends Activity
 				
 				if(s2[0].contentEquals("player_position_x:")){
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")) continue;
-					player_posX=(Float.parseFloat(s2[1]));
+					prop.playerPosX=(Float.parseFloat(s2[1]));
 
 				}
 				
 				if(s2[0].contentEquals("player_position_y:")){
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")) continue;
-					player_posY=(Float.parseFloat(s2[1]));
+					prop.playerPosY=(Float.parseFloat(s2[1]));
 
 				}
 				if(s2[0].contentEquals("money:")){

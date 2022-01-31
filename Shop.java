@@ -19,6 +19,8 @@ public class Shop
 	TargetItem ti;
 	String tmpName="";
 	List itemPictures=new ArrayList<ImageView>();
+	TextView buyed;
+	TextView notBuyed;
 	
 	Shop(main_properties prop){
 		this.prop=prop;
@@ -217,6 +219,7 @@ public class Shop
 			name.setLayoutParams(new LayoutParams(685,LayoutParams.WRAP_CONTENT));
 			name.setTextColor(Color.BLUE);
 			name.setTypeface(prop.ttf);
+			name.setShadowLayer(20,5,5,Color.argb(255,166,166,255));
 			descriptionL.addView(name);
 			
 			ImageView btn_buy=new ImageView(prop.context);
@@ -225,7 +228,7 @@ public class Shop
 			btn_buy.setImageResource(R.drawable.btns_background);
 			btn_buy.setLayoutParams(new LayoutParams(250,50));
 			TextView buy=new TextView(prop.context);
-			buy.setText(" купить ");
+			buy.setText(prop.words.get(Words.words.BUY));
 			buy.setGravity(Gravity.CENTER);
 			buy.setTextSize(9);
 			buy.setTranslationX(btn_buy.getX());
@@ -233,6 +236,31 @@ public class Shop
 			buy.setLayoutParams(new LayoutParams(250,50));
 			buy.setTextColor(Color.YELLOW);
 			buy.setTypeface(prop.ttf);
+			btn_buy.setOnClickListener(c1);
+			buyed=new TextView(prop.context);
+			buyed.setText(prop.words.get(Words.words.BUYED));
+			buyed.setGravity(Gravity.CENTER);
+			buyed.setTextSize(9);
+			buyed.setAlpha(0);
+			buyed.setTranslationX(50);
+			buyed.setTranslationY(65);
+			buyed.setZ(5);
+			buyed.setLayoutParams(new LayoutParams(250,50));
+			buyed.setTextColor(Color.GREEN);
+			buyed.setTypeface(prop.ttf);
+			notBuyed=new TextView(prop.context);
+			notBuyed.setText(prop.words.get(Words.words.NOT_BUYED));
+			notBuyed.setGravity(Gravity.CENTER);
+			notBuyed.setTextSize(9);
+			notBuyed.setAlpha(0);
+			notBuyed.setTranslationX(50);
+			notBuyed.setTranslationY(65);
+			notBuyed.setZ(5);
+			notBuyed.setLayoutParams(new LayoutParams(250,50));
+			notBuyed.setTextColor(Color.RED);
+			notBuyed.setTypeface(prop.ttf);
+			
+			
 			price=new TextView(prop.context);
 		    price.setText("0");
 			price.setGravity(Gravity.RIGHT);
@@ -246,12 +274,16 @@ public class Shop
 			priceL.addView(buy);
 			priceL.addView(price);
 			
+			new Thread(r1).start();
+			
 			target=new ImageView(prop.context);
 			target.setLayoutParams(params4);
 			target.setTranslationX(50);
 			target.setTranslationY(65);
 			target.setTranslationZ(4);
 			itemL.addView(target);
+			itemL.addView(buyed);
+			itemL.addView(notBuyed);
 			prop.activity.runOnUiThread(r3);
 			}
 			
@@ -262,7 +294,111 @@ public class Shop
 		tmpPrice=item.price;
 		prop.activity.runOnUiThread(r4);
 	}
+	boolean t=false;
+	int al=0;
+		Runnable r1=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				while(true){
+					if(prop.stage.getStage()==Game_stage.EXIT)
+						Thread.currentThread().stop();
+					try{
+						Thread.sleep(8);
+						while(t){
+							al--;
+							prop.activity.runOnUiThread(r2);
+							if(al==-100){
+								t=false;
+								prop.activity.runOnUiThread(r5);
+								break;
+							}
+							Thread.sleep(8);
+						}
+					}
+					catch(Exception ignore){}
+
+				}
+			}
+		};
+
+		Runnable r2=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				buyed.setAlpha(1);
+				buyed.setY(al);
+			}
+
+
+		};
+		
+		Runnable r5=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				buyed.setAlpha(0);
+				buyed.setY(65);
+			}
+
+
+		};
+		
+		Runnable r6=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				try{
+							prop.activity.runOnUiThread(r7);
+					Thread.sleep(1000);
+								prop.activity.runOnUiThread(r8);
+							Thread.sleep(8);
+						}
+					catch(Exception ignore){}
+			}
+		};
+
+		Runnable r7=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				notBuyed.setAlpha(1);
+			}
+		};
+
+		Runnable r8=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				notBuyed.setAlpha(0);
+			}
+		};
+		
 	
+		OnClickListener c1=new OnClickListener(){
+
+			@Override
+			public void onClick(View p1)
+			{
+				if(item==null) return;
+				if(!prop.inv.addItem(item)){
+					
+				new Thread(r6).start();
+				return;
+				}else{
+					
+				al=65;
+				t=true;
+				}
+			}
+
+	};
 	
 		Runnable r3=new Runnable(){
 

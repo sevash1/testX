@@ -6,7 +6,7 @@ import android.widget.RelativeLayout.*;
 import android.widget.ImageView.*;
 import android.view.*;
 
-public class Btn_play extends Ui
+public class Btn_play 
 {
 	RelativeLayout menu;
 	Context context;

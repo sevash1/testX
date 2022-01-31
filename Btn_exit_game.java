@@ -6,7 +6,7 @@ import android.graphics.*;
 import android.view.*;
 import android.widget.ImageView.*;
 
-public class Btn_exit_game extends Ui
+public class Btn_exit_game 
 {
 	RelativeLayout world;
 	Context context;

@@ -8,7 +8,7 @@ import android.widget.ImageView.*;
 import android.graphics.*;
 import java.util.*;
 
-public class Joystick extends Ui
+public class Joystick 
 {
 	RelativeLayout world;
 	Context context;

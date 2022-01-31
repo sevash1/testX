@@ -230,7 +230,7 @@ public class Skeleton extends Mob
 		{
 			anim=anim_idle;
 			while(true){
-				if(Game_stage.EXIT==prop.stage.getStage())th.stop();
+				if(Game_stage.EXIT==prop.stage.getStage())Thread.currentThread().stop();
 				
 				try{
 					Thread.sleep(250);
@@ -294,6 +294,7 @@ public class Skeleton extends Mob
 				}
 				
 			}
+			prop.money.v();
 				prop.money.addMoney(1);
 			}catch(Exception e){
 			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));

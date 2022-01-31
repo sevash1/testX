@@ -93,8 +93,7 @@ public class World
 				//Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 				while(true){
 					 try{
-						 if(prop.stage.getStage()==Game_stage.EXIT)
-							 Thread.currentThread().stop();
+						
 					if(prop.stage.getStage()==Game_stage.MENU){
 						 Thread.sleep(100);
 						 continue;

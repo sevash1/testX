@@ -6,7 +6,7 @@ import android.graphics.*;
 import android.widget.ImageView.*;
 import android.view.*;
 
-public class Player_health extends Ui
+public class Player_health 
 {
 	RelativeLayout menu;
 	Context context;

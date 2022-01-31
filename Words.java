@@ -18,6 +18,9 @@ public class Words
 		CONTINUE,
 		EXIT_MENU,
 		EXIT_GAME,
+		BUY,
+		BUYED,
+		NOT_BUYED,
 		armor01a,
 		armor01b,
 		armor01c,
@@ -45,7 +48,9 @@ public class Words
 		if(w==words.armor01d)return "золотой нагрудник";
 		if(w==words.armor01c)return "сапфировый нагрудник";
 		if(w==words.armor01e)return "рубиновый нагрудник";
-		
+		if(w==words.BUYED)return "Куплено!";
+		if(w==words.NOT_BUYED)return "Не куплено!";
+		if(w==words.BUY)return "Купить";
 		return "";
 	}
 	private String getEn(words w){

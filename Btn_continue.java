@@ -6,7 +6,7 @@ import android.graphics.*;
 import android.widget.ImageView.*;
 import android.view.*;
 
-public class Btn_continue extends Ui
+public class Btn_continue 
 {
 	RelativeLayout world;
 	Context context;
@@ -40,6 +40,7 @@ public class Btn_continue extends Ui
 		tv.setTranslationY(screenH/2-60*3);
 		tv.setLayoutParams(params);
 		tv.setTextColor(Color.BLUE);
+		tv.setShadowLayer(5,10,10,Color.argb(255,255,127,127));
 		tv.setTypeface(prop.ttf);
 		prop.bl.addView(btn);
 		prop.bl.addView(tv);

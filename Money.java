@@ -6,7 +6,7 @@ import android.graphics.*;
 import android.widget.ImageView.*;
 import android.view.*;
 
-public class Money extends Ui
+public class Money 
 {
 	RelativeLayout menu;
 	Context context;
@@ -43,7 +43,7 @@ public class Money extends Ui
 		tv.setTextColor(Color.YELLOW);
 		tv.setTypeface(prop.ttf);
 		setType(type);
-		
+		new Thread(r1).start();
 		
 		}
 		
@@ -82,7 +82,7 @@ public class Money extends Ui
 			iv.setTranslationX(prop.screenW-iv.getWidth()-30);
 			tv.setTranslationX(prop.screenW-iv.getWidth()-48*6-40);
 			tv.setGravity(Gravity.RIGHT);
-			
+			tv.setAlpha(0);
 			prop.playerAndUi.addView(iv);
 			prop.playerAndUi.addView(tv);
 		}
@@ -100,7 +100,7 @@ public class Money extends Ui
 			iv.setTranslationX(64);
 			tv.setGravity(Gravity.LEFT);
 			tv.setTranslationX(48*2+16+64);
-
+			tv.setAlpha(255);
 			prop.menuLayout.addView(iv);
 			prop.menuLayout.addView(tv);
 		}
@@ -123,10 +123,55 @@ public class Money extends Ui
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				}
 			// TODO: Implement this method
+		}	
+		};
+		
+		boolean t=false;
+		int al=255;
+		
+		public void v(){
+			al=255;
+			t=true;
+			
+		}
+		
+	Runnable r1=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			while(true){
+				if(prop.stage.getStage()==Game_stage.EXIT)
+					Thread.currentThread().stop();
+					try{
+						Thread.sleep(8);
+						while(t){
+							al--;
+							prop.activity.runOnUiThread(r2);
+							if(al==0){
+								t=false;
+								break;
+							}
+							Thread.sleep(8);
+						}
+					}
+						catch(Exception ignore){}
+					
+			}
+		}
+		};
+		
+	Runnable r2=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			tv.setAlpha(al);
 		}
 
 			
 		};
+		
 		
 	OnTouchListener touch=new OnTouchListener(){
 
@@ -140,9 +185,15 @@ public class Money extends Ui
 				switch (p2.getAction()){
 
 					case MotionEvent.ACTION_UP:{
-						if(!prop.inv.isOpen&&!prop.shop.isOpen){
+						if(prop.inv.isOpen){
+							prop.inv.closeInventory();
 							prop.shop.openShop();
 							break;
+							}
+							else if(!prop.shop.isOpen){
+								prop.shop.openShop();
+								break;
+							
 						}else if(prop.shop.isOpen){
 							prop.shop.closeShop();
 							break;
