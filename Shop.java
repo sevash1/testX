@@ -48,7 +48,7 @@ public class Shop
 		ImageView it;
 		for(int i=1;i<prop.items.size();i++){
 			    it=new ImageView(prop.context);
-				it.setX(200+3+(i-i/10)*106);
+				it.setX(200+3+(i%10)*106);
 				it.setY(100+3+(i/10)*106);
 				it.setZ(4);
 			    it.setOnTouchListener(t2);
@@ -387,7 +387,7 @@ public class Shop
 			public void onClick(View p1)
 			{
 				if(item==null) return;
-				if(!prop.inv.addItem(item)){
+				if(!prop.inv.addItem("shop",item)){
 					
 				new Thread(r6).start();
 				return;

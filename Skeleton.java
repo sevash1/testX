@@ -258,6 +258,38 @@ public class Skeleton extends Mob
 		
 	};
 	
+	Runnable run9=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			prop.world.removeView(hp);
+		prop.world.removeView(iv);
+		prop.world.removeView(money);
+		}
+
+
+	};
+
+	Runnable run10=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			
+				try{
+					Thread.sleep(10000);
+
+						prop.activity.runOnUiThread(run9);
+		
+
+				}catch(Exception e){
+					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+
+				}
+			}
+};
+	
 
 	Runnable run3=new Runnable(){
 
@@ -266,7 +298,7 @@ public class Skeleton extends Mob
 		{
 			try{
 			prop.activity.runOnUiThread(run4);
-		
+		new Thread(run10).start();
 				x=iv.getTranslationX()+iv.getWidth()/2;
 				y=iv.getTranslationY()+iv.getHeight()/2;
 			lengthX=prop.screenW-48-30-x;
@@ -295,7 +327,7 @@ public class Skeleton extends Mob
 				
 			}
 			prop.money.v();
-				prop.money.addMoney(1);
+				prop.money.addMoney(2.1f);
 			}catch(Exception e){
 			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 

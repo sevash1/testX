@@ -39,7 +39,7 @@ public class Btn_exit_game
 		tv.setTranslationX(50);
 		tv.setTranslationY(screenH/2+60*3);
 		tv.setLayoutParams(params);
-		tv.setTextColor(Color.BLUE);
+		tv.setTextColor(Color.YELLOW);
 		tv.setTypeface(prop.ttf);
 		prop.bl.addView(btn);
 		prop.bl.addView(tv);

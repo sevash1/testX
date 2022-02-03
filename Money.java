@@ -17,7 +17,7 @@ public class Money
 	LayoutParams params2=new LayoutParams(48*6,48*2);
 	TextView tv;
 	main_properties prop;
-	public int money_count=0;
+	public float money_count=0;
 	
 	public static final enum Type{
 		MENU,
@@ -34,7 +34,7 @@ public class Money
 		iv.setLayoutParams(params);
 		iv.setScaleType(ScaleType.FIT_XY);
 		iv.setOnTouchListener(touch);
-		tv.setText(String.valueOf(money_count));
+		tv.setText(String.valueOf(((float)((int)(money_count*10))/10)));
 		tv.setTextSize(20);
 		tv.setTranslationY(10);
 		tv.setTranslationZ(1);
@@ -56,16 +56,20 @@ public class Money
 				prop.activity.runOnUiThread(run1);
 			}
 		}
-		public void setMoneyCount(int count){
+		
+		
+		public void setMoneyCount(float count){
 			money_count=count;
 			prop.activity.runOnUiThread(run3);
 		}
+		
+		
 	Runnable run3=new Runnable(){
 
 		@Override
 		public void run()
 		{
-			tv.setText(String.valueOf(money_count));
+			tv.setText(String.valueOf(((float)((int)(money_count*10))/10)));
 			
 		}
 
@@ -107,7 +111,7 @@ public class Money
 
 
 	};
-		public void addMoney(int count){
+		public void addMoney(float count){
 			money_count+=count;
 			prop.activity.runOnUiThread(run);
 		}
@@ -118,7 +122,7 @@ public class Money
 		public void run()
 		{
 			try{
-			tv.setText(String.valueOf(money_count));
+				tv.setText(String.valueOf(((float)((int)(money_count*10))/10)));
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				}
@@ -132,6 +136,7 @@ public class Money
 		public void v(){
 			al=255;
 			t=true;
+			prop.activity.runOnUiThread(r2);
 			
 		}
 		
@@ -145,15 +150,17 @@ public class Money
 					Thread.currentThread().stop();
 					try{
 						Thread.sleep(8);
-						while(t){
-							al--;
+						if(t){
+							al=1;
 							prop.activity.runOnUiThread(r2);
-							if(al==0){
+							
+							Thread.sleep(1500);
+								if(prop.stage.getStage()==Game_stage.WORLD)
+								al=0;
+									prop.activity.runOnUiThread(r2);
 								t=false;
 								break;
 							}
-							Thread.sleep(8);
-						}
 					}
 						catch(Exception ignore){}
 					

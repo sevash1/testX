@@ -41,7 +41,7 @@ public class Btn_play
 		tv.setTranslationX((screenW/2)-105*4);
 		tv.setTranslationY(screenH-75*4);
 		tv.setLayoutParams(params);
-		tv.setTextColor(Color.BLUE);
+		tv.setTextColor(Color.YELLOW);
 		tv.setTypeface(prop.ttf);
 		
 			prop.menuLayout.addView(btn);

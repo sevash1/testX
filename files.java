@@ -19,10 +19,15 @@ public class files
 					e.printStackTrace();
 				}
 				BufferedWriter bw = new BufferedWriter(new FileWriter(file));
-				bw.write("player_position_x: "+args[0]+"\n");
-				bw.write("player_position_y: "+args[1]+"\n");
+				bw.write("player_position_x: "+String.valueOf(prop.playerPosX)+"\n");
+				bw.write("player_position_y: "+String.valueOf(prop.playerPosY)+"\n");
 				bw.write("money: "+String.valueOf(prop.money.money_count)+"\n");
-				bw.write("musicVolume: "+String.valueOf(prop.menu.settings.musicVolume.volume));
+				bw.write("musicVolume: "+String.valueOf(prop.menu.settings.musicVolume.volume)+"\n");
+				bw.write("inven: ");
+				for(Item item:prop.inv.items){
+					bw.write(String.valueOf(item.id)+":"+String.valueOf(item.count)+"/");
+				}
+			//	bw.write("\n");
 				bw.close();
 				return;
 			} catch (Exception ignore) {}

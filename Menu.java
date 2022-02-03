@@ -26,7 +26,7 @@ public class Menu
 		new Player(prop,Player.type.MENU);
 		new Btn_play(prop);
 		settings =new Settings();
-		Item.loadItems(prop);
+		
 	}
 	
 	
@@ -67,8 +67,13 @@ public class Menu
 			@Override
 			public void run()
 			{
+				try{
 				prop.menuLayout.addView(set,p1);
 				prop.menuLayout.addView(settingsLayout);
+				}catch(Exception e){
+					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+					
+				}
 			}
 
 			
@@ -150,7 +155,17 @@ public class Menu
 		
 		public void updatePoint(){
 			point.setTranslationX(500+1200*volume);
+			prop.music.setVolume(volume,volume);
+			
 		}
+			Runnable r4=new Runnable(){
+
+				@Override
+				public void run()
+				{
+					updatePoint();
+				}
+			};
 		
 			OnTouchListener t3=new OnTouchListener(){
 
@@ -159,10 +174,11 @@ public class Menu
 				{
 					if(p2.getAction()==MotionEvent.ACTION_MOVE){
 						if(barsLayout.getTranslationX()+p2.getX()>barsLayout.getTranslationX()
-						   &&barsLayout.getTranslationX()+p2.getX()<barsLayout.getTranslationX()+1200)
-						point.setTranslationX(barsLayout.getTranslationX()+p2.getX());
+						   &&barsLayout.getTranslationX()+p2.getX()<barsLayout.getTranslationX()+1200){
+						//point.setTranslationX(barsLayout.getTranslationX()+p2.getX());
 						volume=p2.getX()/1200;
-						prop.music.setVolume(volume,volume);
+						prop.activity.runOnUiThread(r4);
+						}
 					}
 					return true;
 				}
@@ -174,10 +190,15 @@ public class Menu
 				@Override
 				public void run()
 				{
+					try{
 					prop.menu.settings.settingsLayout.addView(text);
 					prop.menu.settings.settingsLayout.addView(bar);
 					prop.menu.settings.settingsLayout.addView(point);
 					prop.menu.settings.settingsLayout.addView(barsLayout);
+					}catch(Exception e){
+						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+				
+					}
 				}
 
 			};

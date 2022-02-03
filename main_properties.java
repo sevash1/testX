@@ -44,6 +44,7 @@ public class main_properties
 	public Words words;
 	
 	
+	
 	public main_properties(
 	RelativeLayout main,
 	RelativeLayout menuLayout,
@@ -157,4 +158,13 @@ public class main_properties
 			
 		}
 	};
+	Item findItem(int id){
+		for(Item item1:items){
+			if(item1.id==id){
+				 return new Item(this,item1.id,item1.pictureInt,item1.price,item1.name,item1.description,item1.dat);
+	
+			}
+		}
+		return null;
+	}
 }

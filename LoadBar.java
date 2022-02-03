@@ -10,7 +10,7 @@ public class LoadBar
 	ImageView bar;
 	TextView tv;
 	main_properties prop;
-	int max_points=38;
+	int max_points=37;
 	float points=1;
 	LayoutParams params2=new LayoutParams(800,20);
 	

@@ -39,7 +39,7 @@ public class Btn_continue
 		tv.setTranslationX(50);
 		tv.setTranslationY(screenH/2-60*3);
 		tv.setLayoutParams(params);
-		tv.setTextColor(Color.BLUE);
+		tv.setTextColor(Color.YELLOW);
 		tv.setShadowLayer(5,10,10,Color.argb(255,255,127,127));
 		tv.setTypeface(prop.ttf);
 		prop.bl.addView(btn);

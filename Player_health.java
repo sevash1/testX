@@ -16,9 +16,10 @@ public class Player_health
 	ImageView back;
 	ImageView border;
 	TextView tv;
-	LayoutParams params2=new LayoutParams(272*2,21*2);
-	LayoutParams params3=new LayoutParams(272*2,21*2);
-	LayoutParams params4=new LayoutParams(280*2,31*2);
+	LayoutParams params1=new LayoutParams(100,12);
+	LayoutParams params2=new LayoutParams(800,10);
+	LayoutParams params3=new LayoutParams(800,10);
+	LayoutParams params4=new LayoutParams(832,12);
 	
 	
 	main_properties prop;
@@ -36,35 +37,36 @@ public class Player_health
 		progress.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.red_bar,prop.options)));
 		progress.setLayoutParams(params2);
 	    progress.setScaleType(ScaleType.FIT_XY);
-		progress.setTranslationX(30);
-		progress.setTranslationY(30);
+		progress.setTranslationX(65);
+		progress.setTranslationY(10);
 		progress.setTranslationZ(1023);
 		
 		back=new ImageView(prop.context);
 		back.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.black_bar,prop.options)));
 		back.setLayoutParams(params3);
 		back.setScaleType(ScaleType.FIT_XY);
-		back.setTranslationX(30);
-		back.setTranslationY(30);
+		back.setTranslationX(65);
+		back.setTranslationY(10);
 		back.setTranslationZ(1023);
 		
 		border=new ImageView(prop.context);
 		border.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.hp_bar_border,prop.options)));
 		border.setLayoutParams(params4);
 		border.setScaleType(ScaleType.FIT_XY);
-		border.setTranslationX(20);
-		border.setTranslationY(20);
+		border.setTranslationX(49);
+		border.setTranslationY(8);
 		border.setTranslationZ(1023);
 
 		tv=new TextView(prop.context);
 		tv.setText("100"+" | "+"100");
-		tv.setGravity(Gravity.CENTER);
-		tv.setTextSize(16);
-		tv.setTranslationX(272*2+100);
-		tv.setTranslationY(30);
+		tv.setGravity(Gravity.LEFT);
+		tv.setTextSize(4);
+		tv.setTranslationX(882);
+		tv.setTranslationY(10);
 		tv.setTranslationZ(1023);
 		tv.setTextColor(Color.RED);
 		tv.setTypeface(prop.ttf);
+		tv.setLayoutParams(params1);
 		
 		prop.playerAndUi.addView(back);
 		prop.playerAndUi.addView(progress);

@@ -188,7 +188,7 @@ public class MainActivity extends Activity
 					time5+=time3;
 					if(time5>1000){
 						time5=0;
-						files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{Float.toString(prop.playerPosY),Float.toString(prop.playerPosY),Integer.toString(prop.money.money_count)});
+						files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{});
 						coord="X:"+(int)prop.playerPosX+"\n"+"Y:"+(int)prop.playerPosY+"\n"+String.valueOf(time3)+"\n"+fps+"\n";
 						fps=0;
 						Log.d("seva",String.valueOf(
@@ -260,7 +260,7 @@ public class MainActivity extends Activity
 			
 			files.readFile(read,getExternalFilesDir("")+"/f.txt");
 				
-			menu.setBackgroundResource(R.drawable.menu_background);
+			menu.setBackgroundResource(R.drawable.game_background_4);
 				pause_lay.setVisibility(View.GONE);
 				pause_lay.setBackgroundColor(Color.argb(63,0,0,0));
 				pause_lay.setTranslationZ(11111);
@@ -287,8 +287,11 @@ public class MainActivity extends Activity
 				
 				prop=new main_properties(main,menu,playerAndUi,context,activity,disp.getWidth(),disp.getHeight(),op,face,thread,stage,pause_lay,run,music,skeletons);
 				new Words(prop);
+
+				Item.loadItems(prop);
+				new Shop(prop);
+				new Inventory(prop);
 				new Menu(prop);
-				prop.loadBar.addPoint();
 				abc();
 				prop.loadBar.addPoint();
 				coords=new TextView(context);
@@ -363,8 +366,8 @@ public class MainActivity extends Activity
 				prop.loadBar.addPoint();
 				new Btn_exit_game(prop);
 				prop.loadBar.addPoint();
-				new Shop(prop);
-				new Inventory(prop);
+				
+				
 				prop.loadBar.addPoint();
 				
 				prop.loadBar.addPoint();
@@ -417,6 +420,7 @@ public class MainActivity extends Activity
 		else if(stage.getStage()==Game_stage.WORLD){
 			if(prop.stage.getStage_in_world()==Game_stage.NOT_PAUSE){
 				if(prop.inv.isOpen){
+					
 					prop.inv.closeInventory();
 					return;
 				}
@@ -448,27 +452,39 @@ public class MainActivity extends Activity
 				String[] s2=s1.split(" ");
 				
 				if(s2[0].contentEquals("player_position_x:")){
-					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")) continue;
+					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 					prop.playerPosX=(Float.parseFloat(s2[1]));
 
 				}
 				
 				if(s2[0].contentEquals("player_position_y:")){
-					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")) continue;
+					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 					prop.playerPosY=(Float.parseFloat(s2[1]));
 
 				}
 				if(s2[0].contentEquals("money:")){
-					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")) continue;
-					prop.money.setMoneyCount(Integer.parseInt(s2[1]));
+					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
+					prop.money.setMoneyCount(Float.parseFloat(s2[1]));
 
 				}
 				
 					if(s2[0].contentEquals("musicVolume:")){
-						if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")) continue;
+						if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 						prop.menu.settings.musicVolume.volume=(Float.parseFloat(s2[1]));
 						prop.menu.settings.musicVolume.updatePoint();
 					}
+					
+					if(s2[0].contentEquals("inven:")){
+						if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
+						for(String s3:s2[1].split("/")){
+							if(s3.contentEquals("NaN") || s3.contentEquals("")||s3==null) continue;
+							
+							String[] s4=s3.split(":");
+							if(s4[0]==null)continue;
+						prop.inv.addItem("inventory",prop.findItem(Integer.parseInt(s4[0])));
+					}
+						}
+					
 			
 				}
 				}catch(Exception e){
