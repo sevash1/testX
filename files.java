@@ -6,8 +6,10 @@ import java.util.*;
 public class files
 {
 	
-		static void writeFile(main_properties prop, String dir,String sfile,String[] args) {
-			
+		static void writeFile(final main_properties prop, final String dir,final String sfile,final String[] args) {
+			new Thread(){
+				public void run(){
+				
 			if(sfile.contentEquals("f.txt")){
 			try {
 				File file = new File(dir,sfile);
@@ -27,7 +29,13 @@ public class files
 				for(Item item:prop.inv.items){
 					bw.write(String.valueOf(item.id)+":"+String.valueOf(item.count)+"/");
 				}
-			//	bw.write("\n");
+				bw.write("\n");
+					bw.write("armor: ");
+					if(prop.inv.armItems!=null)
+					for(int i=0;i<prop.inv.armItems.length;i++){
+						if(prop.inv.armItems[i]!=null)
+								bw.write(String.valueOf(i)+"_"+String.valueOf(prop.inv.armItems[i].id)+":"+String.valueOf(prop.inv.armItems[i].count)+"/");
+					}
 				bw.close();
 				return;
 			} catch (Exception ignore) {}
@@ -72,6 +80,8 @@ public class files
 			
 			}
 		}
+
+				}}.start();
 		}
 		
 	public static void updateWorld(String dir1,String dir2, String fileName, String text1){

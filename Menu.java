@@ -26,9 +26,8 @@ public class Menu
 		new Player(prop,Player.type.MENU);
 		new Btn_play(prop);
 		settings =new Settings();
-		
-	}
 	
+	}
 	
 	
 	class Settings{
@@ -155,6 +154,7 @@ public class Menu
 		
 		public void updatePoint(){
 			point.setTranslationX(500+1200*volume);
+			if(prop.music!=null)
 			prop.music.setVolume(volume,volume);
 			
 		}

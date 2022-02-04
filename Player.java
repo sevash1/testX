@@ -221,15 +221,21 @@ public class Player implements Entity
 		
 		Random r= new Random();
 		prop.music=(MediaPlayer)prop.musicList.get(r.nextInt(48));
-		prop.music.setVolume(0.5f,0.5f);
-
-		prop.music.seekTo(0);
-		if(prop.music.isPlaying())return;
+		if(prop.music!=null)
+			prop.music.setVolume(0.5f,0.5f);
+		if(prop.music!=null)if(prop.music.isPlaying())return;
 		prop.music.start();
 		prop.music.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
 				@Override
 				public void onCompletion(MediaPlayer mp){
+					try{
+						if(Game_stage.EXIT==prop.stage.getStage()) return;
+						
 					playM();
+					}catch(Exception e){
+						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+
+					}
 				}
 			});
 	}
@@ -240,14 +246,20 @@ public class Player implements Entity
 		@Override
 		public void run()
 		{
+			try{
 			playM();
-			
+			}catch(Exception e){
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
+
+			}
 			while(true){
-				if(Game_stage.EXIT==prop.stage.getStage()) Thread.currentThread().stop();
+				if(Game_stage.EXIT==prop.stage.getStage())
+					Thread.currentThread().stop();
+				
 				try{
 					Thread.sleep(250);
 					if(prop.stage.getStage()==Game_stage.MENU){
-					player.setImageBitmap((Bitmap)anim_idle.get(s));
+						prop.activity.runOnUiThread(run5);
 					s++;
 					if(s>14) s=0;
 					
@@ -260,6 +272,16 @@ public class Player implements Entity
 			}
 		}
 			
+		};
+		
+	Runnable run5=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			player.setImageBitmap((Bitmap)anim_idle.get(s));
+			
+		}
 		};
 		
 		public boolean attacked=false;
@@ -287,7 +309,9 @@ public class Player implements Entity
 		{
 			
 			while(true){
-				if(Game_stage.EXIT==prop.stage.getStage()) Thread.currentThread().stop();
+				if(Game_stage.EXIT==prop.stage.getStage()) 
+					Thread.currentThread().stop();
+				
 				
 				try{
 					Thread.sleep(125);

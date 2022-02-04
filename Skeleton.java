@@ -15,7 +15,7 @@ public class Skeleton extends Mob
 	
 	main_properties prop;
 	LayoutParams params=new LayoutParams(300,300);
-	LayoutParams params2=new LayoutParams(200,20);
+	LayoutParams params2=new LayoutParams(200,6);
 	LayoutParams params6=new LayoutParams(48*2,48*2);
 	ImageView iv;
 	ImageView hp;
@@ -45,7 +45,7 @@ public class Skeleton extends Mob
 		iv=new ImageView(prop.context);
 		hp=new ImageView(prop.context);
 		money=new ImageView(prop.context);
-		money.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.items,prop.options),48*6,48*6,48,48));
+		money.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.coin_01b,prop.options)));
 		money.setLayoutParams(params6);
 		money.setVisibility(View.INVISIBLE);
 		anim_idle();
@@ -61,7 +61,7 @@ public class Skeleton extends Mob
 	    hp.setLayoutParams(params2);
 		hp.setScaleType(ScaleType.FIT_XY);
 		hp.setTranslationX(iv.getTranslationX()+iv.getWidth()/2-hp.getWidth()/2);
-		hp.setTranslationY(iv.getTranslationY()+30);
+		hp.setTranslationY(iv.getTranslationY());
 		hp.setZ(12);
 		
 		th=new Thread(run2);
@@ -230,7 +230,9 @@ public class Skeleton extends Mob
 		{
 			anim=anim_idle;
 			while(true){
-				if(Game_stage.EXIT==prop.stage.getStage())Thread.currentThread().stop();
+				if(Game_stage.EXIT==prop.stage.getStage())
+					Thread.currentThread().stop();
+				
 				
 				try{
 					Thread.sleep(250);

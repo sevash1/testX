@@ -59,7 +59,6 @@ public class main_properties
 	Game_stage stage,
 	RelativeLayout bl,
 	Runnable run,
-	MediaPlayer menu_music,
 	List skeletons){
 		
 		this.main=main;
@@ -75,7 +74,6 @@ public class main_properties
 		this.stage=stage;
 		this.bl=bl;
 		this.worldThreadRun=run;
-		this.music=menu_music;
 		this.skeletons=skeletons;
 
 	}

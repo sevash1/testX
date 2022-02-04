@@ -54,6 +54,7 @@ public class Btn_exit_game
 		{
 			try{
 				prop.stage.setStage(Game_stage.EXIT);
+				if(prop.music!=null)
 				prop.music.stop();
 				prop.activity.finish();
 				

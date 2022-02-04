@@ -304,6 +304,7 @@ public class Shop
 				while(true){
 					if(prop.stage.getStage()==Game_stage.EXIT)
 						Thread.currentThread().stop();
+					
 					try{
 						Thread.sleep(8);
 						while(t){
@@ -387,7 +388,7 @@ public class Shop
 			public void onClick(View p1)
 			{
 				if(item==null) return;
-				if(!prop.inv.addItem("shop",item)){
+				if(!prop.inv.addItem("shop",item,0)){
 					
 				new Thread(r6).start();
 				return;

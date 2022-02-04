@@ -30,7 +30,7 @@ public class Money
 		
 		iv=new ImageView(prop.context);
 		tv=new TextView(prop.context);
-		iv.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.items,prop.options),48*5,48*7,48,48));
+		iv.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.coin_04b,prop.options)));
 		iv.setLayoutParams(params);
 		iv.setScaleType(ScaleType.FIT_XY);
 		iv.setOnTouchListener(touch);
@@ -148,6 +148,7 @@ public class Money
 			while(true){
 				if(prop.stage.getStage()==Game_stage.EXIT)
 					Thread.currentThread().stop();
+				
 					try{
 						Thread.sleep(8);
 						if(t){

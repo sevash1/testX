@@ -47,7 +47,6 @@ public class MainActivity extends Activity
 	int fps=0;
 	Thread thread;
 	Context context;
-	MediaPlayer music;
 	boolean isPause=false;
 	Game_stage stage;
 	RelativeLayout pause_lay;
@@ -88,6 +87,7 @@ public class MainActivity extends Activity
 	protected void onDestroy()
 	{
 		stage.setStage(Game_stage.EXIT);
+		if(prop.music!=null)
 		prop.music.stop();
 		finish();
 		super.onDestroy();
@@ -96,7 +96,7 @@ public class MainActivity extends Activity
 	@Override
 	protected void onPause()
 	{
-		if(prop.music != null && prop.music.isPlaying()){
+		if(prop.music != null)if( prop.music.isPlaying()){
 			isPause=true;
 			prop.music.pause();
 	
@@ -116,7 +116,8 @@ public class MainActivity extends Activity
 				while(!run1_c){}
 			prop.money.setType(Money.Type.WORLD);
 			while(stage.getStage()==Game_stage.WORLD){
-				if(Game_stage.EXIT==prop.stage.getStage()) Thread.currentThread().stop();
+				if(Game_stage.EXIT==prop.stage.getStage()) 
+					Thread.currentThread().stop();
 				
 				try{
 					time1=System.currentTimeMillis();
@@ -283,9 +284,8 @@ public class MainActivity extends Activity
 				Typeface face=Typeface.createFromAsset(getAssets(), "fonts/blazma_regular.ttf"); 
 				disp=getWindowManager().getDefaultDisplay();
 				stage=new Game_stage(Game_stage.MENU);
-				music=MediaPlayer.create(context,R.raw.music01);
 				
-				prop=new main_properties(main,menu,playerAndUi,context,activity,disp.getWidth(),disp.getHeight(),op,face,thread,stage,pause_lay,run,music,skeletons);
+				prop=new main_properties(main,menu,playerAndUi,context,activity,disp.getWidth(),disp.getHeight(),op,face,thread,stage,pause_lay,run,skeletons);
 				new Words(prop);
 
 				Item.loadItems(prop);
@@ -374,7 +374,7 @@ public class MainActivity extends Activity
 				playerAndUi.addView(pause_lay,params2);
 				prop.loadBar.addPoint();
 				prop.stage.world_load_complete=true;
-			}catch(Exception e){
+					}catch(Exception e){
 				files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 			}
 }
@@ -386,6 +386,7 @@ public class MainActivity extends Activity
 		@Override
 		public void run(){
 			main.addView(menu,params2);
+			
 		}
 	};
 	
@@ -481,9 +482,21 @@ public class MainActivity extends Activity
 							
 							String[] s4=s3.split(":");
 							if(s4[0]==null)continue;
-						prop.inv.addItem("inventory",prop.findItem(Integer.parseInt(s4[0])));
+						prop.inv.addItem("inventory",prop.findItem(Integer.parseInt(s4[0])),0);
 					}
+					}
+						if(s2[0].contentEquals("armor:")){
+							if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
+							for(String s3:s2[1].split("/")){
+								if(s3.contentEquals("NaN") || s3.contentEquals("")||s3==null) continue;
+								String[] s4=s3.split("_");
+								String[] s5=s4[1].split(":");
+								if(s5[0]==null)continue;
+								
+								prop.inv.addItem("armF",prop.findItem(Integer.parseInt(s5[0])),Integer.parseInt(s4[0]));
+							}
 						}
+						
 					
 			
 				}
@@ -501,6 +514,7 @@ public class MainActivity extends Activity
 			super.onResume();
 				if(isPause){
 					isPause=false;
+					if(prop.music!=null)
 				prop.music.start();
 				}
 		}catch(Exception e){
