@@ -36,7 +36,7 @@ public class Shop
 		for(int i=0;i<10;i++){
 			for(int j=0;j<35;j++){
 				in=new ImageView(prop.context);
-				in.setImageDrawable(((Item)prop.items.get(0)).picture.getDrawable());
+				in.setImageResource(R.drawable.cell01);
 				in.setX(200+i*106);
 				in.setY(100+j*106);
 				in.setZ(3);
@@ -46,7 +46,7 @@ public class Shop
 			}
 		}
 		ImageView it;
-		for(int i=1;i<prop.items.size();i++){
+		for(int i=0;i<prop.items.size();i++){
 			    it=new ImageView(prop.context);
 				it.setX(200+3+(i%10)*106);
 				it.setY(100+3+(i/10)*106);
@@ -65,8 +65,16 @@ public class Shop
 	
 	public void openShop(){
 		prop.vanishGameButtons();
+		prop.activity.runOnUiThread(prop.money.r2);
 		prop.activity.runOnUiThread(run);
 	}
+	
+	public void closeShop(){
+		prop.activity.runOnUiThread(run1);
+		prop.activity.runOnUiThread(prop.money.r3);
+		prop.showGameButtons();
+	}
+	
 	Runnable run=new Runnable(){
 
 		@Override
@@ -124,10 +132,7 @@ public class Shop
 	};
 	
 	
-	public void closeShop(){
-		prop.activity.runOnUiThread(run1);
-		prop.showGameButtons();
-	}
+	
 	Runnable run1=new Runnable(){
 
 		@Override
@@ -177,6 +182,7 @@ public class Shop
 		ImageView target;
 		ImageView it;
 		TextView name;
+		TextView descT;
 		TextView price;
 		int tmpPrice=-1;
 		Item item;
@@ -193,14 +199,14 @@ public class Shop
 			itemL.setLayoutParams(new LayoutParams(300,300));
 			itemL.setTranslationX(15);
 			itemL.setTranslationY(15);
-			itemL.setBackgroundColor(Color.argb(192,64,64,240));
+			itemL.setBackgroundColor(Color.argb(192,64,240,64));
 			lay.addView(itemL);
 			
 			priceL=new RelativeLayout(prop.context);
 			priceL.setLayoutParams(new LayoutParams(300,300));
 			priceL.setTranslationX(430);
 			priceL.setTranslationY(15);
-			priceL.setBackgroundColor(Color.argb(192,64,240,64));
+			priceL.setBackgroundColor(Color.argb(192,64,64,240));
 			lay.addView(priceL);
 			
 			descriptionL=new RelativeLayout(prop.context);
@@ -217,10 +223,23 @@ public class Shop
 			name.setTranslationX(15);
 			name.setTranslationY(20);
 			name.setLayoutParams(new LayoutParams(685,LayoutParams.WRAP_CONTENT));
-			name.setTextColor(Color.BLUE);
+			name.setTextColor(Color.GREEN);
 			name.setTypeface(prop.ttf);
 			name.setShadowLayer(20,5,5,Color.argb(255,166,166,255));
 			descriptionL.addView(name);
+			
+			descT=new TextView(prop.context);
+			descT.setText(" Продолжить ");
+			descT.setGravity(Gravity.LEFT);
+			descT.setTextSize(10);
+			descT.setTranslationX(15);
+			descT.setTranslationY(200);
+			descT.setLayoutParams(new LayoutParams(685,LayoutParams.MATCH_PARENT));
+			descT.setTextColor(Color.YELLOW);
+			descT.setTypeface(prop.ttf);
+			descT.setShadowLayer(20,5,5,Color.argb(255,166,166,255));
+			descriptionL.addView(descT);
+			
 			
 			ImageView btn_buy=new ImageView(prop.context);
 			btn_buy.setX(25);
@@ -260,19 +279,26 @@ public class Shop
 			notBuyed.setTextColor(Color.RED);
 			notBuyed.setTypeface(prop.ttf);
 			
+			ImageView gold=new ImageView(prop.context);
+			gold.setX(235);
+			gold.setY(25);
+			gold.setImageResource(R.drawable.coin_01c);
+			gold.setLayoutParams(new LayoutParams(50,50));
 			
 			price=new TextView(prop.context);
 		    price.setText("0");
 			price.setGravity(Gravity.RIGHT);
 			price.setTextSize(14);
-			price.setTranslationX(25);
+			price.setTranslationX(gold.getX()-260);
 			price.setTranslationY(25);
 			price.setLayoutParams(new LayoutParams(250,175));
 			price.setTextColor(Color.RED);
 			price.setTypeface(prop.ttf);
+			
 			priceL.addView(btn_buy);
 			priceL.addView(buy);
 			priceL.addView(price);
+			priceL.addView(gold);
 			
 			new Thread(r1).start();
 			
@@ -292,7 +318,8 @@ public class Shop
 		item=findItem(prop,t,itemPictures,item);
 		tmpName=item.name; 
 		tmpPrice=item.price;
-		prop.activity.runOnUiThread(r4);
+		prop.onUi(r4);
+		//prop.activity.runOnUiThread(r4);
 	}
 	boolean t=false;
 	int al=0;
@@ -303,7 +330,7 @@ public class Shop
 			{
 				while(true){
 					if(prop.stage.getStage()==Game_stage.EXIT)
-						Thread.currentThread().stop();
+						return;
 					
 					try{
 						Thread.sleep(8);
@@ -417,6 +444,11 @@ public class Shop
 			public void run()
 			{
 				target.setImageDrawable(item.picture.getDrawable());
+				if(prop.money.money_count>=item.price)
+					price.setTextColor(Color.GREEN);
+				else
+					price.setTextColor(Color.RED);
+				
 				name.setText(item.name);
 				price.setText(String.valueOf(item.price));
 		}
@@ -426,7 +458,7 @@ public class Shop
 	
 	
 	static Item findItem(main_properties prop,ImageView pic,List il,Item item){
-		int i=1;
+		int i=0;
 		for(ImageView item1:il){
 			if(item1==pic){
 				return (Item)prop.items.get(i);

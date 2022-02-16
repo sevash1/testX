@@ -65,8 +65,6 @@ public class Music
 		prop.addMusic(music);
 		music=MediaPlayer.create(prop.context,R.raw.music30);
 		prop.addMusic(music);
-		music=MediaPlayer.create(prop.context,R.raw.music48);
-		prop.addMusic(music);
 		music=MediaPlayer.create(prop.context,R.raw.music31);
 		prop.addMusic(music);
 		music=MediaPlayer.create(prop.context,R.raw.music32);

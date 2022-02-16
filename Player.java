@@ -216,22 +216,56 @@ public class Player implements Entity
 		
 		};
 	int s=0;
+	int o=0;
+	Random r= new Random();
+	
 	void playM(){
 		if(Game_stage.EXIT==prop.stage.getStage()) return;
 		
-		Random r= new Random();
-		prop.music=(MediaPlayer)prop.musicList.get(r.nextInt(48));
+		prop.music=(MediaPlayer)prop.musicList.get(r.nextInt(47));
 		if(prop.music!=null)
-			prop.music.setVolume(0.5f,0.5f);
+			if(prop.menu!=null)
+			prop.music.setVolume(prop.menu.settings.musicVolume.volume
+			                    ,prop.menu.settings.musicVolume.volume);
+		    else
+				prop.music.setVolume(0.5f,0.5f);
 		if(prop.music!=null)if(prop.music.isPlaying())return;
 		prop.music.start();
+		int length=prop.music.getDuration();
+		if(length<16000){
+			o=4;
+			}
+		else if(length<32000){
+			o=2;
+		}
+		if(o!=0){
+			prop.music.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
+					@Override
+					public void onCompletion(MediaPlayer mp){
+						o--;
+						if(o>0)
+						    prop.music.start();
+						else
+							nextMusic();
+						}
+						});
+		}
+		else nextMusic();
+		
+	}
+	
+	void nextMusic(){
+		if(!prop.music.isPlaying()){
+			playM();
+			return;
+		}
 		prop.music.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
 				@Override
 				public void onCompletion(MediaPlayer mp){
 					try{
 						if(Game_stage.EXIT==prop.stage.getStage()) return;
-						
-					playM();
+
+						playM();
 					}catch(Exception e){
 						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
@@ -254,7 +288,7 @@ public class Player implements Entity
 			}
 			while(true){
 				if(Game_stage.EXIT==prop.stage.getStage())
-					Thread.currentThread().stop();
+					return;
 				
 				try{
 					Thread.sleep(250);
@@ -310,7 +344,7 @@ public class Player implements Entity
 			
 			while(true){
 				if(Game_stage.EXIT==prop.stage.getStage()) 
-					Thread.currentThread().stop();
+					return;
 				
 				
 				try{

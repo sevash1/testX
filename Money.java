@@ -147,7 +147,7 @@ public class Money
 		{
 			while(true){
 				if(prop.stage.getStage()==Game_stage.EXIT)
-					Thread.currentThread().stop();
+					return;
 				
 					try{
 						Thread.sleep(8);
@@ -158,7 +158,7 @@ public class Money
 							Thread.sleep(1500);
 								if(prop.stage.getStage()==Game_stage.WORLD)
 								al=0;
-									prop.activity.runOnUiThread(r2);
+									prop.activity.runOnUiThread(r3);
 								t=false;
 								break;
 							}
@@ -174,11 +174,21 @@ public class Money
 		@Override
 		public void run()
 		{
-			tv.setAlpha(al);
+			tv.setAlpha(1);
 		}
-
 			
 		};
+		
+	Runnable r3=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			tv.setAlpha(0);
+		}
+
+
+	};
 		
 		
 	OnTouchListener touch=new OnTouchListener(){

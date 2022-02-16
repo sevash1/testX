@@ -89,28 +89,16 @@ public class Joystick
 
 				switch(m.getAction()){
 					case MotionEvent.ACTION_DOWN:{
+							if(joystick_pressed)break;
 							if(Float.isNaN(m.getX())||Float.isNaN(m.getY()))break;
 							joystick_downX=m.getX();
 							joystick_downY=m.getY();
-
-							if(joystick_pressed)break;
 							prop.activity.runOnUiThread(run3);
 							joystick_pressed=true;
 
 							break;
 						}
 
-					case MotionEvent.ACTION_POINTER_DOWN:{
-							if(Float.isNaN(m.getX())||Float.isNaN(m.getY()))break;
-							joystick_downX=m.getX();
-							joystick_downY=m.getY();
-
-							if(joystick_pressed)break;
-							prop.activity.runOnUiThread(run3);
-							joystick_pressed=true;
-
-							break;
-						}
 
 					case MotionEvent.ACTION_UP:{
 							prop.activity.runOnUiThread(run4);

@@ -10,8 +10,7 @@ public class Menu
 	main_properties prop;
 	public boolean settingsIsOpen=false;
 	public Settings settings;
-	
-	
+	LayoutParams p1=new LayoutParams(500,500);
 	Menu(main_properties prop){
 		prop.setMenu(this);
 		this.prop=prop;
@@ -23,7 +22,6 @@ public class Menu
 		prop.money=new Money(prop,Money.Type.MENU);
 		prop.loadBar.addPoint();
 		Music.load(prop);
-		new Player(prop,Player.type.MENU);
 		new Btn_play(prop);
 		settings =new Settings();
 	
@@ -191,10 +189,10 @@ public class Menu
 				public void run()
 				{
 					try{
-					prop.menu.settings.settingsLayout.addView(text);
-					prop.menu.settings.settingsLayout.addView(bar);
-					prop.menu.settings.settingsLayout.addView(point);
-					prop.menu.settings.settingsLayout.addView(barsLayout);
+					settingsLayout.addView(text);
+					settingsLayout.addView(bar);
+					settingsLayout.addView(point);
+					settingsLayout.addView(barsLayout);
 					}catch(Exception e){
 						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				

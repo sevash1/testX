@@ -90,8 +90,9 @@ public class World
 			@Override
 			public void run()
 			{
-				//Thread.currentThread().setPriority(Thread.MIN_PRIORITY);
 				while(true){
+					 if(Game_stage.EXIT==prop.stage.getStage()) 
+						 return;
 					 try{
 						
 					if(prop.stage.getStage()==Game_stage.MENU){
@@ -116,17 +117,22 @@ public class World
 		
 			prop.activity.runOnUiThread(r1);
 		}
-
+int t=0;
 		Runnable r1=new Runnable(){
 
 			@Override
 			public void run()
 			{
-
+				
 				for(Grass iv:ll){
+					t++;
 					prop.world.addView(iv.gr);
 				}
+				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{String.valueOf(t)}));
+				
 				ll.clear();
+				t=0;
+				
 			}
 		};
 	

@@ -13,6 +13,7 @@ public class Item
 	ImageView picture;
 	int price=0;
 	int count=0;
+	int slotX,slotY;
 	String name="NoN";
 	String description="";
 	String[] dat;
@@ -24,6 +25,8 @@ public class Item
 	boolean isBoots=false;
 	boolean isHelmet=false;
 	boolean isGloves=false;
+	int t=-1;
+	int armSlot=-1;
 	
 	
 	Item(main_properties prop,int id,int picture,int price, String name, String description, String[] dat){
@@ -34,63 +37,114 @@ public class Item
 		this.picture.setImageResource(picture);
 		this.price=price;
 		this.name=name;
-		this.description=description;
+		this.description=name;//description;
 		this.dat=dat;
 		if(dat!=null)
 			for(int i=0;i<dat.length;i++){
-			if(dat[i]=="armor") isArmor=true;
-			if(dat[i]=="sword") isSword=true;
-				if(dat[i]=="necklace") isNecklace=true;
-				if(dat[i]=="shield") isShield=true;
-				if(dat[i]=="ring") isRing=true;
-				if(dat[i]=="boots") isBoots=true;
-				if(dat[i]=="helmet") isHelmet=true;
-				if(dat[i]=="gloves") isGloves=true;
+				
+				if(dat[i].contentEquals("helmet")){
+					isHelmet=true;
+					t=0;
+				}
+				if(dat[i].contentEquals("armor")){
+				    isArmor=true;
+				    t=1;
+				}
+				if(dat[i].contentEquals("boots")){
+					isBoots=true;
+					t=2;
+				}
+				if(dat[i].contentEquals("gloves")){
+					isGloves=true;
+					t=3;
+				}
+				if(dat[i].contentEquals("shield")){
+					isShield=true;
+					t=4;
+				}
+				if(dat[i].contentEquals("sword")){
+				    isSword=true;
+				    t=5;
+				}
+				if(dat[i].contentEquals("ring")){
+					isRing=true;
+					t=6;
+				}
+				if(dat[i].contentEquals("necklace")){
+					isNecklace=true;
+					t=7;
+					}
 	
 				}
 		prop.items.add(this);
 	}
 	
-	Item(main_properties prop,String from,int id,int picture,ImageView iv,int price, String name, String description, String[] dat){
+	Item(main_properties prop,String from,int id,int picture,int price, String name, String description, String[] dat){
 		this.prop=prop;
 		this.id=id;
 		this.pictureInt=picture;
-		this.picture=iv;
+		this.picture=new ImageView(prop.context);
+		this.picture.setImageResource(picture);
+		//this.picture=iv;
 		this.price=price;
 		this.name=name;
 		this.description=description;
 		this.dat=dat;
 		if(dat!=null)
 			for(int i=0;i<dat.length;i++){
-				if(dat[i].contentEquals("armor")) isArmor=true;
-				if(dat[i]=="sword") isSword=true;
-				if(dat[i]=="necklace") isNecklace=true;
-				if(dat[i]=="shield") isShield=true;
-				if(dat[i]=="ring") isRing=true;
-				if(dat[i]=="boots") isBoots=true;
-				if(dat[i]=="helmet") isHelmet=true;
-				if(dat[i]=="gloves") isGloves=true;
+
+				if(dat[i].contentEquals("helmet")){
+					isHelmet=true;
+					t=0;
+				}
+				if(dat[i].contentEquals("armor")){
+				    isArmor=true;
+				    t=1;
+				}
+				if(dat[i].contentEquals("boots")){
+					isBoots=true;
+					t=2;
+				}
+				if(dat[i].contentEquals("gloves")){
+					isGloves=true;
+					t=3;
+				}
+				if(dat[i].contentEquals("shield")){
+					isShield=true;
+					t=4;
+				}
+				if(dat[i].contentEquals("sword")){
+				    isSword=true;
+				    t=5;
+				}
+				if(dat[i].contentEquals("ring")){
+					isRing=true;
+					t=6;
+				}
+				if(dat[i].contentEquals("necklace")){
+					isNecklace=true;
+					t=7;
+				}
 
 			}
 	}
 	
 	public static void loadItems(main_properties prop){
-		new Item(prop,0,R.drawable.cell01,0,"рамка","",null);
-		new Item(prop,1,R.drawable.armor_01a,0,prop.words.get(Words.words.armor01a),"",new String[]{"armor"});
-		new Item(prop,2,R.drawable.armor_01b,1,prop.words.get(Words.words.armor01b),"",new String[]{"armor"});
-		new Item(prop,3,R.drawable.armor_01d,2,prop.words.get(Words.words.armor01d),"",new String[]{"armor"});
-		new Item(prop,4,R.drawable.armor_01c,3,prop.words.get(Words.words.armor01c),"",new String[]{"armor"});
-		new Item(prop,5,R.drawable.armor_01e,4,prop.words.get(Words.words.armor01e),"",new String[]{"armor"});
-		new Item(prop,6,R.drawable.helmet_01a,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
-		new Item(prop,7,R.drawable.helmet_01b,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
-		new Item(prop,8,R.drawable.helmet_01c,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
-		new Item(prop,9,R.drawable.helmet_01d,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
-		new Item(prop,10,R.drawable.helmet_01e,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
-		new Item(prop,11,R.drawable.helmet_02a,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
-		new Item(prop,12,R.drawable.helmet_02b,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
-		new Item(prop,13,R.drawable.helmet_02c,4,prop.words.get(Words.words.armor01e),"",new String[]{"armor"});
-		new Item(prop,14,R.drawable.helmet_02d,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
-		new Item(prop,15,R.drawable.helmet_02e,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
+		new Item(prop,1,R.drawable.helmet_01a,4444,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
+		new Item(prop,2,R.drawable.helmet_01b,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
+		new Item(prop,3,R.drawable.helmet_01c,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
+		new Item(prop,4,R.drawable.helmet_01d,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
+		new Item(prop,5,R.drawable.helmet_01e,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
+		new Item(prop,6,R.drawable.helmet_02a,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
+		new Item(prop,7,R.drawable.helmet_02b,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
+		new Item(prop,8,R.drawable.helmet_02c,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
+		new Item(prop,9,R.drawable.helmet_02d,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
+		new Item(prop,10,R.drawable.helmet_02e,4,prop.words.get(Words.words.armor01e),"",new String[]{"helmet"});
+		new Item(prop,11,R.drawable.armor_01a,0,prop.words.get(Words.words.armor01a),"",new String[]{"armor"});
+		new Item(prop,12,R.drawable.armor_01b,1,prop.words.get(Words.words.armor01b),"",new String[]{"armor"});
+		new Item(prop,13,R.drawable.armor_01c,2,prop.words.get(Words.words.armor01c),"",new String[]{"armor"});
+		new Item(prop,14,R.drawable.armor_01d,3,prop.words.get(Words.words.armor01d),"",new String[]{"armor"});
+		new Item(prop,15,R.drawable.armor_01e,4,prop.words.get(Words.words.armor01e),"",new String[]{"armor"});
 		new Item(prop,16,R.drawable.gloves_01a,4,prop.words.get(Words.words.armor01e),"",new String[]{"gloves"});
 		new Item(prop,17,R.drawable.gloves_01b,4,prop.words.get(Words.words.armor01e),"",new String[]{"gloves"});
 		new Item(prop,18,R.drawable.gloves_01c,4,prop.words.get(Words.words.armor01e),"",new String[]{"gloves"});

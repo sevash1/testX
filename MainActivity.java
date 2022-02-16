@@ -89,6 +89,8 @@ public class MainActivity extends Activity
 		stage.setStage(Game_stage.EXIT);
 		if(prop.music!=null)
 		prop.music.stop();
+		files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{});
+		
 		finish();
 		super.onDestroy();
 	}
@@ -113,11 +115,14 @@ public class MainActivity extends Activity
 			try{
 				
 				runOnUiThread(run1);
-				while(!run1_c){}
+				while(!run1_c){
+					if(Game_stage.EXIT==prop.stage.getStage()) 
+						return;
+				}
 			prop.money.setType(Money.Type.WORLD);
 			while(stage.getStage()==Game_stage.WORLD){
 				if(Game_stage.EXIT==prop.stage.getStage()) 
-					Thread.currentThread().stop();
+					return;
 				
 				try{
 					time1=System.currentTimeMillis();
@@ -260,8 +265,9 @@ public class MainActivity extends Activity
 				pause_lay=new RelativeLayout(context);
 			
 			files.readFile(read,getExternalFilesDir("")+"/f.txt");
-				
-			menu.setBackgroundResource(R.drawable.game_background_4);
+		
+				menu.setBackgroundResource(R.drawable.game_background_4);
+			
 				pause_lay.setVisibility(View.GONE);
 				pause_lay.setBackgroundColor(Color.argb(63,0,0,0));
 				pause_lay.setTranslationZ(11111);
@@ -293,6 +299,8 @@ public class MainActivity extends Activity
 				new Inventory(prop);
 				new Menu(prop);
 				abc();
+				new Player(prop,Player.type.MENU);
+				
 				prop.loadBar.addPoint();
 				coords=new TextView(context);
 				prop.loadBar.addPoint();
@@ -380,6 +388,8 @@ public class MainActivity extends Activity
 }
 		
 	};
+	
+	
 	
 	Runnable run5=new Runnable(){
 

@@ -6,6 +6,32 @@ import java.util.*;
 public class files
 {
 	
+	static void writeFile(final main_properties prop, final String sfile,final String[] args) {
+	
+		if(sfile=="error.txt"){
+
+
+			try {
+
+
+				File file = new File(prop.activity.getExternalFilesDir("").toString(), sfile);
+				try {
+					file.createNewFile();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				BufferedWriter bw = new BufferedWriter(new FileWriter(file,true));
+				bw.write(args[0]+"\n");
+
+				bw.close();
+
+			} catch (Exception e) {
+
+			}
+			}
+		}
+		
+		
 		static void writeFile(final main_properties prop, final String dir,final String sfile,final String[] args) {
 			new Thread(){
 				public void run(){
@@ -47,7 +73,7 @@ public class files
 			try {
 
 
-				File file = new File(dir, sfile);
+				File file = new File(prop.activity.getExternalFilesDir(""), sfile);
 				try {
 					file.createNewFile();
 				} catch (IOException e) {

@@ -14,7 +14,8 @@ public class Inventory
 	public ImageView inv;
 	RelativeLayout inven;
 	public boolean isOpen=false;
-	LayoutParams params=new LayoutParams(96,96);
+	LayoutParams params0;
+	LayoutParams params1=new LayoutParams(96,96);
 	LayoutParams params2=new LayoutParams(90,90);
 	LayoutParams params3=new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 	LayoutParams params4=new LayoutParams(96+48,96+48);
@@ -28,15 +29,13 @@ public class Inventory
 	ImageView ground;
 	ImageView[][] in=new ImageView[10][10];
 	OnTouchListener[] TList=new OnTouchListener[8];
-	
-
 	int lastSlot=0;
 
 	Inventory(main_properties prop){
 		this.prop=prop;
 		inv=new ImageView(prop.context);
 		inv.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.wood_01a,prop.options)));
-		inv.setLayoutParams(params);
+		inv.setLayoutParams(params1);
 		inv.setScaleType(ScaleType.FIT_XY);
 		inv.setTranslationX(prop.screenW-250);
 		inv.setTranslationY(prop.screenH/8f);
@@ -54,7 +53,7 @@ public class Inventory
 		ground.setTranslationZ(9999+1);
 		ground.setVisibility(View.INVISIBLE);
 		ground.setAlpha(216);
-		ground.setLayoutParams(params);
+		ground.setLayoutParams(params1);
 		inven.addView(ground);
 		for(int i=0;i<10;i++){
 			for(int j=0;j<5;j++){
@@ -66,9 +65,24 @@ public class Inventory
 				in[i][j].setTranslationZ(9999);
 				in[i][j].setAlpha(192);
 				armorL.add(in[i][j]);
-				inven.addView(in[i][j],params);
+				inven.addView(in[i][j],params1);
 			}
 		}
+		ImageView del=new ImageView(prop.context);
+		del.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.cell01,prop.options)));
+		del.setTranslationX(200+9*106);
+		del.setTranslationY(200-106);
+		del.setTranslationZ(9999);
+		del.setAlpha(192);
+		inven.addView(del,params1);
+		ImageView del1=new ImageView(prop.context);
+		del1.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.delete,prop.options)));
+		del1.setTranslationX(200+9*106+8);
+		del1.setTranslationY(200-106+8);
+		del1.setTranslationZ(9999);
+		del1.setAlpha(192);
+		inven.addView(del1,80,80);
+		
 		try{
 		slot_0();
 		slot_1();
@@ -101,7 +115,17 @@ public class Inventory
 		@Override
 		public boolean onTouch(View p1, MotionEvent p2)
 		{
+			prop.activity.runOnUiThread(r3);
 			return true;
+		}
+	};
+	
+	Runnable r3=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			ground.setVisibility(View.INVISIBLE);
 		}
 	};
 	
@@ -147,7 +171,6 @@ public class Inventory
 			prop.showGameButtons();
 			inven.setVisibility(View.INVISIBLE);
 			isOpen=false;
-			// TODO: Implement this method
 		} 
  };
  
@@ -168,29 +191,34 @@ public class Inventory
  
 	ImageView ivv;
 	public boolean addItem(String from, Item item,int p){
-		if(!freeSlot())return false;
-		if(prop.money.money_count-item.price<0&&from.contentEquals("shop"))return false;
-		if(from.contentEquals("shop"))prop.money.addMoney(-item.price);
 		if(from.contentEquals("armF")){
-			ivv=new ImageView(prop.context);
+			ivv=item.picture;
 			ivv.setImageResource(item.pictureInt);
 			ivv.setLayoutParams(params4);
 			ivv.setX(slots[p].x);
 			ivv.setY(slots[p].y);
 			ivv.setZ(10000);
-			armItems[p]=new Item(prop,"inv",item.id,item.pictureInt,ivv,item.price,item.name,item.description,item.dat);
+			armItems[p]=item;
+			item.armSlot=p;
+			ivv.setOnTouchListener(aT);
 			inven.addView(ivv);
-			//prop.activity.runOnUiThread(r1);
 			return true;
 		}
-		ivv=new ImageView(prop.context);
+		
+		if(!freeSlot())return false;
+		if(prop.money.money_count-item.price<0&&from.contentEquals("shop"))return false;
+		if(from.contentEquals("shop"))prop.money.addMoney(-item.price);
+		
+		ivv=item.picture;
 		ivv.setImageResource(item.pictureInt);
 		ivv.setLayoutParams(params2);
 		ivv.setX(203+106*x);
 		ivv.setY(203+106*y);
 		ivv.setZ(10000);
 		ivv.setOnTouchListener(t1);
-		items.add(new Item(prop,"inv",item.id,item.pictureInt,ivv,item.price,item.name,item.description,item.dat));
+		items.add(item);
+		((Item)(items.get(items.size()-1))).slotX=x;
+		((Item)(items.get(items.size()-1))).slotY=y;
 		z[x][y]=false;
 		inven.addView(ivv);
 		return true;
@@ -199,23 +227,25 @@ public class Inventory
 	
  ImageView it;
  Item item;
-	void setItem(ImageView t){
-		item=findItem(prop,t,items,item);
-		it=item.picture;
-	}
-	
-	static Item findItem(main_properties prop,ImageView pic,List items,Item im){
-		int i=0;
-		for(Item item:items){
-			if(item.picture==pic){
-		
-				return item;
+ 
+	void setItem(ImageView t,int f){
+		if(f==0)
+		for(Item item1:items){
+			if(item1==null)continue;
+			if(item1.picture==t){
+				item=item1;
+				it=item.picture;
 			}
-			i++;
 		}
-		return null;
+		else if(f==1)
+			for(Item item1:armItems){
+				if(item1==null)continue;
+				if(item1.picture==t){
+					item=item1;
+					it=item.picture;
+				}
+			}
 	}
-	
 	
 	
 	View pp=null;
@@ -226,9 +256,10 @@ public class Inventory
 		{
 			try{
 			if(p2.getAction()==MotionEvent.ACTION_UP){
-				
 				pp=p1;
-				setItem((ImageView)p1);
+				params0=params1;
+				tmpItem=item;
+				setItem((ImageView)p1,0);
 				prop.activity.runOnUiThread(r2);
 			}
 				}catch(Exception e){
@@ -239,25 +270,28 @@ public class Inventory
 		}
 	};
 	
-	OnTouchListener t4=new OnTouchListener(){
+	OnTouchListener aT=new OnTouchListener(){
 
 		@Override
 		public boolean onTouch(View p1, MotionEvent p2)
 		{
 			try{
 				if(p2.getAction()==MotionEvent.ACTION_UP){
-
 					pp=p1;
-					setItem((ImageView)p1);
+					params0=params4;
+					tmpItem=item;
+					setItem((ImageView)p1,1);
 					prop.activity.runOnUiThread(r2);
 				}
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 			}
-			return false;
-
+			return true;
 		}
+
+
 	};
+	
 	
 	Runnable r2=new Runnable(){
 
@@ -265,10 +299,60 @@ public class Inventory
 		public void run()
 		{
 			try{
-			ground.setLayoutParams(params);
-			ground.setVisibility(View.VISIBLE);
-			ground.setX(pp.getX());
-			ground.setY(pp.getY());
+			ground.setLayoutParams(params0);
+			if(ground.getVisibility()==View.VISIBLE){
+				if(item.t==tmpItem.t&& item!=tmpItem&&item.armSlot!=tmpItem.armSlot){
+					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"hhh"+String.valueOf(item.t)}));
+					
+					if(item.armSlot>=0){
+						
+						tmpItem.picture.setLayoutParams(item.picture.getLayoutParams());
+						tmpItem.picture.setX(item.picture.getX());
+						tmpItem.picture.setY(item.picture.getY());
+						items.remove(tmpItem);
+						armItems[item.armSlot]=tmpItem;
+						tmpItem.armSlot=item.armSlot;
+						tmpItem.picture.setOnTouchListener(aT);
+						
+						item.picture.setX(203+106*tmpItem.slotX);
+						item.picture.setY(203+106*tmpItem.slotY);
+						item.slotX=tmpItem.slotX;
+						item.slotY=tmpItem.slotY;
+						item.picture.setLayoutParams(params2);
+						item.armSlot=-1;
+						items.add(item);
+						item.picture.setOnTouchListener(t1);
+					
+						}
+						
+					else if(item.armSlot==-1){
+
+						tmpItem.picture.setLayoutParams(item.picture.getLayoutParams());
+						item.picture.setX(tmpItem.picture.getX());
+						item.picture.setY(tmpItem.picture.getY());
+						items.remove(item);
+						armItems[tmpItem.armSlot]=item;
+						item.armSlot=tmpItem.armSlot;
+						tmpItem.picture.setOnTouchListener(t1);
+
+						tmpItem.picture.setX(203+106*item.slotX);
+						tmpItem.picture.setY(203+106*item.slotY);
+						tmpItem.slotX=item.slotX;
+						tmpItem.slotY=item.slotY;
+						item.picture.setLayoutParams(params5);
+						tmpItem.armSlot=-1;
+						items.add(tmpItem);
+						item.picture.setOnTouchListener(aT);
+
+					}
+				}
+			   ground.setVisibility(View.INVISIBLE);
+			   }
+			else
+				ground.setVisibility(View.VISIBLE);
+				ground.setX(pp.getX());
+				ground.setY(pp.getY());
+			
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 			}
@@ -395,7 +479,7 @@ public class Inventory
 		ground.setImageDrawable(in[0][0].getDrawable());
 		ground.setTranslationX(prop.screenW-prop.screenW*4/10);
 		ground.setTranslationY(prop.screenH*4/10);
-		slots[5]=new SlotsPos(prop.screenW-prop.screenW*3/10,
+		slots[5]=new SlotsPos(prop.screenW-prop.screenW*4/10,
 							  prop.screenH*4/10);
 		ground.setTranslationZ(9999);
 		ground.setAlpha(192);
@@ -455,6 +539,9 @@ public class Inventory
 		inven.addView(necklace);
 	}
 	
+	
+	Item tmpItem;
+	
 	OnTouchListener tA0=new OnTouchListener(){
 
 		@Override
@@ -462,19 +549,22 @@ public class Inventory
 		{
 			try{
 				if(p2.getAction()==MotionEvent.ACTION_UP){
-
+					if(item==null)return true;
+					if(ground.getVisibility()==View.INVISIBLE)return true;
 					if(!item.isHelmet)return true;
-					if(armItems[0]!=null) return true;
+					if(armItems[0]!=null)return true;
+					z[item.slotX][item.slotY]=true;
 					it.setLayoutParams(params5);
 					it.setX(p1.getX()+3);
 					it.setY(p1.getY()+3);
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
-					item=findItem(prop,it,items,item);
+					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[0]=item;
-					it.setOnTouchListener(null);
+					item.armSlot=0;
+					it.setOnTouchListener(aT);
 				}
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
@@ -490,19 +580,22 @@ public class Inventory
 		{
 			try{
 			if(p2.getAction()==MotionEvent.ACTION_UP){
-				
+				if(item==null)return true;
+				if(ground.getVisibility()==View.INVISIBLE)return true;
 				if(!item.isArmor)return true;
 				if(armItems[1]!=null) return true;
+				z[item.slotX][item.slotY]=true;
 				it.setLayoutParams(params5);
 				it.setX(p1.getX()+3);
 				it.setY(p1.getY()+3);
 				ground.setLayoutParams(params4);
 				ground.setX(p1.getX());
 				ground.setY(p1.getY());
-				item=findItem(prop,it,items,item);
+				setItem((ImageView)p1,0);
 				items.remove(item);
 				armItems[1]=item;
-				it.setOnTouchListener(null);
+				item.armSlot=1;
+				it.setOnTouchListener(aT);
 			}
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
@@ -518,19 +611,22 @@ public class Inventory
 		{
 			try{
 				if(p2.getAction()==MotionEvent.ACTION_UP){
-
+					if(item==null)return true;
+					if(ground.getVisibility()==View.INVISIBLE)return true;
 					if(!item.isBoots)return true;
 					if(armItems[2]!=null) return true;
+					z[item.slotX][item.slotY]=true;
 					it.setLayoutParams(params5);
 					it.setX(p1.getX()+3);
 					it.setY(p1.getY()+3);
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
-					item=findItem(prop,it,items,item);
+					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[2]=item;
-					it.setOnTouchListener(null);
+					item.armSlot=2;
+					it.setOnTouchListener(aT);
 				}
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
@@ -546,19 +642,22 @@ public class Inventory
 		{
 			try{
 				if(p2.getAction()==MotionEvent.ACTION_UP){
-
+					if(item==null)return true;
+					if(ground.getVisibility()==View.INVISIBLE)return true;
 					if(!item.isGloves)return true;
 					if(armItems[3]!=null) return true;
+					z[item.slotX][item.slotY]=true;
 					it.setLayoutParams(params5);
 					it.setX(p1.getX()+3);
 					it.setY(p1.getY()+3);
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
-					item=findItem(prop,it,items,item);
+					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[3]=item;
-					it.setOnTouchListener(null);
+					item.armSlot=3;
+					it.setOnTouchListener(aT);
 				}
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
@@ -574,19 +673,22 @@ public class Inventory
 		{
 			try{
 				if(p2.getAction()==MotionEvent.ACTION_UP){
-
+					if(item==null)return true;
+					if(ground.getVisibility()==View.INVISIBLE)return true;
 					if(!item.isShield)return true;
 					if(armItems[4]!=null) return true;
+					z[item.slotX][item.slotY]=true;
 					it.setLayoutParams(params5);
 					it.setX(p1.getX()+3);
 					it.setY(p1.getY()+3);
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
-					item=findItem(prop,it,items,item);
+					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[4]=item;
-					it.setOnTouchListener(null);
+					item.armSlot=4;
+					it.setOnTouchListener(aT);
 				}
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
@@ -602,19 +704,22 @@ public class Inventory
 		{
 			try{
 				if(p2.getAction()==MotionEvent.ACTION_UP){
-
+					if(item==null)return true;
+					if(ground.getVisibility()==View.INVISIBLE)return true;
 					if(!item.isSword)return true;
 					if(armItems[5]!=null) return true;
+					z[item.slotX][item.slotY]=true;
 					it.setLayoutParams(params5);
 					it.setX(p1.getX()+3);
 					it.setY(p1.getY()+3);
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
-					item=findItem(prop,it,items,item);
+					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[5]=item;
-					it.setOnTouchListener(null);
+					item.armSlot=5;
+					it.setOnTouchListener(aT);
 				}
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
@@ -630,19 +735,22 @@ public class Inventory
 		{
 			try{
 				if(p2.getAction()==MotionEvent.ACTION_UP){
-
+					if(item==null)return true;
+					if(ground.getVisibility()==View.INVISIBLE)return true;
 					if(!item.isRing)return true;
 					if(armItems[6]!=null) return true;
+					z[item.slotX][item.slotY]=true;
 					it.setLayoutParams(params5);
 					it.setX(p1.getX()+3);
 					it.setY(p1.getY()+3);
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
-					item=findItem(prop,it,items,item);
+					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[6]=item;
-					it.setOnTouchListener(null);
+					item.armSlot=6;
+					it.setOnTouchListener(aT);
 				}
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
@@ -658,19 +766,22 @@ public class Inventory
 		{
 			try{
 				if(p2.getAction()==MotionEvent.ACTION_UP){
-
+					if(item==null)return true;
+					if(ground.getVisibility()==View.INVISIBLE)return true;
 					if(!item.isNecklace)return true;
 					if(armItems[7]!=null) return true;
+					z[item.slotX][item.slotY]=true;
 					it.setLayoutParams(params5);
 					it.setX(p1.getX()+3);
 					it.setY(p1.getY()+3);
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
-					item=findItem(prop,it,items,item);
+					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[7]=item;
-					it.setOnTouchListener(null);
+					item.armSlot=7;
+					it.setOnTouchListener(aT);
 				}
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));

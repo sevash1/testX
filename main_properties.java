@@ -6,6 +6,7 @@ import android.graphics.*;
 import android.media.*;
 import java.util.*;
 import android.view.*;
+import java.util.function.*;
 
 public class main_properties
 {
@@ -42,6 +43,7 @@ public class main_properties
 	public Menu menu;
 	public List items=new ArrayList<Item>();
 	public Words words;
+	public main_properties prop;
 	
 	
 	
@@ -60,7 +62,7 @@ public class main_properties
 	RelativeLayout bl,
 	Runnable run,
 	List skeletons){
-		
+		this.prop=this;
 		this.main=main;
 	this.menuLayout=menuLayout;
     	this.playerAndUi=playerAndUi;
@@ -128,6 +130,26 @@ public class main_properties
 	public void setWords(Words words){
 		this.words=words;
 	}
+	public void onUi(Runnable r4){
+		this.r4=r4;
+		activity.runOnUiThread(r3);
+	}
+	
+	
+	Runnable r4;
+	Runnable r3=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			try{
+		      r4.run();
+			}catch(Exception e){
+				files.writeFile(prop,"error.txt",new String[]{e.toString()});
+			}
+		}
+	};
+	
 	Runnable r1=new Runnable(){
 
 		@Override
@@ -159,7 +181,7 @@ public class main_properties
 	Item findItem(int id){
 		for(Item item1:items){
 			if(item1.id==id){
-				 return new Item(this,item1.id,item1.pictureInt,item1.price,item1.name,item1.description,item1.dat);
+				 return new Item(this," ",item1.id,item1.pictureInt,item1.price,item1.name,item1.description,item1.dat);
 	
 			}
 		}

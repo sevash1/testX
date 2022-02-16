@@ -231,7 +231,7 @@ public class Skeleton extends Mob
 			anim=anim_idle;
 			while(true){
 				if(Game_stage.EXIT==prop.stage.getStage())
-					Thread.currentThread().stop();
+					return;
 				
 				
 				try{
