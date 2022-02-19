@@ -38,6 +38,9 @@ public class Skeleton extends Mob
 	float ratioY;
 	ImageView money;
 	public boolean isLife=true;
+	Random rand=new Random();
+	int minExp=2;
+	int maxExp=5;
 	
 	Skeleton(main_properties prop,float posX,float posY){
 		this.prop=prop;
@@ -132,10 +135,10 @@ public class Skeleton extends Mob
 		if(health<=0){
 			isLife=false;
 			prop.skeletons.remove(this);
-			Random rand=new Random();
 			new Skeleton(prop,rand.nextInt(1000)-500,rand.nextInt(1000)-500);
 			anim_etap=0;
 			anim=anim_death;
+			prop.menu.playerLevel.addExp(rand.nextInt(maxExp-minExp)+minExp);
 			Thread th=new Thread(run3);
 			th.setDaemon(true);
 			th.start();

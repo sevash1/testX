@@ -74,6 +74,7 @@ public class Inventory
 		del.setTranslationY(200-106);
 		del.setTranslationZ(9999);
 		del.setAlpha(192);
+		del.setOnTouchListener(t3);
 		inven.addView(del,params1);
 		ImageView del1=new ImageView(prop.context);
 		del1.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.delete,prop.options)));
@@ -117,6 +118,41 @@ public class Inventory
 		{
 			prop.activity.runOnUiThread(r3);
 			return true;
+		}
+	};
+	
+	OnTouchListener t3=new OnTouchListener(){
+
+		@Override
+		public boolean onTouch(View p1, MotionEvent p2)
+		{
+			if(p2.getAction()==MotionEvent.ACTION_UP){
+				if(ground.getVisibility()==View.VISIBLE){
+					if(item.armSlot<0){
+						items.remove(item);
+						z[item.slotX][item.slotY]=true;
+						prop.onUi(r4);
+						}
+					else{
+						armItems[item.armSlot]=null;
+						prop.onUi(r4);
+					}
+				}
+			}
+			return true;
+		}
+
+		
+	};
+	
+	Runnable r4=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			ground.setVisibility(View.INVISIBLE);
+			inven.removeView(item.picture);
+			
 		}
 	};
 	
@@ -560,6 +596,7 @@ public class Inventory
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
+					ground.setVisibility(View.INVISIBLE);
 					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[0]=item;
@@ -591,6 +628,7 @@ public class Inventory
 				ground.setLayoutParams(params4);
 				ground.setX(p1.getX());
 				ground.setY(p1.getY());
+				ground.setVisibility(View.INVISIBLE);
 				setItem((ImageView)p1,0);
 				items.remove(item);
 				armItems[1]=item;
@@ -622,6 +660,7 @@ public class Inventory
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
+					ground.setVisibility(View.INVISIBLE);
 					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[2]=item;
@@ -653,6 +692,7 @@ public class Inventory
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
+					ground.setVisibility(View.INVISIBLE);
 					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[3]=item;
@@ -684,6 +724,7 @@ public class Inventory
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
+					ground.setVisibility(View.INVISIBLE);
 					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[4]=item;
@@ -715,6 +756,7 @@ public class Inventory
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
+					ground.setVisibility(View.INVISIBLE);
 					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[5]=item;
@@ -746,6 +788,7 @@ public class Inventory
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
+					ground.setVisibility(View.INVISIBLE);
 					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[6]=item;
@@ -777,6 +820,7 @@ public class Inventory
 					ground.setLayoutParams(params4);
 					ground.setX(p1.getX());
 					ground.setY(p1.getY());
+					ground.setVisibility(View.INVISIBLE);
 					setItem((ImageView)p1,0);
 					items.remove(item);
 					armItems[7]=item;

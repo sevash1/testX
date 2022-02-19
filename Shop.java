@@ -31,7 +31,16 @@ public class Shop
 	shopItems.setOnTouchListener(touch);
 	shop.setBackgroundColor(Color.argb(64,0,0,0));
 		shop.addView(shopItems);
-	
+		
+		ImageView close=new ImageView(prop.context);
+		close.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.delete,prop.options)));
+		close.setTranslationX(200-106);
+		close.setTranslationY(300);
+		close.setTranslationZ(9999);
+		close.setAlpha(192);
+		close.setOnTouchListener(t3);
+		shop.addView(close,80,80);
+		
 	ImageView in;
 		for(int i=0;i<10;i++){
 			for(int j=0;j<35;j++){
@@ -80,9 +89,6 @@ public class Shop
 		@Override
 		public void run()
 		{
-			prop.money.iv.setTranslationZ(11);
-			prop.money.tv.setTranslationZ(11);
-			
 			if(prop.stage.getStage()==Game_stage.WORLD)
 			    prop.playerAndUi.addView(shop,params3);
 			if(prop.stage.getStage()==Game_stage.MENU)
@@ -95,6 +101,22 @@ public class Shop
 
 	};
 	
+	Runnable run1=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			if(prop.stage.getStage()==Game_stage.WORLD)
+			    prop.playerAndUi.removeView(shop);
+			if(prop.stage.getStage()==Game_stage.MENU)
+				prop.menuLayout.removeView(shop);
+
+			isOpen=false;
+			// TODO: Implement this method
+		}
+	};
+	
+	
 	OnTouchListener t1=new OnTouchListener(){
 
 		@Override
@@ -104,6 +126,18 @@ public class Shop
 		}
 
 		
+	};
+	
+	OnTouchListener t3=new OnTouchListener(){
+
+		@Override
+		public boolean onTouch(View p1, MotionEvent p2)
+		{
+			closeShop();
+			return true;
+		}
+
+
 	};
 	
 	OnTouchListener touch=new OnTouchListener(){
@@ -131,25 +165,6 @@ public class Shop
 		
 	};
 	
-	
-	
-	Runnable run1=new Runnable(){
-
-		@Override
-		public void run()
-		{
-			if(prop.stage.getStage()==Game_stage.WORLD)
-			    prop.playerAndUi.removeView(shop);
-			if(prop.stage.getStage()==Game_stage.MENU)
-				prop.menuLayout.removeView(shop);
-			
-			prop.money.iv.setTranslationZ(1);
-			prop.money.tv.setTranslationZ(1);
-			
-			isOpen=false;
-			// TODO: Implement this method
-		}
-	};
 	
 	OnTouchListener t2=new OnTouchListener(){
 
@@ -319,7 +334,6 @@ public class Shop
 		tmpName=item.name; 
 		tmpPrice=item.price;
 		prop.onUi(r4);
-		//prop.activity.runOnUiThread(r4);
 	}
 	boolean t=false;
 	int al=0;
@@ -356,6 +370,7 @@ public class Shop
 			@Override
 			public void run()
 			{
+				
 				buyed.setAlpha(1);
 				buyed.setY(al);
 			}
@@ -415,11 +430,11 @@ public class Shop
 			public void onClick(View p1)
 			{
 				if(item==null) return;
-				if(!prop.inv.addItem("shop",item,0)){
-					
+				if(!prop.inv.addItem("shop",item.copy(),0)){
 				new Thread(r6).start();
 				return;
 				}else{
+					prop.onUi(r4);
 					
 				al=65;
 				t=true;

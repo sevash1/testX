@@ -42,9 +42,10 @@ public class main_properties
 	public List treesList=new ArrayList<Bitmap>();
 	public Menu menu;
 	public List items=new ArrayList<Item>();
+	public List icons=new ArrayList<Item>();
 	public Words words;
 	public main_properties prop;
-	
+	public Menu.Avatar avatar;
 	
 	
 	public main_properties(

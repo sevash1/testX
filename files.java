@@ -49,6 +49,7 @@ public class files
 				BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 				bw.write("player_position_x: "+String.valueOf(prop.playerPosX)+"\n");
 				bw.write("player_position_y: "+String.valueOf(prop.playerPosY)+"\n");
+				bw.write("exp: "+String.valueOf(prop.menu.playerLevel.points)+"\n");
 				bw.write("money: "+String.valueOf(prop.money.money_count)+"\n");
 				bw.write("musicVolume: "+String.valueOf(prop.menu.settings.musicVolume.volume)+"\n");
 				bw.write("inven: ");

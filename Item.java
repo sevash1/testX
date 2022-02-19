@@ -90,6 +90,10 @@ public class Item
 		this.name=name;
 		this.description=description;
 		this.dat=dat;
+		if(from.contentEquals("ava")){
+			prop.icons.add(this);
+			return;
+		}
 		if(dat!=null)
 			for(int i=0;i<dat.length;i++){
 
@@ -127,6 +131,10 @@ public class Item
 				}
 
 			}
+	}
+	
+	public Item copy(){
+		return new Item(prop,"copy",id,pictureInt,price,name,description,dat);
 	}
 	
 	public static void loadItems(main_properties prop){
@@ -218,4 +226,11 @@ public class Item
 		new Item(prop,86,R.drawable.wood_01a,4,prop.words.get(Words.words.armor01e),"",new String[]{""});
 		
 		}
+		
+	public static void loadAvatars(main_properties prop){
+		for(int i=0x7f020008;i<=0x7f020098;i++){
+			new Item(prop,"ava",36,i,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+			
+		}
+	}
 }

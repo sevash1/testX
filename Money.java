@@ -43,7 +43,6 @@ public class Money
 		tv.setTextColor(Color.YELLOW);
 		tv.setTypeface(prop.ttf);
 		setType(type);
-		new Thread(r1).start();
 		
 		}
 		
@@ -84,7 +83,9 @@ public class Money
 			prop.menuLayout.removeView(iv);
 			prop.menuLayout.removeView(tv);
 			iv.setTranslationX(prop.screenW-iv.getWidth()-30);
+			iv.setY(10);
 			tv.setTranslationX(prop.screenW-iv.getWidth()-48*6-40);
+			tv.setY(20);
 			tv.setGravity(Gravity.RIGHT);
 			tv.setAlpha(0);
 			prop.playerAndUi.addView(iv);
@@ -101,10 +102,15 @@ public class Money
 		{
 			prop.playerAndUi.removeView(iv);
 			prop.playerAndUi.removeView(tv);
-			iv.setTranslationX(64);
+			iv.setTranslationX(prop.avatar.icon.getX()+prop.avatar.icon.getLayoutParams().width+10);
+			iv.setY(prop.menu.playerLevel.level_bar.getY()+prop.menu.playerLevel.level_bar.getLayoutParams().height+5);
 			tv.setGravity(Gravity.LEFT);
-			tv.setTranslationX(48*2+16+64);
+			tv.setTranslationX(iv.getX()+iv.getLayoutParams().width+10);
+			tv.setY(iv.getY()+10);
 			tv.setAlpha(255);
+			prop.money.iv.setTranslationZ(0);
+			prop.money.tv.setTranslationZ(0);
+			
 			prop.menuLayout.addView(iv);
 			prop.menuLayout.addView(tv);
 		}
@@ -174,6 +180,15 @@ public class Money
 		@Override
 		public void run()
 		{
+			if(prop.stage.getStage()==Game_stage.WORLD){
+			prop.money.iv.setTranslationZ(12);
+			prop.money.tv.setTranslationZ(12);
+			}
+			else{
+				prop.money.iv.setTranslationZ(0);
+				prop.money.tv.setTranslationZ(0);
+			}
+			prop.shop.shop.setZ(11);
 			tv.setAlpha(1);
 		}
 			
@@ -184,7 +199,13 @@ public class Money
 		@Override
 		public void run()
 		{
+			if(prop.stage.getStage()==Game_stage.WORLD){
 			tv.setAlpha(0);
+			}else{
+			prop.money.iv.setTranslationZ(0);
+			prop.money.tv.setTranslationZ(0);
+			prop.shop.shop.setZ(0);
+			}
 		}
 
 

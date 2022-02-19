@@ -27,7 +27,7 @@ public class MainActivity extends Activity
 	RelativeLayout playerAndUi;
 	RelativeLayout grass_layout;
 	main_properties prop;
-	Display disp;
+	
 	LayoutParams params1=new LayoutParams(256,256);
 	LayoutParams params2=new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 	List read=new ArrayList<String>();
@@ -90,7 +90,8 @@ public class MainActivity extends Activity
 		if(prop.music!=null)
 		prop.music.stop();
 		files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{});
-		
+		for(int i=0;i<prop.musicList.size();i++)
+		((MediaPlayer)(prop.musicList.get(i))).release();
 		finish();
 		super.onDestroy();
 	}
@@ -198,9 +199,8 @@ public class MainActivity extends Activity
 						coord="X:"+(int)prop.playerPosX+"\n"+"Y:"+(int)prop.playerPosY+"\n"+String.valueOf(time3)+"\n"+fps+"\n";
 						fps=0;
 						Log.d("seva",String.valueOf(
-						Runtime.getRuntime().totalMemory()/1048576));
-						Log.d("seva",String.valueOf(
-								  Runtime.getRuntime().freeMemory()/1048576));
+						Runtime.getRuntime().totalMemory()/1048576)+"/"+
+						String.valueOf(Runtime.getRuntime().freeMemory()/1048576));
 						runOnUiThread(run3);
 					
 						}
@@ -251,6 +251,21 @@ public class MainActivity extends Activity
 
 	};
 	
+	private int getNavigationBarWidth() {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+			DisplayMetrics metrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			int usableWidth = metrics.widthPixels;
+			getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+			int realWidth = metrics.widthPixels;
+			if (realWidth > usableWidth)
+				return realWidth - usableWidth;
+			else
+				return 0;
+		}
+		return 0;
+	}
+	
 	Runnable run4=new Runnable(){
 
 		@Override
@@ -288,10 +303,10 @@ public class MainActivity extends Activity
 			}
 			thread =new Thread(run);
 				Typeface face=Typeface.createFromAsset(getAssets(), "fonts/blazma_regular.ttf"); 
-				disp=getWindowManager().getDefaultDisplay();
 				stage=new Game_stage(Game_stage.MENU);
-				
-				prop=new main_properties(main,menu,playerAndUi,context,activity,disp.getWidth(),disp.getHeight(),op,face,thread,stage,pause_lay,run,skeletons);
+				DisplayMetrics dm=new DisplayMetrics();
+				getWindowManager().getDefaultDisplay().getRealMetrics(dm);
+				prop=new main_properties(main,menu,playerAndUi,context,activity,dm.widthPixels,dm.heightPixels,op,face,thread,stage,pause_lay,run,skeletons);
 				new Words(prop);
 
 				Item.loadItems(prop);
@@ -495,6 +510,10 @@ public class MainActivity extends Activity
 						prop.inv.addItem("inventory",prop.findItem(Integer.parseInt(s4[0])),0);
 					}
 					}
+					if(s2[0].contentEquals("exp:")){
+						prop.menu.playerLevel.points=Double.parseDouble(s2[1]);
+						prop.menu.playerLevel.update();
+						}
 						if(s2[0].contentEquals("armor:")){
 							if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 							for(String s3:s2[1].split("/")){

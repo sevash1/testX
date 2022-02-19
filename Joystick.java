@@ -36,8 +36,6 @@ public class Joystick
 	float centr=0;
 	public float screenSpX=0;
 	public float screenSpY=0;
-	
-	List motion=new ArrayList<MotionEvent>();
 
 	Joystick(main_properties prop){
 		this.prop=prop;
@@ -86,8 +84,13 @@ public class Joystick
 			try{
 				
 				if(m==null) return true;
+				if(m.getActionMasked()==MotionEvent.ACTION_POINTER_DOWN){
+					return false;
+				}
 
 				switch(m.getAction()){
+					
+							
 					case MotionEvent.ACTION_DOWN:{
 							if(joystick_pressed)break;
 							if(Float.isNaN(m.getX())||Float.isNaN(m.getY()))break;
