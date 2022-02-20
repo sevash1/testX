@@ -251,20 +251,6 @@ public class MainActivity extends Activity
 
 	};
 	
-	private int getNavigationBarWidth() {
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-			DisplayMetrics metrics = new DisplayMetrics();
-			getWindowManager().getDefaultDisplay().getMetrics(metrics);
-			int usableWidth = metrics.widthPixels;
-			getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
-			int realWidth = metrics.widthPixels;
-			if (realWidth > usableWidth)
-				return realWidth - usableWidth;
-			else
-				return 0;
-		}
-		return 0;
-	}
 	
 	Runnable run4=new Runnable(){
 
