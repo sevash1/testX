@@ -228,7 +228,7 @@ public class Item
 		}
 		
 	public static void loadAvatars(main_properties prop){
-		for(int i=0x7f020008;i<=0x7f020098;i++){
+		for(int i=0x7f02010f;i<=0x7f020160;i++){
 			new Item(prop,"ava",36,i,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
 			
 		}

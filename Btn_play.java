@@ -64,10 +64,11 @@ public class Btn_play
 				prop.worldThread=new Thread(prop.worldThreadRun);
 				prop.worldThread.setDaemon(true);
 				prop.worldThread.start();
-				
+			
 				prop.stage.setStage_in_world(Game_stage.NOT_PAUSE);
 				prop.joystick.lay.setVisibility(View.VISIBLE);
-			}catch(Exception e){
+			    prop.inv.switchToWorld();
+				}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				
 

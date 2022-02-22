@@ -416,6 +416,15 @@ public class MainActivity extends Activity
 				prop.menu.settings.closeSettings();
 				return;
 			}
+			if(prop.menu.bonuses.isOpen){
+				prop.menu.bonuses.closeBonuses();
+				return;
+			}
+			if(prop.inv.isOpen){
+
+				prop.inv.closeInventory();
+				return;
+			}
 			
 		last_back_pressed_time2=System.currentTimeMillis();
 		if(last_back_pressed_time2-last_back_pressed_time1<2000){
@@ -432,7 +441,6 @@ public class MainActivity extends Activity
 		else if(stage.getStage()==Game_stage.WORLD){
 			if(prop.stage.getStage_in_world()==Game_stage.NOT_PAUSE){
 				if(prop.inv.isOpen){
-					
 					prop.inv.closeInventory();
 					return;
 				}
@@ -480,27 +488,44 @@ public class MainActivity extends Activity
 
 				}
 				
-					if(s2[0].contentEquals("musicVolume:")){
-						if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
-						prop.menu.settings.musicVolume.volume=(Float.parseFloat(s2[1]));
-						prop.menu.settings.musicVolume.updatePoint();
-					}
+				if(s2[0].contentEquals("musicVolume:")){
+					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
+					prop.menu.settings.musicVolume.volume=(Float.parseFloat(s2[1]));
+					prop.menu.settings.musicVolume.updatePoint();
+				}
 					
-					if(s2[0].contentEquals("inven:")){
-						if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
-						for(String s3:s2[1].split("/")){
-							if(s3.contentEquals("NaN") || s3.contentEquals("")||s3==null) continue;
-							
-							String[] s4=s3.split(":");
-							if(s4[0]==null)continue;
+				if(s2[0].contentEquals("inven:")){
+					if(s2.length==1)continue;
+					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
+					for(String s3:s2[1].split("/")){
+						if(s3.contentEquals("NaN") || s3.contentEquals("")||s3==null) continue;
+						String[] s4=s3.split(":");
+						if(s4[0]==null||s4[0].contentEquals("NaN")||s4[0].contentEquals(""))continue;
 						prop.inv.addItem("inventory",prop.findItem(Integer.parseInt(s4[0])),0);
 					}
+				}
+	
+					if(s2[0].contentEquals("bonuses:")){
+						if(s2.length==1)continue;
+						
+					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+a"}));
+					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
+					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+b"}));
+					for(String s3:s2[1].split("/")){
+						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+c"}));
+						if(s3.contentEquals("NaN") || s3.contentEquals("")||s3==null) continue;
+						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+"+String.valueOf(Integer.parseInt(s3))}));
+						prop.menu.bonuses.update(Integer.parseInt(s3));
+						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+"+String.valueOf(Integer.parseInt(s3))}));	
 					}
+				}
 					if(s2[0].contentEquals("exp:")){
 						prop.menu.playerLevel.points=Double.parseDouble(s2[1]);
 						prop.menu.playerLevel.update();
 						}
-						if(s2[0].contentEquals("armor:")){
+					if(s2[0].contentEquals("armor:")){
+						if(s2.length==1)continue;
+						
 							if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 							for(String s3:s2[1].split("/")){
 								if(s3.contentEquals("NaN") || s3.contentEquals("")||s3==null) continue;
@@ -516,6 +541,7 @@ public class MainActivity extends Activity
 			
 				}
 				}catch(Exception e){
+					e.printStackTrace();
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 
 			}

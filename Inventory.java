@@ -9,7 +9,6 @@ import java.util.*;
 
 public class Inventory
 {
-	RelativeLayout playerAndUi;
 	main_properties prop;
 	public ImageView inv;
 	RelativeLayout inven;
@@ -30,6 +29,9 @@ public class Inventory
 	ImageView[][] in=new ImageView[10][10];
 	OnTouchListener[] TList=new OnTouchListener[8];
 	int lastSlot=0;
+	RelativeLayout descriptionL;
+	TextView name;
+	TextView descT;
 
 	Inventory(main_properties prop){
 		this.prop=prop;
@@ -37,15 +39,14 @@ public class Inventory
 		inv.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.wood_01a,prop.options)));
 		inv.setLayoutParams(params1);
 		inv.setScaleType(ScaleType.FIT_XY);
-		inv.setTranslationX(prop.screenW-250);
-		inv.setTranslationY(prop.screenH/8f);
-		inv.setTranslationZ(2);
+		inv.setTranslationZ(0);
 		inv.setOnTouchListener(touch);
 		inven=new RelativeLayout(prop.context);
-		inven.setTranslationZ(1);
+		inven.setTranslationZ(2);
 		inven.setVisibility(View.INVISIBLE);
 		inven.setBackgroundColor(Color.argb(64,0,0,0));
 		inven.setOnTouchListener(t2);
+		inven.setLayoutParams(params3);
 		ground=new ImageView(prop.context);
 		ground.setImageResource(R.drawable.cellbig_02);
 		ground.setTranslationX(0);
@@ -84,7 +85,38 @@ public class Inventory
 		del1.setAlpha(192);
 		inven.addView(del1,80,80);
 		
-		try{
+		descriptionL=new RelativeLayout(prop.context);
+		descriptionL.setLayoutParams(new LayoutParams(1000,200));
+		descriptionL.setTranslationX(prop.screenW/12);
+		descriptionL.setTranslationY(prop.screenH-300);
+		descriptionL.setBackgroundColor(Color.argb(192,150,160,240));
+		descriptionL.setVisibility(View.INVISIBLE);
+		inven.addView(descriptionL);
+		
+		name=new TextView(prop.context);
+		name.setText(" Продолжить ");
+		name.setGravity(Gravity.CENTER);
+		name.setTextSize(18);
+		name.setTranslationX(15);
+		name.setTranslationY(20);
+		name.setLayoutParams(new LayoutParams(685,LayoutParams.WRAP_CONTENT));
+		name.setTextColor(Color.GREEN);
+		name.setTypeface(prop.ttf);
+		name.setShadowLayer(20,5,5,Color.argb(255,166,166,255));
+		descriptionL.addView(name);
+
+		descT=new TextView(prop.context);
+		descT.setText(" Продолжить ");
+		descT.setGravity(Gravity.LEFT);
+		descT.setTextSize(8);
+		descT.setTranslationX(15);
+		descT.setTranslationY(100);
+		descT.setLayoutParams(new LayoutParams(685,LayoutParams.MATCH_PARENT));
+		descT.setTextColor(Color.YELLOW);
+		descT.setTypeface(prop.ttf);
+		descT.setShadowLayer(20,5,5,Color.argb(255,166,166,255));
+		descriptionL.addView(descT);
+		
 		slot_0();
 		slot_1();
 		slot_2();
@@ -103,13 +135,26 @@ public class Inventory
 			TList[7]=tA7;
 		prop.setInventory(this);
 		
-		prop.playerAndUi.addView(inv);
-		prop.playerAndUi.addView(inven,params3);
-		}catch(Exception e){
-			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-		}
+		switchToMenu();
+		
 		
 	}
+	
+	Runnable r5=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			if(ground.getVisibility()==View.INVISIBLE)
+				descriptionL.setVisibility(View.INVISIBLE);
+			else
+				descriptionL.setVisibility(View.VISIBLE);
+			name.setText(item.name);
+		}
+	};
+
+	
+	
 
 	OnTouchListener t2=new OnTouchListener(){
 
@@ -170,16 +215,12 @@ public class Inventory
 		@Override
 		public boolean onTouch(View p1, MotionEvent p2)
 		{
-			try{
-				if(prop.stage.getStage_in_world()==Game_stage.PAUSE) return false;
 				switch (p2.getAction()){
 					
 					case MotionEvent.ACTION_UP:{
-						if(inven.getVisibility()==View.INVISIBLE){
 							if(prop.shop.isOpen)break;
-							prop.vanishGameButtons();
-							inven.setVisibility(View.VISIBLE);
-							isOpen=true;
+							if(!isOpen){
+							openInventory();
 							}
 						else{
 							closeInventory();
@@ -188,14 +229,23 @@ public class Inventory
 						}
 				}
 				return true;
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-				return true;
-			}
+			
 		}
 	};
 	public void closeInventory(){
 		prop.activity.runOnUiThread(run);
+	}
+	
+	public void openInventory(){
+		prop.onUi(run2);
+	}
+	
+	void switchToMenu(){
+		prop.onUi(run3);
+	}
+	
+	void switchToWorld(){
+		prop.onUi(run4);
 	}
 	
 	
@@ -206,9 +256,54 @@ public class Inventory
 		{
 			prop.showGameButtons();
 			inven.setVisibility(View.INVISIBLE);
+			inv.setZ(0);
 			isOpen=false;
 		} 
  };
+ 
+	Runnable run2=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			prop.vanishGameButtons();
+			inv.setZ(11);
+			inven.setVisibility(View.VISIBLE);
+			isOpen=true;
+		} 
+	};
+	
+	Runnable run3=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			prop.playerAndUi.removeView(inven);
+			prop.menuLayout.addView(inven);
+			prop.playerAndUi.removeView(inv);
+			inv.setTranslationX(prop.screenW-250-320);
+			inv.setTranslationY(60);
+			inven.setBackgroundColor(Color.argb(64,255,255,255));
+			prop.menuLayout.addView(inv);
+		} 
+	};
+
+	Runnable run4=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			
+			prop.menuLayout.removeView(inven);
+			inven.setBackgroundColor(Color.argb(64,0,0,0));
+			prop.playerAndUi.addView(inven);
+			prop.menuLayout.removeView(inv);
+			inv.setTranslationX(prop.screenW-250);
+			inv.setTranslationY(prop.screenH/8f);
+			prop.playerAndUi.addView(inv);
+		} 
+	};
+	
  
  int x=0;
  int y=0;
@@ -253,8 +348,10 @@ public class Inventory
 		ivv.setZ(10000);
 		ivv.setOnTouchListener(t1);
 		items.add(item);
-		((Item)(items.get(items.size()-1))).slotX=x;
-		((Item)(items.get(items.size()-1))).slotY=y;
+		item.slotX=x;
+		item.slotY=y;
+		//((Item)(items.get(items.size()-1))).slotX=x;
+		//((Item)(items.get(items.size()-1))).slotY=y;
 		z[x][y]=false;
 		inven.addView(ivv);
 		return true;
@@ -297,6 +394,7 @@ public class Inventory
 				tmpItem=item;
 				setItem((ImageView)p1,0);
 				prop.activity.runOnUiThread(r2);
+				prop.onUi(r5);
 			}
 				}catch(Exception e){
 					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
@@ -318,6 +416,7 @@ public class Inventory
 					tmpItem=item;
 					setItem((ImageView)p1,1);
 					prop.activity.runOnUiThread(r2);
+					prop.onUi(r5);
 				}
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));

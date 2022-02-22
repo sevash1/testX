@@ -58,6 +58,7 @@ public class Btn_exit_menu
 				prop.playerAndUi.setVisibility(View.GONE);
 				prop.bl.setVisibility(View.GONE);
 				prop.money.setType(Money.Type.MENU);
+				prop.inv.switchToMenu();
 			}catch(Exception e){
 				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
 				

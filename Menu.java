@@ -150,7 +150,7 @@ public class Menu
 		Bonus tmpBonus;
 		float midX=0;
 		float midY=0;
-		
+		boolean isOpen=false;
 		Bonuses(){
 			midX=prop.screenW/2;
 			midY=prop.screenH/2;
@@ -293,11 +293,15 @@ public class Menu
 				   setScrollY((int)(y1));
 				   setY((int)(y1));
 				 }else 
-				 if(y2>y1&&y1>0){
+				 if(y2>y1&&y1>=0){
 					 setScrollY((int)(y1));
 					 setY((int)(y1));
 				 }else 
-				 if(y2<y1&&y2>0){
+				 if(y2<y1&&y2>=0){
+					 setScrollY((int)(y2));
+					 setY((int)(y2));
+				 }else 
+				 if(y2==y1){
 					 setScrollY((int)(y2));
 					 setY((int)(y2));
 				 }
@@ -309,11 +313,11 @@ public class Menu
 					setScrollX((int)(x1));
 					setX((int)(x1));
 				}else 
-				if(x2>x1&&x1>0){
+				if(x2>x1&&x1>=0){
 					setScrollX((int)(x1));
 					setX((int)(x1));
 				}else 
-				if(x2<x1&&x2>0){
+				if(x2<x1&&x2>=0){
 					setScrollX((int)(x2));
 					setX((int)(x2));
 				}
@@ -338,6 +342,7 @@ public class Menu
 			float cY;
 			int parent;
 			int id;
+			boolean isReceived=false;
 			
 			Bonus(int id,int pictureInt, String name, Object obj,float x,float y){
 				this.name=name;
@@ -352,6 +357,7 @@ public class Menu
 				if(obj==null){
 					picture.setX(midX);
 					picture.setY(midY);
+					isReceived=true;
 					cX=picture.getX()+picture.getLayoutParams().width/2;
 					cY=picture.getY()+picture.getLayoutParams().height/2;
 					
@@ -361,7 +367,6 @@ public class Menu
 					picture.setY(findBonus(((int)obj)).picture.getY()+y);
 					cX=picture.getX()+picture.getLayoutParams().width/2;
 					cY=picture.getY()+picture.getLayoutParams().height/2;
-					
 					parent=(int)obj;
 					tmpBonus=findBonus(((int)obj));
 					bonuses_layout.addView( new Canv(prop.context,tmpBonus.cX,tmpBonus.cY,cX,cY,Color.RED));
@@ -378,6 +383,16 @@ public class Menu
 			}
 			return null;
 		};
+		
+		void update(int n){
+			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+"+String.valueOf(n)}));
+			
+			tmpBonus=findBonus(n);
+			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+"+String.valueOf(tmpBonus.id)}));
+			
+				prop.onUi(r3);
+				tmpBonus.isReceived=true;
+		}
 			
 			
 			OnTouchListener touch=new OnTouchListener(){
@@ -400,7 +415,19 @@ public class Menu
 				}
 			};
 			
+			void openBonuses(){
+				intermediary.setZ(11);
+				bonuses_layout.setZ(10);
+				bonuses_layout.setVisibility(View.VISIBLE);
+				isOpen=true;
+			}
 		
+			void closeBonuses(){
+				intermediary.setZ(0);
+				bonuses_layout.setZ(0);
+				bonuses_layout.setVisibility(View.INVISIBLE);
+				isOpen=false;
+			}
 		
 		
 		OnTouchListener t1=new OnTouchListener(){
@@ -413,17 +440,11 @@ public class Menu
 				if(p2.getAction()==MotionEvent.ACTION_UP)
 				{
 					
-					if(bonuses_layout.getVisibility()==View.INVISIBLE){
-						intermediary.setZ(11);
-						bonuses_layout.setZ(10);
-						bonuses_layout.setVisibility(View.VISIBLE);
-						
+					if(!isOpen){
+						openBonuses();
 					}
 					else{
-						intermediary.setZ(0);
-						bonuses_layout.setZ(0);
-						bonuses_layout.setVisibility(View.INVISIBLE);
-						
+						closeBonuses();
 					}
 				}
 				return true;
@@ -438,7 +459,9 @@ public class Menu
 				
 				if(p2.getAction()==MotionEvent.ACTION_UP)
 				{
-					prop.onUi(r3);
+					if(findBonus(tmpBonus.parent).isReceived)
+					update(tmpBonus.id);
+					
 				}
 				return true;
 			}
@@ -449,7 +472,7 @@ public class Menu
 			@Override
 			public void run()
 			{
-				bonuses_layout.addView( new Canv(prop.context,tmpBonus.cX,tmpBonus.cY,((Bonus)(bonusList.get(tmpBonus.parent))).cX,((Bonus)(bonusList.get(tmpBonus.parent))).cY,Color.GREEN));
+				bonuses_layout.addView( new Canv(prop.context,tmpBonus.cX,tmpBonus.cY,findBonus(tmpBonus.parent).cX,findBonus(tmpBonus.parent).cY,Color.GREEN));
 				
 			}
 		};
@@ -471,6 +494,13 @@ public class Menu
 			new Bonus(12,R.drawable.bonus57,"Начало пути..",6,150,0);
 			new Bonus(13,R.drawable.bonus58,"Начало пути..",10,150,0);
 			new Bonus(14,R.drawable.bonus59,"Начало пути..",9,150,0);
+			new Bonus(62,R.drawable.bonus91,"Начало пути..",11,150,0);
+			new Bonus(63,R.drawable.bonus92,"Начало пути..",12,150,0);
+			new Bonus(64,R.drawable.bonus93,"Начало пути..",13,150,0);
+			new Bonus(65,R.drawable.bonus94,"Начало пути..",14,150,0);
+			new Bonus(66,R.drawable.bonus95,"Начало пути..",8,150,0);
+			new Bonus(67,R.drawable.bonus96,"Начало пути..",63,150,0);
+			new Bonus(68,R.drawable.bonus97,"Начало пути..",64,150,0);
 			
 			new Bonus(15,R.drawable.bonus116,"Начало пути..",0,-400,0);
 			new Bonus(16,R.drawable.bonus117,"Начало пути..",15,-150,-150);
@@ -522,6 +552,85 @@ public class Menu
 			new Bonus(55,R.drawable.bonus126,"Начало пути..",51,0,150);
 			new Bonus(56,R.drawable.bonus127,"Начало пути..",52,0,150);
 			
+			new Bonus(69,R.drawable.bonus60,"Начало пути..",0,550,550);
+			new Bonus(70,R.drawable.bonus61,"Начало пути..",69,150,0);
+			new Bonus(71,R.drawable.bonus62,"Начало пути..",69,150,150);
+			new Bonus(72,R.drawable.bonus63,"Начало пути..",69,0,150);
+			new Bonus(73,R.drawable.bonus64,"Начало пути..",70,150,150);
+			new Bonus(74,R.drawable.bonus65,"Начало пути..",70,150,0);
+			new Bonus(75,R.drawable.bonus66,"Начало пути..",71,150,150);
+			new Bonus(76,R.drawable.bonus67,"Начало пути..",72,0,150);
+			new Bonus(77,R.drawable.bonus68,"Начало пути..",72,150,150);
+			new Bonus(78,R.drawable.bonus69,"Начало пути..",73,150,150);
+			new Bonus(79,R.drawable.bonus70,"Начало пути..",74,150,150);
+			new Bonus(80,R.drawable.bonus71,"Начало пути..",76,150,150);
+			new Bonus(81,R.drawable.bonus72,"Начало пути..",77,150,150);
+			
+			new Bonus(82,R.drawable.bonus73,"Начало пути..",0,-550,-550);
+			new Bonus(83,R.drawable.bonus74,"Начало пути..",82,-150,0);
+			new Bonus(84,R.drawable.bonus75,"Начало пути..",82,-150,-150);
+			new Bonus(85,R.drawable.bonus76,"Начало пути..",82,0,-150);
+			new Bonus(86,R.drawable.bonus77,"Начало пути..",83,-150,-150);
+			new Bonus(87,R.drawable.bonus78,"Начало пути..",83,-150,0);
+			new Bonus(88,R.drawable.bonus79,"Начало пути..",84,-150,-150);
+			new Bonus(89,R.drawable.bonus80,"Начало пути..",85,0,-150);
+			new Bonus(90,R.drawable.bonus81,"Начало пути..",85,-150,-150);
+			new Bonus(91,R.drawable.bonus82,"Начало пути..",86,-150,-150);
+			new Bonus(92,R.drawable.bonus83,"Начало пути..",87,-150,-150);
+			new Bonus(93,R.drawable.bonus84,"Начало пути..",88,-150,-150);
+			new Bonus(94,R.drawable.bonus85,"Начало пути..",89,-150,-150);
+			new Bonus(95,R.drawable.bonus86,"Начало пути..",90,-150,-150);
+			new Bonus(96,R.drawable.bonus87,"Начало пути..",91,-150,-150);
+			new Bonus(97,R.drawable.bonus88,"Начало пути..",92,-150,-150);
+			new Bonus(98,R.drawable.bonus89,"Начало пути..",94,-150,-150);
+			new Bonus(99,R.drawable.bonus90,"Начало пути..",95,-150,-150);
+			
+			new Bonus(100,R.drawable.bonus01,"Начало пути..",0,550,-550);
+			new Bonus(101,R.drawable.bonus02,"Начало пути..",100,0,-150);
+			new Bonus(102,R.drawable.bonus03,"Начало пути..",100,150,-150);
+			new Bonus(103,R.drawable.bonus04,"Начало пути..",100,150,0);
+			new Bonus(104,R.drawable.bonus05,"Начало пути..",101,0,-150);
+			new Bonus(105,R.drawable.bonus06,"Начало пути..",101,150,-150);
+			new Bonus(106,R.drawable.bonus07,"Начало пути..",102,150,-150);
+			new Bonus(107,R.drawable.bonus08,"Начало пути..",103,150,-150);
+			new Bonus(108,R.drawable.bonus09,"Начало пути..",103,150,0);
+			new Bonus(109,R.drawable.bonus10,"Начало пути..",104,150,-150);
+			new Bonus(110,R.drawable.bonus11,"Начало пути..",105,150,-150);
+			new Bonus(111,R.drawable.bonus12,"Начало пути..",106,150,-150);
+			new Bonus(112,R.drawable.bonus13,"Начало пути..",107,150,-150);
+			new Bonus(113,R.drawable.bonus14,"Начало пути..",108,150,-150);
+			new Bonus(114,R.drawable.bonus15,"Начало пути..",109,150,-150);
+			new Bonus(115,R.drawable.bonus16,"Начало пути..",110,150,-150);
+			new Bonus(116,R.drawable.bonus17,"Начало пути..",111,150,-150);
+			new Bonus(117,R.drawable.bonus18,"Начало пути..",112,150,-150);
+			new Bonus(118,R.drawable.bonus19,"Начало пути..",113,150,-150);
+			new Bonus(119,R.drawable.bonus20,"Начало пути..",114,150,-150);
+			new Bonus(120,R.drawable.bonus21,"Начало пути..",118,150,-150);
+			new Bonus(121,R.drawable.bonus22,"Начало пути..",116,150,-150);
+			
+			new Bonus(122,R.drawable.bonus23,"Начало пути..",0,-550,550);
+			new Bonus(123,R.drawable.bonus24,"Начало пути..",122,0,150);
+			new Bonus(124,R.drawable.bonus25,"Начало пути..",122,-150,150);
+			new Bonus(125,R.drawable.bonus26,"Начало пути..",122,-150,0);
+			new Bonus(126,R.drawable.bonus27,"Начало пути..",123,0,150);
+			new Bonus(127,R.drawable.bonus28,"Начало пути..",123,-150,150);
+			new Bonus(128,R.drawable.bonus29,"Начало пути..",124,-150,150);
+			new Bonus(129,R.drawable.bonus30,"Начало пути..",125,-150,150);
+			new Bonus(130,R.drawable.bonus31,"Начало пути..",125,-150,0);
+			new Bonus(131,R.drawable.bonus32,"Начало пути..",126,-150,150);
+			new Bonus(132,R.drawable.bonus33,"Начало пути..",127,-150,150);
+			new Bonus(133,R.drawable.bonus34,"Начало пути..",128,-150,150);
+			new Bonus(134,R.drawable.bonus35,"Начало пути..",129,-150,150);
+			new Bonus(135,R.drawable.bonus36,"Начало пути..",130,-150,150);
+			new Bonus(136,R.drawable.bonus37,"Начало пути..",131,-150,150);
+			new Bonus(137,R.drawable.bonus38,"Начало пути..",132,-150,150);
+			new Bonus(138,R.drawable.bonus39,"Начало пути..",133,-150,150);
+			new Bonus(139,R.drawable.bonus40,"Начало пути..",134,-150,150);
+			new Bonus(140,R.drawable.bonus41,"Начало пути..",135,-150,150);
+			new Bonus(141,R.drawable.bonus43,"Начало пути..",136,-150,150);
+			new Bonus(142,R.drawable.bonus44,"Начало пути..",138,-150,150);
+			new Bonus(143,R.drawable.bonus45,"Начало пути..",140,-150,150);
+			
 		}
 		
 	}
@@ -540,7 +649,7 @@ public class Menu
 			set.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.settings_button,prop.options)));
 			set.setTranslationX(prop.screenW-250);
 			set.setTranslationY(60);
-			set.setTranslationZ(2);
+			set.setTranslationZ(0);
 			set.setOnTouchListener(t1);
 			settingsLayout=new RelativeLayout(prop.context);
 			settingsLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
@@ -555,6 +664,7 @@ public class Menu
 		public void closeSettings(){
 			settingsLayout.setVisibility(View.INVISIBLE);
 			settingsIsOpen=false;
+			set.setZ(0);
 		}
 		
 		Runnable r1=new Runnable(){
@@ -584,6 +694,7 @@ public class Menu
 						closeSettings();
 						return true;
 					}
+					set.setZ(11);
 					settingsLayout.setVisibility(View.VISIBLE);
 					settingsIsOpen=true;
 					}

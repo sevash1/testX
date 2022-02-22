@@ -297,7 +297,7 @@ public class Shop
 			ImageView gold=new ImageView(prop.context);
 			gold.setX(235);
 			gold.setY(25);
-			gold.setImageResource(R.drawable.coin_01c);
+			gold.setImageResource(R.drawable.coin_01d);
 			gold.setLayoutParams(new LayoutParams(50,50));
 			
 			price=new TextView(prop.context);

@@ -16,8 +16,7 @@ public class Skeleton extends Mob
 	main_properties prop;
 	LayoutParams params=new LayoutParams(300,300);
 	LayoutParams params2=new LayoutParams(200,6);
-	LayoutParams params6=new LayoutParams(48*2,48*2);
-	ImageView iv;
+		ImageView iv;
 	ImageView hp;
 	Thread th;
 	int anim_etap=0;
@@ -36,7 +35,6 @@ public class Skeleton extends Mob
 	float 	length;
 	float ratioX;
 	float ratioY;
-	ImageView money;
 	public boolean isLife=true;
 	Random rand=new Random();
 	int minExp=2;
@@ -47,11 +45,7 @@ public class Skeleton extends Mob
 		
 		iv=new ImageView(prop.context);
 		hp=new ImageView(prop.context);
-		money=new ImageView(prop.context);
-		money.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.coin_01b,prop.options)));
-		money.setLayoutParams(params6);
-		money.setVisibility(View.INVISIBLE);
-		anim_idle();
+			anim_idle();
 		iv.setPivotX(75);
 		iv.setPivotY(75);
 		iv.setScaleType(ScaleType.FIT_XY);
@@ -92,8 +86,7 @@ public class Skeleton extends Mob
 		{
 			prop.world.addView(hp);
 			prop.world.addView(iv,params);
-			prop.world.addView(money);
-			th.start();
+		    th.start();
 		}	
 	};
 	
@@ -104,10 +97,6 @@ public class Skeleton extends Mob
 		public void run()
 		{
 			try{
-				
-		//	iv.setTranslationX(posX-playerPosX);
-		//	iv.setTranslationY(posY-playerPosY);
-			
 			hp.setTranslationX(iv.getTranslationX()+iv.getWidth()/2-hp.getWidth()/2);
 			hp.setTranslationY(iv.getTranslationY()+30);
 			}catch(Exception e){
@@ -134,12 +123,13 @@ public class Skeleton extends Mob
 			prop.activity.runOnUiThread(run0);
 		if(health<=0){
 			isLife=false;
+			Money.drop(prop,"",iv.getX()+iv.getWidth()/2,iv.getY()+iv.getHeight()/2,2.1f);	
 			prop.skeletons.remove(this);
+			new Thread(run10).start();
 			new Skeleton(prop,rand.nextInt(1000)-500,rand.nextInt(1000)-500);
 			anim_etap=0;
 			anim=anim_death;
 			prop.menu.playerLevel.addExp(rand.nextInt(maxExp-minExp)+minExp);
-			Thread th=new Thread(run3);
 			th.setDaemon(true);
 			th.start();
 		}
@@ -253,8 +243,7 @@ public class Skeleton extends Mob
 	
 					
 				}catch(Exception e){
-					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-					
+					e.printStackTrace();
 				}
 			}
 			
@@ -270,7 +259,6 @@ public class Skeleton extends Mob
 		{
 			prop.world.removeView(hp);
 		prop.world.removeView(iv);
-		prop.world.removeView(money);
 		}
 
 
@@ -296,97 +284,5 @@ public class Skeleton extends Mob
 };
 	
 
-	Runnable run3=new Runnable(){
-
-		@Override
-		public void run()
-		{
-			try{
-			prop.activity.runOnUiThread(run4);
-		new Thread(run10).start();
-				x=iv.getTranslationX()+iv.getWidth()/2;
-				y=iv.getTranslationY()+iv.getHeight()/2;
-			lengthX=prop.screenW-48-30-x;
-			lengthY=10-y;
-		    length=(float)Math.sqrt(Math.pow(lengthX,2)+Math.pow(lengthY,2));
-			ratioX=lengthX/length;
-		    ratioY=lengthY/length;
-			
-			for(int s=ss;s<100;s++){
-				try{
-					if(money.getTranslationX()>prop.screenW-48-30
-					   &&money.getTranslationY()<10){
-					
-						Thread.sleep(100);
-						prop.activity.runOnUiThread(run8);
-						s=100;
-						   break;
-						   }
-					ss=s;
-					Thread.sleep(15);
-			prop.activity.runOnUiThread(run5);
-				}catch(Exception e){
-					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-				}
-				
-			}
-			prop.money.v();
-				prop.money.addMoney(2.1f);
-			}catch(Exception e){
-			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-		}
 	
-		}
-
-		
-	};
-	
-	Runnable run4=new Runnable(){
-
-		@Override
-		public void run()
-		{
-			try{
-			money.setTranslationX(iv.getTranslationX()+iv.getWidth()/2);
-			money.setTranslationY(iv.getTranslationY()+iv.getHeight()/2);
-			money.setVisibility(View.VISIBLE);
-			
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-			}
-		}
-
-		
-	};
-	Runnable run5=new Runnable(){
-
-		@Override
-		public void run()
-		{
-			try{
-				money.setTranslationX(money.getTranslationX()+ratioX*ss);
-				money.setTranslationY(money.getTranslationY()+ratioY*ss);
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-			}
-		}
-
-		
-	};
-	
-	Runnable run8=new Runnable(){
-
-		@Override
-		public void run()
-		{
-			money.setVisibility(View.GONE);
-			
-		}
-
-		
-	};
 }

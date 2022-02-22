@@ -63,6 +63,11 @@ public class files
 						if(prop.inv.armItems[i]!=null)
 								bw.write(String.valueOf(i)+"_"+String.valueOf(prop.inv.armItems[i].id)+":"+String.valueOf(prop.inv.armItems[i].count)+"/");
 					}
+				bw.write("\n");
+				bw.write("bonuses: ");
+				for(Menu.Bonuses.Bonus bonus:prop.menu.bonuses.bonusList)
+				if(bonus.isReceived) bw.write(String.valueOf(bonus.id)+"/");
+				bw.write("\n");
 				bw.close();
 				return;
 			} catch (Exception ignore) {}
