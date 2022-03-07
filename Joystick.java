@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import android.widget.*;
 import android.content.*;
 import android.widget.RelativeLayout.*;
@@ -81,8 +81,6 @@ public class Joystick
 		@Override
 		public boolean onTouch(View p1, MotionEvent m)
 		{
-			try{
-				
 				if(m==null) return true;
 				if(m.getActionMasked()==MotionEvent.ACTION_POINTER_DOWN){
 					return false;
@@ -101,7 +99,6 @@ public class Joystick
 
 							break;
 						}
-
 
 					case MotionEvent.ACTION_UP:{
 							prop.activity.runOnUiThread(run4);
@@ -146,15 +143,8 @@ public class Joystick
 						}
 
 				}
-				
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-				
-			}
-			return true;
+				return true;
 		}
-		
-		
 	};
 
 	
@@ -165,21 +155,11 @@ public class Joystick
 		{
 			try{
 				Thread.sleep(1000);
+				}catch(Exception e){}
 				if(joystick_pressed) return;
 				border.setVisibility(View.INVISIBLE);
 				joystick.setVisibility(View.INVISIBLE);
-				
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-				
-				border.setVisibility(View.INVISIBLE);
-				joystick.setVisibility(View.INVISIBLE);
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-				
-			}
-		}
-
-		
+				}
 	};
 	
 	
@@ -188,20 +168,13 @@ public class Joystick
 		@Override
 		public void run()
 		{
-			try{
 			joystick.setTranslationX(joystick_downX-95);
 			joystick.setTranslationY(joystick_downY+centr);
 			border.setTranslationX(joystick_downX-95);
 			border.setTranslationY(joystick_downY+centr);
 			border.setVisibility(View.VISIBLE);
 			joystick.setVisibility(View.VISIBLE);
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
 			}
-		}
-
-		
 	};
 	
 	Runnable run4=new Runnable(){
@@ -209,15 +182,9 @@ public class Joystick
 		@Override
 		public void run()
 		{
-			try{
 			joystick.setTranslationX(border.getTranslationX());
 			joystick.setTranslationY(border.getTranslationY());
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
 			}
-		}
-
 
 	};
 	
@@ -227,14 +194,9 @@ public class Joystick
 		@Override
 		public void run()
 		{
-			try{
 			joystick.setTranslationX(joystickX-95);
 			joystick.setTranslationY(joystickY+centr);
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-			}
-		}
+	     }
 
 	};
 	
@@ -247,15 +209,9 @@ public class Joystick
 		@Override
 		public void run()
 		{
-			try{
 			if(ratioX<0)prop.player.player.setRotationY(180);
 			else if(ratioX>0) prop.player.player.setRotationY(0);
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
 			}
-		}
-
 
 	};
 }

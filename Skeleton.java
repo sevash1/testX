@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import java.util.*;
 import android.widget.*;
 import android.content.*;
@@ -6,7 +6,7 @@ import android.graphics.*;
 import android.app.*;
 import android.widget.RelativeLayout.*;
 import android.widget.ImageView.*;
-import sevash.testx.*;
+import sevash.livingSword.*;
 import android.util.*;
 import android.view.*;
 
@@ -20,8 +20,6 @@ public class Skeleton extends Mob
 	ImageView hp;
 	Thread th;
 	int anim_etap=0;
-	public float playerPosX;
-    public float playerPosY;
 	public float posX=0;
 	public float posY=0;
 	public float max_health=3;
@@ -62,21 +60,13 @@ public class Skeleton extends Mob
 		hp.setZ(12);
 		
 		th=new Thread(run2);
-		th.setDaemon(true);
 		prop.activity.runOnUiThread(run6);
 		prop.skeletons.add(this);
 		
 	}
 	
-	public void update(float x,float y){
-		try{
-		playerPosX=x;
-		playerPosY=y;
-		prop.activity.runOnUiThread(run1);
-		}catch(Exception e){
-			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-		}
+	public void update(){
+		prop.activity.runOnUiThread(run1);	
 	}
 	
 	Runnable run6=new Runnable(){
@@ -96,55 +86,30 @@ public class Skeleton extends Mob
 		@Override
 		public void run()
 		{
-			try{
 			hp.setTranslationX(iv.getTranslationX()+iv.getWidth()/2-hp.getWidth()/2);
 			hp.setTranslationY(iv.getTranslationY()+30);
-			}catch(Exception e){
-			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-		}
-		}
+			}
 	};
 	
 	public void sendDamage(float count){
-		try{
 			if(!isLife)return;
 		health=health-count;
 		checkHealth();
-		}catch(Exception e){
-		files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-	}
 	}
 
 	
 	void checkHealth(){
-		try{
 			prop.activity.runOnUiThread(run0);
 		if(health<=0){
-			isLife=false;
-			Money.drop(prop,"",iv.getX()+iv.getWidth()/2,iv.getY()+iv.getHeight()/2,2.1f);	
 			prop.skeletons.remove(this);
+			isLife=false;
+			prop.menu.playerLevel.addExp((float)(rand.nextInt(maxExp-minExp)+minExp));
+			Money.drop(prop,"",iv.getX()+iv.getWidth()/2,iv.getY()+iv.getHeight()/2,1f);	
 			new Thread(run10).start();
 			new Skeleton(prop,rand.nextInt(1000)-500,rand.nextInt(1000)-500);
 			anim_etap=0;
 			anim=anim_death;
-			prop.menu.playerLevel.addExp(rand.nextInt(maxExp-minExp)+minExp);
-			th.setDaemon(true);
-			th.start();
-		}
-		
-		}catch(Exception e){
-			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-		}
-	}
-	
-	
-	@Override
-	public int getMobId()
-	{
-		return Mob.SKELETON;
+			}
 	}
 
 	
@@ -229,7 +194,7 @@ public class Skeleton extends Mob
 				
 				try{
 					Thread.sleep(250);
-					
+				}catch(Exception e){continue;}
 					if(prop.stage.getStage()==Game_stage.WORLD){
 					prop.activity.runOnUiThread(run7);
 					if(anim==anim_death&&anim_etap>=anim.size()-2){
@@ -239,12 +204,6 @@ public class Skeleton extends Mob
 					if(anim_etap>anim.size()-2)anim_etap=0;
 					
 					}
-					
-	
-					
-				}catch(Exception e){
-					e.printStackTrace();
-				}
 			}
 			
 		}
@@ -272,14 +231,10 @@ public class Skeleton extends Mob
 			
 				try{
 					Thread.sleep(10000);
-
-						prop.activity.runOnUiThread(run9);
-		
-
 				}catch(Exception e){
-					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
+					
 				}
+						prop.activity.runOnUiThread(run9);
 			}
 };
 	

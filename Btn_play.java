@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import android.widget.*;
 import android.content.*;
 import android.graphics.*;
@@ -19,8 +19,6 @@ public class Btn_play
 	Thread worldThread;
 	
 	Btn_play(main_properties prop){
-		try{
-			
 		this.prop=prop;
 			this.menu=prop.menuLayout;
 		this.context=prop.context;
@@ -33,31 +31,32 @@ public class Btn_play
 		btn.setLayoutParams(params);
 		btn.setScaleType(ScaleType.FIT_XY);
 		btn.setTranslationX((screenW/2)-105*4);
-		btn.setTranslationY(screenH-75*4);
+		btn.setTranslationY(screenH-75*5);
 		btn.setOnClickListener(click);
-		tv.setText(Words.getRu(Words.words.PLAY));
+		tv.setText(prop.words.get(Words.words.PLAY));
 		tv.setGravity(Gravity.CENTER);
 		tv.setTextSize(32);
-		tv.setTranslationX((screenW/2)-105*4);
-		tv.setTranslationY(screenH-75*4);
+		tv.setTranslationX(btn.getX());
+		tv.setTranslationY(btn.getY());
 		tv.setLayoutParams(params);
 		tv.setTextColor(Color.YELLOW);
 		tv.setTypeface(prop.ttf);
-		
+		prop.Btn_play=this;
 			prop.menuLayout.addView(btn);
 			prop.menuLayout.addView(tv);
-		}catch(Exception e){
-			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"erro.txt",(new String[]{e.toString()}));
-		}
+		
 	}
 	
+	void reLang(){
+		tv.setText(prop.words.get(Words.words.PLAY));
+		}
+		
 	
 	OnClickListener click=new OnClickListener(){
 
 		@Override
 		public void onClick(View p1)
 		{
-			try{
 				if(!prop.stage.world_load_complete)return;
 				prop.stage.setStage(Game_stage.WORLD);
 				
@@ -68,13 +67,7 @@ public class Btn_play
 				prop.stage.setStage_in_world(Game_stage.NOT_PAUSE);
 				prop.joystick.lay.setVisibility(View.VISIBLE);
 			    prop.inv.switchToWorld();
-				}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-				
-
-			}
-		}
-
-		
+				prop.money.setType(Money.Type.WORLD);
+				}
 	};
 }

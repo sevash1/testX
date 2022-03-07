@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import java.util.*;
 import android.widget.*;
 
@@ -13,9 +13,7 @@ public interface Entity
 	public static final int STRUCTURE=3;
 	public static final int UI=4;
 	
-	public float worldPosX;
-	public float worldPosY;
-
+	
     
 	public int getEntityType();
 	

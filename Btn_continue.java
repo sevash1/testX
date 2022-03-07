@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import android.widget.*;
 import android.content.*;
 import android.widget.RelativeLayout.*;
@@ -43,30 +43,25 @@ public class Btn_continue
 		tv.setShadowLayer(5,10,10,Color.argb(255,255,127,127));
 		tv.setTypeface(prop.ttf);
 		prop.bl.addView(btn);
+		prop.btn_continue=this;
 		prop.bl.addView(tv);
 	
 	}
 
-	
+	void reLang(){
+		tv.setText(prop.words.get(Words.words.CONTINUE));
+
+	}
 
 	OnClickListener click=new OnClickListener(){
 
 		@Override
 		public void onClick(View p1)
 		{
-			try{
 				prop.bl.setVisibility(View.GONE);
 				prop.stage.setStage_in_world(Game_stage.NOT_PAUSE);
 				prop.joystick.lay.setVisibility(View.VISIBLE);
-				
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-
 			}
-		}
-
-
 	};
 	
 	

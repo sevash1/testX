@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import android.widget.*;
 import android.content.*;
 import android.app.*;
@@ -38,7 +38,7 @@ public class main_properties
 	public Inventory inv;
 	public Shop shop;
 	public LoadBar loadBar;
-	public List musicList=new ArrayList<MediaPlayer>();
+	public List musicList=new ArrayList<Integer>();
 	public List treesList=new ArrayList<Bitmap>();
 	public Menu menu;
 	public List items=new ArrayList<Item>();
@@ -46,6 +46,10 @@ public class main_properties
 	public Words words;
 	public main_properties prop;
 	public Menu.Avatar avatar;
+	public Btn_continue btn_continue;
+	public Btn_exit_menu Btn_exit_menu;
+	public Btn_exit_game Btn_exit_game;
+	public Btn_play Btn_play;
 	
 	
 	public main_properties(
@@ -113,7 +117,7 @@ public class main_properties
 	public void setLoadBar(LoadBar bar){
 		this.loadBar=bar;
 	}
-	public void addMusic(MediaPlayer music){
+	public void addMusic(int music){
 		this.musicList.add(music);
 	}
 	public void addTree(ImageView tree){
@@ -143,11 +147,7 @@ public class main_properties
 		@Override
 		public void run()
 		{
-			try{
 		      r4.run();
-			}catch(Exception e){
-				files.writeFile(prop,"error.txt",new String[]{e.toString()});
-			}
 		}
 	};
 	

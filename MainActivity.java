@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 
 import android.app.*;
 import android.content.pm.*;
@@ -10,7 +10,7 @@ import android.view.View.*;
 import android.widget.*;
 import android.widget.RelativeLayout.*;
 import java.util.*;
-import sevash.testx.files.*;
+import sevash.livingSword.files.*;
 import android.widget.ImageView.*;
 import android.content.*;
 import android.content.res.*;
@@ -56,7 +56,6 @@ public class MainActivity extends Activity
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
-		try{
         super.onCreate(savedInstanceState);
 		if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.P){
 			getWindow().getAttributes().layoutInDisplayCutoutMode=
@@ -77,10 +76,6 @@ public class MainActivity extends Activity
 			setContentView(R.layout.main);
 			activity=this;
 			new Thread(run4).start();
-			}
-		catch(Exception e){
-			files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-		}
 	}
 
 	@Override
@@ -90,10 +85,9 @@ public class MainActivity extends Activity
 		if(prop.music!=null)
 		prop.music.stop();
 		files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{});
-		for(int i=0;i<prop.musicList.size();i++)
-		((MediaPlayer)(prop.musicList.get(i))).release();
 		finish();
 		super.onDestroy();
+	
 	}
 
 	@Override
@@ -113,14 +107,11 @@ public class MainActivity extends Activity
 		@Override
 		public void run()
 		{
-			try{
-				
 				runOnUiThread(run1);
 				while(!run1_c){
 					if(Game_stage.EXIT==prop.stage.getStage()) 
 						return;
 				}
-			prop.money.setType(Money.Type.WORLD);
 			while(stage.getStage()==Game_stage.WORLD){
 				if(Game_stage.EXIT==prop.stage.getStage()) 
 					return;
@@ -130,7 +121,8 @@ public class MainActivity extends Activity
 					Thread.sleep(8);
 					time2=System.currentTimeMillis();
 					time3=time2-time1;
-					
+					}
+			catch(Exception e){continue;}
 					
 					fps++;
 					
@@ -189,7 +181,7 @@ public class MainActivity extends Activity
 						
 					}
 					for(Skeleton skeleton:skeletons){
-						skeleton.update(prop.playerPosX,prop.playerPosY);
+						skeleton.update();
 					}
 				
 					time5+=time3;
@@ -203,14 +195,8 @@ public class MainActivity extends Activity
 						String.valueOf(Runtime.getRuntime().freeMemory()/1048576));
 						runOnUiThread(run3);
 					
-						}
-						
-				}catch(Exception e){
-					files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-				}}
-		}catch(Exception e){
-			files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-		}
+						}}
+	
 		}
 		};
 		
@@ -220,17 +206,12 @@ public class MainActivity extends Activity
 		@Override
 		public void run()
 		{
-			try{
 			if(!run1_c){
 				main.addView(playerAndUi,params2);
 			run1_c=true;
 			}
 				prop.playerAndUi.setVisibility(View.VISIBLE);
 				prop.menuLayout.setVisibility(View.GONE);
-				
-			}catch(Exception e){
-				files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));		
-			}
 		}
 		};
 		
@@ -239,14 +220,7 @@ public class MainActivity extends Activity
 		@Override
 		public void run()
 		{
-			try{
-				
 				coords.setText(coord);
-			}
-			catch(Exception e){
-				files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-			}
-			
 		}
 
 	};
@@ -257,7 +231,6 @@ public class MainActivity extends Activity
 		@Override
 		public void run()
 		{
-			try{
 			context=getApplicationContext();
 			main=findViewById(R.id.main);
 			menu=new RelativeLayout(context);
@@ -267,8 +240,8 @@ public class MainActivity extends Activity
 			
 			files.readFile(read,getExternalFilesDir("")+"/f.txt");
 		
-				menu.setBackgroundResource(R.drawable.game_background_4);
-			
+				menu.setBackgroundResource(R.drawable.background1);
+			    menu.setVisibility(View.INVISIBLE);
 				pause_lay.setVisibility(View.GONE);
 				pause_lay.setBackgroundColor(Color.argb(63,0,0,0));
 				pause_lay.setTranslationZ(11111);
@@ -383,9 +356,6 @@ public class MainActivity extends Activity
 				playerAndUi.addView(pause_lay,params2);
 				prop.loadBar.addPoint();
 				prop.stage.world_load_complete=true;
-					}catch(Exception e){
-				files.writeFile(prop,getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-			}
 }
 		
 	};
@@ -406,7 +376,6 @@ public class MainActivity extends Activity
 	@Override
 	public void onBackPressed()
 	{
-		try{
 		if(stage.getStage()==Game_stage.MENU){
 			if(prop.shop.isOpen){
 				prop.shop.closeShop();
@@ -459,15 +428,11 @@ public class MainActivity extends Activity
 				
 				}
 		}
-		}catch(Exception e){
-		files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-	}
+		
 	}
 			
 			
 		void abc(){
-			try{
 			for(String s1:read){
 				String[] s2=s1.split(" ");
 				
@@ -506,21 +471,16 @@ public class MainActivity extends Activity
 				}
 	
 					if(s2[0].contentEquals("bonuses:")){
-						if(s2.length==1)continue;
-						
-					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+a"}));
+						if(s2.length==1)continue;	
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
-					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+b"}));
 					for(String s3:s2[1].split("/")){
-						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+c"}));
-						if(s3.contentEquals("NaN") || s3.contentEquals("")||s3==null) continue;
-						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+"+String.valueOf(Integer.parseInt(s3))}));
-						prop.menu.bonuses.update(Integer.parseInt(s3));
-						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+"+String.valueOf(Integer.parseInt(s3))}));	
-					}
+							if(s3.contentEquals("NaN") || s3.contentEquals("")||s3==null) continue;
+							prop.menu.bonuses.update(Integer.parseInt(s3));
+							}
 				}
 					if(s2[0].contentEquals("exp:")){
-						prop.menu.playerLevel.points=Double.parseDouble(s2[1]);
+						prop.menu.playerLevel.points=Float.parseFloat(s2[1]);
+						prop.menu.playerLevel.pointsOnThisLevel=prop.menu.playerLevel.points;
 						prop.menu.playerLevel.update();
 						}
 					if(s2[0].contentEquals("armor:")){
@@ -540,17 +500,12 @@ public class MainActivity extends Activity
 					
 			
 				}
-				}catch(Exception e){
-					e.printStackTrace();
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-			}
+				
 		}
 
 		@Override
 		protected void onResume()
 		{
-			try{
 			
 			super.onResume();
 				if(isPause){
@@ -558,10 +513,7 @@ public class MainActivity extends Activity
 					if(prop.music!=null)
 				prop.music.start();
 				}
-		}catch(Exception e){
-			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-		}
+		
 		}
 	
     

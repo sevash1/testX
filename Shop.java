@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import android.widget.*;
 import android.widget.RelativeLayout.*;
 import android.view.*;
@@ -82,6 +82,12 @@ public class Shop
 		prop.activity.runOnUiThread(run1);
 		prop.activity.runOnUiThread(prop.money.r3);
 		prop.showGameButtons();
+	}
+	
+	void reLang(){
+		buyed.setText(prop.words.get(Words.words.BUYED));
+		notBuyed.setText(prop.words.get(Words.words.NOT_BUYED));
+		ti.reLang();
 	}
 	
 	Runnable run=new Runnable(){
@@ -196,6 +202,7 @@ public class Shop
 		RelativeLayout descriptionL;
 		ImageView target;
 		ImageView it;
+		TextView buy;
 		TextView name;
 		TextView descT;
 		TextView price;
@@ -261,7 +268,7 @@ public class Shop
 			btn_buy.setY(225);
 			btn_buy.setImageResource(R.drawable.btns_background);
 			btn_buy.setLayoutParams(new LayoutParams(250,50));
-			TextView buy=new TextView(prop.context);
+			buy=new TextView(prop.context);
 			buy.setText(prop.words.get(Words.words.BUY));
 			buy.setGravity(Gravity.CENTER);
 			buy.setTextSize(9);
@@ -327,6 +334,10 @@ public class Shop
 			itemL.addView(notBuyed);
 			prop.activity.runOnUiThread(r3);
 			}
+			
+		void reLang(){
+			buy.setText(prop.words.get(Words.words.BUY));
+		}
 			
 	void setItem(ImageView t){
 		it=t;

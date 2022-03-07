@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import java.io.*;
 import android.util.*;
 import java.util.*;
@@ -47,6 +47,7 @@ public class files
 					e.printStackTrace();
 				}
 				BufferedWriter bw = new BufferedWriter(new FileWriter(file));
+				bw.write("ver: 0.1\n");
 				bw.write("player_position_x: "+String.valueOf(prop.playerPosX)+"\n");
 				bw.write("player_position_y: "+String.valueOf(prop.playerPosY)+"\n");
 				bw.write("exp: "+String.valueOf(prop.menu.playerLevel.points)+"\n");

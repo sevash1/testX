@@ -1,7 +1,7 @@
-package sevash.testx;
+package sevash.livingSword;
 import java.util.*;
 import android.graphics.*;
-import sevash.testx.*;
+import sevash.livingSword.*;
 
 public class Mob implements Entity
 {

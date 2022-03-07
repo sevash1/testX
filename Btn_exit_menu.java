@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import android.widget.*;
 import android.content.*;
 import android.widget.RelativeLayout.*;
@@ -41,29 +41,27 @@ public class Btn_exit_menu
 		tv.setLayoutParams(params);
 		tv.setTextColor(Color.YELLOW);
 		tv.setTypeface(prop.ttf);
+		prop.Btn_exit_menu=this;
 		prop.bl.addView(btn);
 		prop.bl.addView(tv);
 	}
 
-	
+	void reLang(){
+		tv.setText(prop.words.get(Words.words.EXIT_MENU));
+
+	}
 
 	OnClickListener click=new OnClickListener(){
 
 		@Override
 		public void onClick(View p1)
 		{
-			try{
 				prop.stage.setStage(Game_stage.MENU);
 				prop.menuLayout.setVisibility(View.VISIBLE);
 				prop.playerAndUi.setVisibility(View.GONE);
 				prop.bl.setVisibility(View.GONE);
 				prop.money.setType(Money.Type.MENU);
 				prop.inv.switchToMenu();
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-				
-
-			}
 		}
 
 

@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 
 public class Game_stage
 {

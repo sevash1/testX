@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import android.widget.*;
 import android.widget.RelativeLayout.*;
 import android.graphics.*;
@@ -51,7 +51,6 @@ public class Btn_roll
 		@Override
 		public boolean onTouch(View p1, MotionEvent p2)
 		{
-			try{
 				if(prop.stage.getStage_in_world()==Game_stage.PAUSE) return false;
 				switch (p2.getAction()){
 					case MotionEvent.ACTION_DOWN:{
@@ -70,10 +69,6 @@ public class Btn_roll
 						}
 				}
 				return true;
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-				return true;
-			}
 		}
 
 

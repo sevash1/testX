@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import android.widget.*;
 import android.content.*;
 import java.util.*;
@@ -222,7 +222,7 @@ public class Player implements Entity
 	void playM(){
 		if(Game_stage.EXIT==prop.stage.getStage()) return;
 		
-		prop.music=(MediaPlayer)prop.musicList.get(r.nextInt(47));
+		prop.music=MediaPlayer.create(prop.context,prop.musicList.get(r.nextInt(47)));
 		if(prop.music!=null)
 			if(prop.menu!=null)
 			prop.music.setVolume(prop.menu.settings.musicVolume.volume
@@ -242,36 +242,17 @@ public class Player implements Entity
 			prop.music.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
 					@Override
 					public void onCompletion(MediaPlayer mp){
+						if(Game_stage.EXIT==prop.stage.getStage()) return;	
 						o--;
 						if(o>0)
 						    prop.music.start();
 						else
-							nextMusic();
+							playM();
 						}
 						});
 		}
-		else nextMusic();
+		else playM();
 		
-	}
-	
-	void nextMusic(){
-		if(!prop.music.isPlaying()){
-			playM();
-			return;
-		}
-		prop.music.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
-				@Override
-				public void onCompletion(MediaPlayer mp){
-					try{
-						if(Game_stage.EXIT==prop.stage.getStage()) return;
-
-						playM();
-					}catch(Exception e){
-						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-					}
-				}
-			});
 	}
 	
 	
@@ -280,18 +261,14 @@ public class Player implements Entity
 		@Override
 		public void run()
 		{
-			try{
-			playM();
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-			}
+			
 			while(true){
 				if(Game_stage.EXIT==prop.stage.getStage())
 					return;
 				
 				try{
 					Thread.sleep(250);
+					}catch(Exception e){continue;}
 					if(prop.stage.getStage()==Game_stage.MENU){
 						prop.activity.runOnUiThread(run5);
 					s++;
@@ -299,10 +276,7 @@ public class Player implements Entity
 					
 						
 					}
-				}catch(Exception e){
-					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-					
-				}
+				
 			}
 		}
 			
@@ -320,9 +294,7 @@ public class Player implements Entity
 		
 		public boolean attacked=false;
 	void attack(){
-		try{
 			for(Skeleton skel:prop.skeletons){
-				//if(player.getRotationY()==0)
 				if(Math.sqrt(Math.pow((player.getTranslationX()-(skel.iv.getTranslationX()-prop.world.getScrollX())),2)
 						  +Math.pow((player.getTranslationY()-(skel.iv.getTranslationY()-prop.world.getScrollY())),2))<200){
 			attacked=true;
@@ -330,10 +302,7 @@ public class Player implements Entity
 			
 		else attacked=false;
 		}
-		}catch(Exception e){
-			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-		}
+		
 	}
 		
 	Runnable run3=new Runnable(){
@@ -349,6 +318,8 @@ public class Player implements Entity
 				
 				try{
 					Thread.sleep(125);
+					}
+				catch(Exception e) {continue;}
 					if(prop.stage.getStage()==Game_stage.WORLD){
 						
 						updateAnim();
@@ -391,10 +362,6 @@ public class Player implements Entity
 						}
 						anim_stage++;
 					}
-				}catch(Exception e){
-					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-					
-				}
 				
 			}
 		}
@@ -406,13 +373,8 @@ public class Player implements Entity
 		@Override
 		public void run()
 		{
-			try{
-				
 			player.setImageBitmap((Bitmap)anim.get(anim_stage));
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-
-			}
+			
 		}
 
 		

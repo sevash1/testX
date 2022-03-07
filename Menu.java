@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import android.widget.*;
 import android.graphics.*;
 import android.widget.RelativeLayout.*;
@@ -6,6 +6,7 @@ import android.view.*;
 import android.widget.ImageView.*;
 import java.util.*;
 import android.content.*;
+import android.media.*;
 
 public class Menu
 {
@@ -31,22 +32,33 @@ public class Menu
 		prop.money=new Money(prop,Money.Type.MENU);
 		prop.loadBar.addPoint();
 		Music.load(prop);
-		new Btn_play(prop);
 		settings =new Settings();
-		
+		new Btn_play(prop);
 	
 	}
 	
 	class Avatar{
 		ImageView icon;
+		ImageView background;
 		Random r=new Random();
 	
 		Avatar(){
 			Item.loadAvatars(prop);
-			icon=((Item)prop.icons.get(r.nextInt(prop.icons.size()-1))).picture;
-			icon.setX(prop.screenW/30);
-			icon.setY(prop.screenH*0.025f);
-			prop.onUi(r1);
+			
+			background=new ImageView(prop.context);
+			background.setImageResource(R.drawable.background3);
+			background.setX(prop.screenW/30);
+			background.setY(prop.screenH*0.025f);
+			background.setScaleType(ScaleType.FIT_XY);
+			
+			icon=new ImageView(prop.context);
+			icon.setImageResource(((Item)prop.icons.get(r.nextInt(prop.icons.size()-1))).pictureInt);
+			icon.setX(background.getX()+25);
+			icon.setY(background.getY()+25);
+			icon.setScaleType(ScaleType.FIT_XY);
+			
+			prop.menuLayout.addView(background,200,200);
+			prop.menuLayout.addView(icon,150,150);	
 			prop.avatar=this;
 			
 				}
@@ -56,13 +68,16 @@ public class Menu
 			@Override
 			public void run()
 			{
-				prop.menuLayout.addView(icon,200,200);	
+				
 			}
 	};
 	}
 	
 	class PlayerLevel{
-		double points=0;
+		float points=0;
+		float pointsOnThisLevel=0;
+		float maxPointsOnThisLevel=20;
+		int level=0;
 		ImageView level_bar;
 		ImageView level_bar_backgound;
 		TextView lvl;
@@ -71,41 +86,51 @@ public class Menu
 		PlayerLevel(){
 			level_bar_backgound=new ImageView(prop.context);
 			level_bar_backgound.setImageResource(R.drawable.black_bar);
-			level_bar_backgound.setX(avatar.icon.getX()+avatar.icon.getLayoutParams().width+10);
+			level_bar_backgound.setX(avatar.icon.getX()+avatar.background.getLayoutParams().width+10);
 			level_bar_backgound.setY(prop.screenH/24);
 			level_bar_backgound.setScaleType(ScaleType.FIT_XY);
 			
 			level_bar=new ImageView(prop.context);
 			level_bar.setImageResource(R.drawable.red_bar);
-			level_bar.setX(avatar.icon.getX()+avatar.icon.getLayoutParams().width+10);
+			level_bar.setPivotX(0);
+			level_bar.setX(avatar.icon.getX()+avatar.background.getLayoutParams().width+10);
 			level_bar.setY(prop.screenH/24);
 			level_bar.setScaleType(ScaleType.FIT_XY);
 			
-			lvl=new TextView(prop.context);
-			lvl.setTypeface(prop.ttf);
-			lvl.setTextSize(6);
-			lvl.setX(level_bar.getX()+40);
-			lvl.setY(level_bar.getY()-15);
-			lvl.setText(String.valueOf((int)(points/100))+"  lvl.");
-			
 			pointsOfThisLevel=new TextView(prop.context);
 			pointsOfThisLevel.setTypeface(prop.ttf);
+			pointsOfThisLevel.setTextColor(Color.WHITE);
 			pointsOfThisLevel.setTextSize(6);
 		    pointsOfThisLevel.setX(level_bar.getX()+600+15);
 			pointsOfThisLevel.setY(level_bar.getY());
-			pointsOfThisLevel.setText(String.valueOf((int)(points%100))+" / 100");
 			
+			lvl=new TextView(prop.context);
+			lvl.setTypeface(prop.ttf);
+			lvl.setTextColor(Color.WHITE);
+			lvl.setTextSize(6);
+			lvl.setX(level_bar.getX()+40);
+			lvl.setY(level_bar.getY()-15);
 			
+			r2.run();
+		
 			prop.onUi(r1);
 			}
 			
-			public void addExp(int count){
+			public void addExp(float count){
 				points+=count;
-				prop.onUi(r2);
+				pointsOnThisLevel+=count;
+				update();
 			}
 			
 			public void update(){
-				prop.onUi(r2);
+				while(pointsOnThisLevel>maxPointsOnThisLevel){
+					pointsOnThisLevel-=maxPointsOnThisLevel;
+					level++;
+					maxPointsOnThisLevel*=1.33f;
+
+				}
+				r2.run();
+				//prop.onUi(r2);
 			}
 			
 		Runnable r2=new Runnable(){
@@ -113,9 +138,10 @@ public class Menu
 			@Override
 			public void run()
 			{
-			    level_bar.setLayoutParams(new LayoutParams((int)(points%100)*6,10));
-				lvl.setText(String.valueOf((int)(points/100))+"  lvl.");
-				pointsOfThisLevel.setText(String.valueOf((int)(points%100))+" / 100");
+				
+			    level_bar.setScaleX(pointsOnThisLevel/maxPointsOnThisLevel);
+				lvl.setText(String.valueOf(level)+"  lvl.");
+				pointsOfThisLevel.setText(String.valueOf((int)(pointsOnThisLevel))+" / "+String.valueOf((int)maxPointsOnThisLevel));
 				
 			}
 		};
@@ -126,7 +152,7 @@ public class Menu
 			public void run()
 			{
 				prop.menuLayout.addView(level_bar_backgound,600,10);
-				prop.menuLayout.addView(level_bar,500,10);
+				prop.menuLayout.addView(level_bar,600,10);
 				prop.menuLayout.addView(lvl);
 				prop.menuLayout.addView(pointsOfThisLevel);
 				
@@ -142,15 +168,16 @@ public class Menu
 		float x=0;
 		float y=0;
 		RelativeLayout description_layout;
+		RelativeLayout descB;
 		TextView description;
 		TextView name;
 		LayoutParams params1=new LayoutParams(100,100);
-		LayoutParams params2=new LayoutParams(500,200);
 		List bonusList=new ArrayList<Bonus>();
 		Bonus tmpBonus;
 		float midX=0;
 		float midY=0;
 		boolean isOpen=false;
+		TextView btnText;;
 		Bonuses(){
 			midX=prop.screenW/2;
 			midY=prop.screenH/2;
@@ -170,32 +197,52 @@ public class Menu
 			bonuses_layout.setOnTouchListener(touch);
 			
 			description_layout=new RelativeLayout(prop.context);
-			description_layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
-		    description_layout.setBackgroundColor(Color.argb(0xd4,0x8f,0x8f,0x8f));
 			description_layout.setVisibility(View.INVISIBLE);
-			description_layout.setLayoutParams(params2);
 			description_layout.setZ(2);
-			description_layout.setClipChildren(false);
-			description_layout.setClipToOutline(false);
-			description_layout.setOnTouchListener(t3);
+			description_layout.setLayoutParams(new LayoutParams(500,800));
+			
+			descB=new RelativeLayout(prop.context);
+			descB.setLayoutParams(new LayoutParams(500,LayoutParams.WRAP_CONTENT));
+			descB.setBackgroundResource(R.drawable.background3);
+			
+			btnText=new TextView(prop.context);
+			btnText.setBackgroundResource(R.drawable.btn);
+			btnText.setGravity(Gravity.CENTER);
+			btnText.setTypeface(prop.ttf);
+			btnText.setTextSize(8);
+			btnText.setTextColor(Color.YELLOW);
+			btnText.setX(250);
+			btnText.setLayoutParams(new LayoutParams(200,50));
+			btnText.setText("изучить");
+			btnText.setOnTouchListener(t3);
 			
 			name=new TextView(prop.context);
 			name.setTypeface(prop.ttf);
+			name.setTextColor(Color.WHITE);
 			name.setTextSize(12);
 			name.setX(45);
-			name.setY(20);
+			name.setPaintFlags(name.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
+			
+			descB.setY(btnText.getY()
+			          +btnText.getLayoutParams().height+20);
+			name.setY(25);
 			
 			description=new TextView(prop.context);
 			description.setTypeface(prop.ttf);
+			description.setTextColor(Color.WHITE);
 			description.setTextSize(8);
 			description.setX(25);
+			description.setY(name.getY()+15);
 			
-			description_layout.addView(name);
-			description_layout.addView(description);
+			descB.addView(name,description_layout.getLayoutParams().width-75,100);
+			descB.addView(description,description_layout.getLayoutParams().width-50,100);
+			description_layout.addView(descB);
+			description_layout.addView(btnText);
 			
 			loadBonuses();
 			
 			bonuses_layout.addView(description_layout);
+			
 			for(Bonus bonus:bonusList)
 			bonuses_layout.addView(bonus.picture);
 			prop.menuLayout.addView(intermediary,100,100);
@@ -234,11 +281,12 @@ public class Menu
 			public void run()
 			{
 				
-				if(description_layout.getVisibility()==View.VISIBLE)
+				if(description_layout.getVisibility()==View.VISIBLE){
 					description_layout.setVisibility(View.INVISIBLE);
-				else
+					}
+				else{
 					description_layout.setVisibility(View.VISIBLE);
-				
+					}
 			}
 			};
 			
@@ -259,11 +307,19 @@ public class Menu
 			{
 					description_layout.setVisibility(View.VISIBLE);
 				description_layout.setX(tmpBonus.picture.getX()+tmpBonus.picture.getWidth()+25);
-				description_layout.setY(tmpBonus.picture.getY()-30);
+				description_layout.setY(tmpBonus.picture.getY()-100);
 				name.setText(tmpBonus.name);
-				description.setY(name.getY()+name.getHeight());
+				name.setLayoutParams(new LayoutParams(name.getLayoutParams().width,
+													   name.getLineCount()*name.getLineHeight()));
+				
+				description.setY(name.getY()+name.getLineHeight()*name.getLineCount()+10);
 				description.setText(tmpBonus.description);
-			}
+				description.setLayoutParams(new LayoutParams(description.getLayoutParams().width,
+													  description.getLineCount()*description.getLineHeight()));
+				
+				descB.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,(int)(
+							   description.getY()+description.getLineCount()*description.getLineHeight()+50)));
+				}
 		};
 			
 			Bonus findBonus(ImageView picture){
@@ -335,7 +391,7 @@ public class Menu
 			
 		class Bonus{
 			ImageView picture;
-			String description="nullo";
+			String description="nullo\nn\nn\nn";
 			String name="";
 			Bonus lastBonus;
 			float cX;
@@ -353,7 +409,9 @@ public class Menu
 				picture.setLayoutParams(params1);
 				picture.setOnTouchListener(t2);
 				picture.setZ(1);
-				
+				if(id==0){description="начало";
+				this.name="аааааааааааааапппачччхххиииииииииииииииииииииииииaxaxaxaxaxaxaxaxaxaxdи";
+				}
 				if(obj==null){
 					picture.setX(midX);
 					picture.setY(midY);
@@ -385,12 +443,11 @@ public class Menu
 		};
 		
 		void update(int n){
-			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+"+String.valueOf(n)}));
-			
 			tmpBonus=findBonus(n);
-			files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{"+"+String.valueOf(tmpBonus.id)}));
-			
+			if(prop.menuLayout.getVisibility()==View.VISIBLE)
 				prop.onUi(r3);
+			else
+				r3.run();
 				tmpBonus.isReceived=true;
 		}
 			
@@ -653,12 +710,13 @@ public class Menu
 			set.setOnTouchListener(t1);
 			settingsLayout=new RelativeLayout(prop.context);
 			settingsLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
-			settingsLayout.setBackgroundColor(Color.argb(192,0,0,0));
+			settingsLayout.setBackgroundColor(Color.argb(192,110,110,110));
 			settingsLayout.setOnTouchListener(t2);
 			settingsLayout.setVisibility(View.INVISIBLE);
 			settingsLayout.setTranslationZ(1);
 			prop.activity.runOnUiThread(r1);
 			musicVolume= new MusicVolume();
+			new Languge();
 		}
 		
 		public void closeSettings(){
@@ -672,16 +730,9 @@ public class Menu
 			@Override
 			public void run()
 			{
-				try{
 				prop.menuLayout.addView(set,p1);
 				prop.menuLayout.addView(settingsLayout);
-				}catch(Exception e){
-					files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-					
 				}
-			}
-
-			
 		};
 		OnTouchListener t1=new OnTouchListener(){
 
@@ -715,6 +766,88 @@ public class Menu
 
 	};
 	
+	class Languge{
+		TextView text;
+		TextView btn_text;
+		ImageView picture;
+		SoundPool sp;
+		int t;
+		Languge(){
+			
+			text=new TextView(prop.context);
+			text.setGravity(Gravity.RIGHT);
+			text.setTextSize(12);
+			text.setTranslationX(140);
+			text.setTranslationY(prop.screenH/3.5f);
+			text.setLayoutParams(new LayoutParams(300,50));
+			text.setTextColor(Color.BLUE);
+			text.setTypeface(prop.ttf);
+			text.setText(prop.words.get(Words.words.SETT_LANG));
+			
+			picture=new ImageView(prop.context);
+			picture.setX(text.getX()+500);
+			picture.setY(text.getY()-25);
+			picture.setLayoutParams(new LayoutParams(500,100));
+			picture.setScaleType(ScaleType.FIT_XY);
+			picture.setImageResource(R.drawable.btn);
+			picture.setOnTouchListener(t1);
+			
+			btn_text=new TextView(prop.context);
+			btn_text.setGravity(Gravity.CENTER);
+			btn_text.setTextSize(16);
+			btn_text.setTranslationX(picture.getX());
+			btn_text.setTranslationY(picture.getY());
+			btn_text.setLayoutParams(picture.getLayoutParams());
+			btn_text.setTextColor(Color.argb(255,100,100,255));
+			btn_text.setTypeface(prop.ttf);
+			btn_text.setText(prop.words.get(Words.words.LANGUAGE));
+			
+			sp=new SoundPool(10,AudioManager.STREAM_MUSIC,0);
+			t=sp.load(prop.context,R.raw.music01,1);
+			
+			settingsLayout.addView(text);
+			settingsLayout.addView(picture);
+			settingsLayout.addView(btn_text);
+		}
+		void reLang(){
+			text.setText(prop.words.get(Words.words.SETT_LANG));
+			btn_text.setText(prop.words.get(Words.words.LANGUAGE));
+			prop.shop.reLang();
+			prop.btn_continue.reLang();
+			prop.Btn_exit_game.reLang();
+			prop.Btn_exit_menu.reLang();
+			prop.Btn_play.reLang();
+		}
+		
+			OnTouchListener t1=new OnTouchListener(){
+
+				@Override
+				public boolean onTouch(View p1, MotionEvent p2)
+				{
+					if(p2.getAction()==MotionEvent.ACTION_UP){
+						if(prop.words.lang==Words.language.RU)
+						    prop.words.setLanguage(Words.language.EN);
+						else
+							prop.words.setLanguage(Words.language.RU);
+						prop.onUi(r1);
+					}
+					return true;
+				}	
+		};
+		
+			Runnable r1=new Runnable(){
+
+				@Override
+				public void run()
+				{sp.play(t,1f,1f,1,5,1f);
+					
+					reLang();
+					musicVolume.reLang();
+				}
+			
+		};
+	}
+	
 	class MusicVolume{
 		TextView text;
 		ImageView bar;
@@ -733,7 +866,7 @@ public class Menu
 			text.setLayoutParams(new LayoutParams(300,50));
 			text.setTextColor(Color.BLUE);
 			text.setTypeface(prop.ttf);
-		text.setText("Музыка");
+		text.setText(prop.words.get(Words.words.MUSIC));
 		
 		bar=new ImageView(prop.context);
 			bar.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.red_bar,prop.options)));
@@ -763,6 +896,10 @@ public class Menu
 			point.setTranslationX(500+1200*volume);
 			if(prop.music!=null)
 			prop.music.setVolume(volume,volume);
+			
+		}
+		void reLang(){
+			text.setText(prop.words.get(Words.words.MUSIC));
 			
 		}
 			Runnable r4=new Runnable(){
@@ -797,16 +934,11 @@ public class Menu
 				@Override
 				public void run()
 				{
-					try{
 					settingsLayout.addView(text);
 					settingsLayout.addView(bar);
 					settingsLayout.addView(point);
 					settingsLayout.addView(barsLayout);
-					}catch(Exception e){
-						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-				
 					}
-				}
 
 			};
 			

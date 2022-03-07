@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import android.widget.*;
 import android.content.*;
 import android.widget.RelativeLayout.*;
@@ -35,7 +35,7 @@ public class Money
 		iv.setLayoutParams(params);
 		iv.setScaleType(ScaleType.FIT_XY);
 		iv.setOnTouchListener(touch);
-		tv.setText(String.valueOf(((float)((int)(money_count*10))/10)));
+		tv.setText(String.valueOf((int)(money_count)));
 		tv.setTextSize(20);
 		tv.setTranslationY(10);
 		tv.setTranslationZ(1);
@@ -44,7 +44,6 @@ public class Money
 		tv.setTextColor(Color.YELLOW);
 		tv.setTypeface(prop.ttf);
 		setType(type);
-		
 		}
 		
 	float posX=0;
@@ -55,7 +54,7 @@ public class Money
 	float rY=0;
 	float count=0;
 	
-	 Money(main_properties prop,String s, float x, float y, float count){
+	 Money(main_properties prop,String s, float x, float y){
 		pic1=new ImageView(prop.context);
 		pic1.setLayoutParams(params);
 		pic1.setX(x-prop.world.getScrollX());
@@ -63,19 +62,18 @@ public class Money
 		pic1.setScaleType(ScaleType.FIT_XY);
 		pic1.setImageResource(R.drawable.coin_01d);
 		
-		this.count=count;
 		this.prop=prop;
 		 posX=pic1.getX();
 		 posY=pic1.getY();
 		 endX=prop.screenW;
 		 rX=(endX-posX)/100;
 		 rY=(-posY)/100;
-		 prop.onUi(r6);
 			new Thread(r4).start();
 	}
 	
 	static void drop(main_properties prop,String s,float x, float y,float count){
-		Money m=new Money(prop,s,x,y,count);
+		prop.money.addMoney(count);
+		new Money(prop,s,x,y);
 	}
 	
 	Runnable r4=new Runnable(){
@@ -83,19 +81,18 @@ public class Money
 		@Override
 		public void run()
 		{
-			prop.money.v();
-			prop.money.addMoney(count);
-			for(int i=0; i<100;i++)
-			try{
-				Thread.sleep(10+1);
-				posX+=rX;
+			prop.onUi(r6);
+			new Thread(r1).start();
+			for(int i=0; i<100;i++){
+			    try{
+				  Thread.sleep(10+1);
+			    }catch(Exception e){}
+			    posX+=rX;
 				posY+=rY;
 				prop.onUi(r5);
-			}catch(Exception e){
-				e.printStackTrace();
 			}
 			
-		}
+			}
 	};
 	
 	Runnable r5=new Runnable(){
@@ -114,7 +111,6 @@ public class Money
 		public void run()
 		{
 			prop.playerAndUi.addView(pic1);
-			
 		}
 	};
 	
@@ -140,7 +136,7 @@ public class Money
 		@Override
 		public void run()
 		{
-			tv.setText(String.valueOf(((float)((int)(money_count*10))/10)));
+			tv.setText(String.valueOf((int)(money_count)));
 			
 		}
 
@@ -174,7 +170,7 @@ public class Money
 		{
 			prop.playerAndUi.removeView(iv);
 			prop.playerAndUi.removeView(tv);
-			iv.setTranslationX(prop.avatar.icon.getX()+prop.avatar.icon.getLayoutParams().width+10);
+			iv.setTranslationX(prop.avatar.icon.getX()+prop.avatar.background.getLayoutParams().width+10);
 			iv.setY(prop.menu.playerLevel.level_bar.getY()+prop.menu.playerLevel.level_bar.getLayoutParams().height+5);
 			tv.setGravity(Gravity.LEFT);
 			tv.setTranslationX(iv.getX()+iv.getLayoutParams().width+10);
@@ -199,69 +195,44 @@ public class Money
 		@Override
 		public void run()
 		{
-			try{
-				tv.setText(String.valueOf(((float)((int)(money_count*10))/10)));
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-				}
-			// TODO: Implement this method
-		}	
+				tv.setText(String.valueOf((int)(money_count)));
+			}	
 		};
 		
-		boolean t=false;
-		int al=255;
-		
-		public void v(){
-			al=255;
-			t=true;
-			prop.activity.runOnUiThread(r2);
-			
-		}
 		
 	Runnable r1=new Runnable(){
 
 		@Override
 		public void run()
 		{
-			while(true){
-				if(prop.stage.getStage()==Game_stage.EXIT)
-					return;
-				
-					try{
-						Thread.sleep(8);
-						if(t){
-							al=1;
-							prop.activity.runOnUiThread(r2);
-							
-							Thread.sleep(1500);
-								if(prop.stage.getStage()==Game_stage.WORLD)
-								al=0;
-									prop.activity.runOnUiThread(r3);
-								t=false;
-								break;
-							}
-					}
-						catch(Exception ignore){}
+					prop.activity.runOnUiThread(r2);
 					
-			}
+					try{
+						Thread.sleep(1500);
+					}catch(Exception ignore){}
+					
+					if(prop.stage.getStage()==Game_stage.WORLD){
+						prop.activity.runOnUiThread(r3);
+					}
+					prop.onUi(r7);
 		}
-		};
+	};
+	
+	Runnable r7=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			prop.playerAndUi.removeView(pic1);
+		}
+	};
 		
 	Runnable r2=new Runnable(){
 
 		@Override
 		public void run()
 		{
-			if(prop.stage.getStage()==Game_stage.WORLD){
-			prop.money.iv.setTranslationZ(12);
-			prop.money.tv.setTranslationZ(12);
-			}
-			else{
-				prop.money.iv.setTranslationZ(0);
-				prop.money.tv.setTranslationZ(0);
-			}
-			prop.shop.shop.setZ(11);
-			tv.setAlpha(1);
+			prop.money.tv.setAlpha(1);
 		}
 			
 		};
@@ -271,15 +242,9 @@ public class Money
 		@Override
 		public void run()
 		{
-			if(prop.stage.getStage()==Game_stage.WORLD){
-			tv.setAlpha(0);
-			}else{
-			prop.money.iv.setTranslationZ(0);
-			prop.money.tv.setTranslationZ(0);
-			prop.shop.shop.setZ(0);
-			}
+			if(prop.stage.getStage()==Game_stage.WORLD)
+			   prop.money.tv.setAlpha(0);
 		}
-
 
 	};
 		
@@ -289,7 +254,6 @@ public class Money
 		@Override
 		public boolean onTouch(View p1, MotionEvent p2)
 		{
-			try{
 				if(prop.stage.getStage_in_world()==Game_stage.PAUSE&&
 				prop.stage.getStage()!=Game_stage.MENU) return false;
 				
@@ -312,11 +276,7 @@ public class Money
 						}
 				}
 				return true;
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-				return true;
 			}
-		}
 
 
 	};

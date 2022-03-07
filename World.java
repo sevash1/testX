@@ -1,4 +1,4 @@
-package sevash.testx;
+package sevash.livingSword;
 import android.widget.*;
 import android.graphics.*;
 import java.util.*;
@@ -128,7 +128,6 @@ int t=0;
 					t++;
 					prop.world.addView(iv.gr);
 				}
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{String.valueOf(t)}));
 				
 				ll.clear();
 				t=0;
