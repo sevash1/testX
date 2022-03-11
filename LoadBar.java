@@ -53,7 +53,7 @@ public class LoadBar
 		public void run()
 		{
 			tv.setText("з а г р у ж е н о");
-			
+			prop.player.playM();
 		}
 
 	};

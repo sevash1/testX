@@ -16,7 +16,6 @@ public class Btn_play
 	LayoutParams params=new LayoutParams(210*4,60*4);
 	TextView tv;
 	main_properties prop;
-	Thread worldThread;
 	
 	Btn_play(main_properties prop){
 		this.prop=prop;
@@ -24,7 +23,6 @@ public class Btn_play
 		this.context=prop.context;
 		this.screenW=prop.screenW;
 		this.screenH=prop.screenH;
-		this.worldThread=prop.worldThread;
 		btn=new ImageView(prop.context);
 		tv=new TextView(prop.context);
 		btn.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.btn_play,prop.options)));
@@ -59,15 +57,13 @@ public class Btn_play
 		{
 				if(!prop.stage.world_load_complete)return;
 				prop.stage.setStage(Game_stage.WORLD);
-				
-				prop.worldThread=new Thread(prop.worldThreadRun);
-				prop.worldThread.setDaemon(true);
-				prop.worldThread.start();
-			
+			    prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
 				prop.stage.setStage_in_world(Game_stage.NOT_PAUSE);
 				prop.joystick.lay.setVisibility(View.VISIBLE);
 			    prop.inv.switchToWorld();
 				prop.money.setType(Money.Type.WORLD);
+			    prop.playerAndUi.setVisibility(View.VISIBLE);
+			    prop.menuLayout.setVisibility(View.GONE);
 				}
 	};
 }

@@ -8,7 +8,6 @@ import android.widget.ImageView.*;
 
 public class Btn_exit_menu 
 {
-	RelativeLayout world;
 	Context context;
 	float screenW=0;
 	float screenH=0;
@@ -16,15 +15,12 @@ public class Btn_exit_menu
 	LayoutParams params=new LayoutParams(210*2,60*2);
 	TextView tv;
 	main_properties prop;
-	Thread worldThread;
 
 	Btn_exit_menu(main_properties prop){
 		this.prop=prop;
-		this.world=prop.menuLayout;
 		this.context=prop.context;
 		this.screenW=prop.screenW;
 		this.screenH=prop.screenH;
-		this.worldThread=prop.worldThread;
 		btn=new ImageView(prop.context);
 		tv=new TextView(prop.context);
 		btn.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.btns_background,prop.options)));
@@ -56,6 +52,8 @@ public class Btn_exit_menu
 		@Override
 		public void onClick(View p1)
 		{
+			prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
+			
 				prop.stage.setStage(Game_stage.MENU);
 				prop.menuLayout.setVisibility(View.VISIBLE);
 				prop.playerAndUi.setVisibility(View.GONE);

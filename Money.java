@@ -152,8 +152,10 @@ public class Money
 			prop.menuLayout.removeView(tv);
 			iv.setTranslationX(prop.screenW-iv.getWidth()-30);
 			iv.setY(10);
+			iv.setZ(11);
 			tv.setTranslationX(prop.screenW-iv.getWidth()-48*6-40);
 			tv.setY(20);
+			tv.setZ(11);
 			tv.setGravity(Gravity.RIGHT);
 			tv.setAlpha(0);
 			prop.playerAndUi.addView(iv);
@@ -256,7 +258,6 @@ public class Money
 		{
 				if(prop.stage.getStage_in_world()==Game_stage.PAUSE&&
 				prop.stage.getStage()!=Game_stage.MENU) return false;
-				
 				switch (p2.getAction()){
 
 					case MotionEvent.ACTION_UP:{

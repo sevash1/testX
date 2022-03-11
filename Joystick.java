@@ -10,7 +10,6 @@ import java.util.*;
 
 public class Joystick 
 {
-	RelativeLayout world;
 	Context context;
 	float screenW=0;
 	float screenH=0;
@@ -18,7 +17,6 @@ public class Joystick
 	ImageView border;
 	LayoutParams params=new LayoutParams(190,190);
 	main_properties prop;
-	Thread worldThread;
 	float joystick_downX=0;
 	float joystick_downY=0;
 	float joystickX=0;
@@ -34,16 +32,12 @@ public class Joystick
 	public boolean joystick_pressed=false;
 	public RelativeLayout lay;
 	float centr=0;
-	public float screenSpX=0;
-	public float screenSpY=0;
 
 	Joystick(main_properties prop){
 		this.prop=prop;
-		this.world=prop.menuLayout;
 		this.context=prop.context;
 		this.screenW=prop.screenW;
 		this.screenH=prop.screenH;
-		this.worldThread=prop.worldThread;
 		
 		joystick=new ImageView(prop.context);
 		joystick.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.joystick,prop.options)));
@@ -81,10 +75,7 @@ public class Joystick
 		@Override
 		public boolean onTouch(View p1, MotionEvent m)
 		{
-				if(m==null) return true;
-				if(m.getActionMasked()==MotionEvent.ACTION_POINTER_DOWN){
-					return false;
-				}
+				if(m.getX()<0||m.getY()<0||m.getX()>lay.getWidth()||m.getY()>lay.getHeight())return false;
 
 				switch(m.getAction()){
 					
@@ -97,7 +88,7 @@ public class Joystick
 							prop.activity.runOnUiThread(run3);
 							joystick_pressed=true;
 
-							break;
+							return true;
 						}
 
 					case MotionEvent.ACTION_UP:{
@@ -114,7 +105,7 @@ public class Joystick
 							prop.player.anim_stage=0;
 							prop.player.a_anim=Player.active_anim.IDLE;
 
-							break;
+							return true;
 						}
 
 					case MotionEvent.ACTION_MOVE:{
@@ -139,11 +130,11 @@ public class Joystick
 								prop.player.a_anim=Player.active_anim.RUN;
 
 							}
-							break;
+							return true;
 						}
 
 				}
-				return true;
+				return false;
 		}
 	};
 

@@ -34,11 +34,10 @@ public class MainActivity extends Activity
 	float[] background_posX=new float[32];
 	float[] background_posY=new float[16];
 	ImageView[][] imm=new ImageView[32][16];
-	List skeletons=new ArrayList<Skeleton>();
 	TextView coords;
 	String coord="";
 	boolean run1_c=false;
-	long time1=0,time2=0,time3=0;
+	long time1=0,time2=0,deltaTime=0;
 	long time5=0;
 	long last_back_pressed_time1=0;
 	long last_back_pressed_time2=0;
@@ -50,8 +49,8 @@ public class MainActivity extends Activity
 	boolean isPause=false;
 	Game_stage stage;
 	RelativeLayout pause_lay;
-	Activity activity;
 	Thread thread9;
+	Activity activity;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -81,10 +80,10 @@ public class MainActivity extends Activity
 	@Override
 	protected void onDestroy()
 	{
-		stage.setStage(Game_stage.EXIT);
+		prop.stage.setStage(Game_stage.EXIT);
 		if(prop.music!=null)
 		prop.music.stop();
-		files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{});
+		files.writeFile(prop);
 		finish();
 		super.onDestroy();
 	
@@ -98,7 +97,7 @@ public class MainActivity extends Activity
 			prop.music.pause();
 	
 			}
-		files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{Float.toString(prop.playerPosX),String.valueOf(prop.playerPosY),String.valueOf(prop.money.money_count)});
+		files.writeFile(prop);
 		
 		super.onPause();
 	}
@@ -107,34 +106,31 @@ public class MainActivity extends Activity
 		@Override
 		public void run()
 		{
-				runOnUiThread(run1);
-				while(!run1_c){
-					if(Game_stage.EXIT==prop.stage.getStage()) 
-						return;
-				}
+			while(stage.getStage()!=Game_stage.EXIT)
+				
 			while(stage.getStage()==Game_stage.WORLD){
 				if(Game_stage.EXIT==prop.stage.getStage()) 
 					return;
 				
 				try{
+					fps++;
 					time1=System.currentTimeMillis();
 					Thread.sleep(8);
 					time2=System.currentTimeMillis();
-					time3=time2-time1;
+					deltaTime=time2-time1;
+					prop.deltaTime=deltaTime;
 					}
-			catch(Exception e){continue;}
-					
-					fps++;
-					
-					
+				catch(Exception e){	e.printStackTrace();
+				}
+						
 					if(prop.player.a_anim==Player.active_anim.ATTACK){
 					   if(!prop.joystick.joystick_pressed
 					&&!Float.isNaN(prop.joystick.attackX)){
-					 prop.playerPosX=prop.playerPosX+prop.joystick.attackX*time3;
+					 prop.playerPosX=prop.playerPosX+prop.joystick.attackX*deltaTime;
 					}
 					else if(prop.attack.pressed
 					&&!Float.isNaN(prop.joystick.attackX)){
-				prop.playerPosX=prop.playerPosX+prop.joystick.attackX*time3;
+				prop.playerPosX=prop.playerPosX+prop.joystick.attackX*deltaTime;
 						}
 						}
 						
@@ -155,8 +151,8 @@ public class MainActivity extends Activity
 						   ||Float.isNaN(prop.joystick.ratioY)
 						   ||Float.isNaN(prop.playerPosX)
 						   ||Float.isNaN(prop.playerPosY))){}else{
-							prop.playerPosX=prop.playerPosX+prop.joystick.ratioX*time3;
-							prop.playerPosY=prop.playerPosY+prop.joystick.ratioY*time3;
+							prop.playerPosX=prop.playerPosX+prop.joystick.ratioX*deltaTime;
+							prop.playerPosY=prop.playerPosY+prop.joystick.ratioY*deltaTime;
 
 						}}
 					
@@ -166,29 +162,26 @@ public class MainActivity extends Activity
 						   ||Float.isNaN(prop.joystick.ratioY)
 						   ||Float.isNaN(prop.playerPosX)
 						   ||Float.isNaN(prop.playerPosY))){}else{
-							prop.playerPosX=prop.playerPosX+prop.joystick.ratioX*time3;
-							prop.playerPosY=prop.playerPosY+prop.joystick.ratioY*time3;	
+							prop.playerPosX=prop.playerPosX+prop.joystick.ratioX*deltaTime;
+							prop.playerPosY=prop.playerPosY+prop.joystick.ratioY*deltaTime;	
 					}}
 				
 					if(last_playerPosX==prop.playerPosX&&last_playerPosY==prop.playerPosY){}
 					else {
 						last_playerPosX=prop.playerPosX;
 						last_playerPosY=prop.playerPosY;
-						grass_layout.setScrollX((int)(prop.playerPosX+prop.joystick.screenSpX-((int)(prop.playerPosX/256))*256+256*6));
-						grass_layout.setScrollY((int)(prop.playerPosY+prop.joystick.screenSpY-((int)(prop.playerPosY/256))*256+256*3));
-						prop.world.setScrollX((int)(prop.playerPosX+prop.joystick.screenSpX));
-						prop.world.setScrollY((int)(prop.playerPosY+prop.joystick.screenSpY));
+						grass_layout.setScrollX((int)(prop.playerPosX-((int)(prop.playerPosX/256))*256+256*6));
+						grass_layout.setScrollY((int)(prop.playerPosY-((int)(prop.playerPosY/256))*256+256*3));
+						prop.world.setScrollX((int)(prop.playerPosX));
+						prop.world.setScrollY((int)(prop.playerPosY));
 						
 					}
-					for(Skeleton skeleton:skeletons){
-						skeleton.update();
-					}
-				
-					time5+=time3;
+					
+				time5+=deltaTime;
 					if(time5>1000){
 						time5=0;
-						files.writeFile(prop,getExternalFilesDir("").toString(),"f.txt",new String[]{});
-						coord="X:"+(int)prop.playerPosX+"\n"+"Y:"+(int)prop.playerPosY+"\n"+String.valueOf(time3)+"\n"+fps+"\n";
+						files.writeFile(prop);
+						coord="X:"+(int)prop.playerPosX+"\n"+"Y:"+(int)prop.playerPosY+"\n"+String.valueOf(deltaTime)+"\n"+fps+"\n"+String.valueOf(prop.skeletons.size());
 						fps=0;
 						Log.d("seva",String.valueOf(
 						Runtime.getRuntime().totalMemory()/1048576)+"/"+
@@ -206,12 +199,7 @@ public class MainActivity extends Activity
 		@Override
 		public void run()
 		{
-			if(!run1_c){
-				main.addView(playerAndUi,params2);
-			run1_c=true;
-			}
-				prop.playerAndUi.setVisibility(View.VISIBLE);
-				prop.menuLayout.setVisibility(View.GONE);
+				main.addView(playerAndUi,params2);	
 		}
 		};
 		
@@ -238,10 +226,9 @@ public class MainActivity extends Activity
 				playerAndUi=new RelativeLayout(context);
 				pause_lay=new RelativeLayout(context);
 			
-			files.readFile(read,getExternalFilesDir("")+"/f.txt");
+			files.readFile(activity,read,getExternalFilesDir("")+"/f.txt");
 		
-				menu.setBackgroundResource(R.drawable.background1);
-			    menu.setVisibility(View.INVISIBLE);
+				   menu.setVisibility(View.INVISIBLE);
 				pause_lay.setVisibility(View.GONE);
 				pause_lay.setBackgroundColor(Color.argb(63,0,0,0));
 				pause_lay.setTranslationZ(11111);
@@ -265,15 +252,17 @@ public class MainActivity extends Activity
 				stage=new Game_stage(Game_stage.MENU);
 				DisplayMetrics dm=new DisplayMetrics();
 				getWindowManager().getDefaultDisplay().getRealMetrics(dm);
-				prop=new main_properties(main,menu,playerAndUi,context,activity,dm.widthPixels,dm.heightPixels,op,face,thread,stage,pause_lay,run,skeletons);
+				prop=new main_properties(main,menu,playerAndUi,context,activity,dm.widthPixels,dm.heightPixels,op,face,stage,pause_lay);
 				new Words(prop);
-
+				new Music(prop);
 				Item.loadItems(prop);
 				new Shop(prop);
 				new Inventory(prop);
+			    new Player(prop,Player.type.MENU);
+			    new Player(prop,Player.type.WORLD);
+			
 				new Menu(prop);
 				abc();
-				new Player(prop,Player.type.MENU);
 				
 				prop.loadBar.addPoint();
 				coords=new TextView(context);
@@ -282,7 +271,7 @@ public class MainActivity extends Activity
 				prop.loadBar.addPoint();
 				coords.setTranslationZ(1023);
 				prop.loadBar.addPoint();
-				coords.setTextColor(Color.RED);
+				coords.setTextColor(Color.YELLOW);
 				prop.loadBar.addPoint();
 				coords.setTypeface(face); 
 				prop.loadBar.addPoint();
@@ -327,13 +316,13 @@ public class MainActivity extends Activity
 				World.loadTrees(prop);
 
 				prop.loadBar.addPoint();
-				new Player(prop,Player.type.WORLD);
 				prop.loadBar.addPoint();
 				new Player_health(prop);
 				prop.loadBar.addPoint();
 				new World().start(prop);
 				new Joystick(prop);
 				prop.loadBar.addPoint();
+			    new Mob(prop);
 				new Skeleton(prop,0,0);
 				prop.loadBar.addPoint();
 				new Btn_attack(prop);
@@ -349,11 +338,12 @@ public class MainActivity extends Activity
 				new Btn_exit_game(prop);
 				prop.loadBar.addPoint();
 				
-				
 				prop.loadBar.addPoint();
 				
 				prop.loadBar.addPoint();
 				playerAndUi.addView(pause_lay,params2);
+				prop.onUi(run1);
+				thread.start();
 				prop.loadBar.addPoint();
 				prop.stage.world_load_complete=true;
 }
@@ -366,6 +356,11 @@ public class MainActivity extends Activity
 
 		@Override
 		public void run(){
+			try{
+				Thread.sleep(1500);
+			}catch(Exception e){}
+			main.setBackgroundResource(R.drawable.g2);
+			
 			main.addView(menu,params2);
 			
 		}
@@ -470,6 +465,12 @@ public class MainActivity extends Activity
 					}
 				}
 	
+				if(s2[0].contentEquals("language:")){
+					if(s2.length==1)continue;
+					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
+					prop.words.setLanguage(s2[1]);
+				}
+				
 					if(s2[0].contentEquals("bonuses:")){
 						if(s2.length==1)continue;	
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
@@ -479,7 +480,7 @@ public class MainActivity extends Activity
 							}
 				}
 					if(s2[0].contentEquals("exp:")){
-						prop.menu.playerLevel.points=Float.parseFloat(s2[1]);
+						prop.menu.playerLevel.points=Double.parseDouble(s2[1]);
 						prop.menu.playerLevel.pointsOnThisLevel=prop.menu.playerLevel.points;
 						prop.menu.playerLevel.update();
 						}

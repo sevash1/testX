@@ -46,7 +46,6 @@ public class Btn_shield
 		@Override
 		public boolean onTouch(View p1, MotionEvent p2)
 		{
-			try{
 				if(prop.stage.getStage_in_world()==Game_stage.PAUSE) return false;
 				switch (p2.getAction()){
 					case MotionEvent.ACTION_DOWN:{
@@ -62,10 +61,6 @@ public class Btn_shield
 						}
 				}
 				return true;
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-				return true;
-			}
 		}
 
 

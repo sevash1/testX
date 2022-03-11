@@ -74,9 +74,9 @@ public class Menu
 	}
 	
 	class PlayerLevel{
-		float points=0;
-		float pointsOnThisLevel=0;
-		float maxPointsOnThisLevel=20;
+		double points=0;
+		double pointsOnThisLevel=0;
+		double maxPointsOnThisLevel=20;
 		int level=0;
 		ImageView level_bar;
 		ImageView level_bar_backgound;
@@ -126,11 +126,10 @@ public class Menu
 				while(pointsOnThisLevel>maxPointsOnThisLevel){
 					pointsOnThisLevel-=maxPointsOnThisLevel;
 					level++;
-					maxPointsOnThisLevel*=1.33f;
+					maxPointsOnThisLevel*=1.33;
 
 				}
 				r2.run();
-				//prop.onUi(r2);
 			}
 			
 		Runnable r2=new Runnable(){
@@ -139,9 +138,9 @@ public class Menu
 			public void run()
 			{
 				
-			    level_bar.setScaleX(pointsOnThisLevel/maxPointsOnThisLevel);
+			    level_bar.setScaleX((float)(pointsOnThisLevel/maxPointsOnThisLevel));
 				lvl.setText(String.valueOf(level)+"  lvl.");
-				pointsOfThisLevel.setText(String.valueOf((int)(pointsOnThisLevel))+" / "+String.valueOf((int)maxPointsOnThisLevel));
+				pointsOfThisLevel.setText(String.valueOf((long)(pointsOnThisLevel))+" / "+String.valueOf((long)maxPointsOnThisLevel));
 				
 			}
 		};
@@ -305,8 +304,7 @@ public class Menu
 			@Override
 			public void run()
 			{
-					description_layout.setVisibility(View.VISIBLE);
-				description_layout.setX(tmpBonus.picture.getX()+tmpBonus.picture.getWidth()+25);
+							description_layout.setX(tmpBonus.picture.getX()+tmpBonus.picture.getWidth()+25);
 				description_layout.setY(tmpBonus.picture.getY()-100);
 				name.setText(tmpBonus.name);
 				name.setLayoutParams(new LayoutParams(name.getLayoutParams().width,
@@ -319,7 +317,11 @@ public class Menu
 				
 				descB.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,(int)(
 							   description.getY()+description.getLineCount()*description.getLineHeight()+50)));
-				}
+			    if(tmpBonus.isReceived) btnText.setVisibility(View.INVISIBLE);
+				else btnText.setVisibility(View.VISIBLE);
+				description_layout.setVisibility(View.VISIBLE);
+				
+			   }
 		};
 			
 			Bonus findBonus(ImageView picture){
@@ -399,10 +401,12 @@ public class Menu
 			int parent;
 			int id;
 			boolean isReceived=false;
+			String upgrades="";
 			
-			Bonus(int id,int pictureInt, String name, Object obj,float x,float y){
+			Bonus(int id,int pictureInt, String name, Object obj,float x,float y, String upgrades){
 				this.name=name;
 				this.id=id;
+				this.upgrades=upgrades;
 				picture=new ImageView(prop.context);
 				picture.setImageResource(pictureInt);
 				picture.setScaleType(ScaleType.FIT_XY);
@@ -444,6 +448,21 @@ public class Menu
 		
 		void update(int n){
 			tmpBonus=findBonus(n);
+			
+			for(String s1:tmpBonus.upgrades.split("/")){
+				String[] s2=s1.split(":");
+				
+				if(s2[0]==null||s2[0]=="")continue;
+
+				if(s2[0].contentEquals("attackDamageFixed")){
+					prop.player.attackDamageFixed+=Float.parseFloat(s2[1]);
+				}
+
+				else if(s2[0].contentEquals("bonusGoldPercent")){
+					prop.player.bonusGoldPercent+=Float.parseFloat(s2[1]);
+				}
+			}
+			
 			if(prop.menuLayout.getVisibility()==View.VISIBLE)
 				prop.onUi(r3);
 			else
@@ -473,6 +492,8 @@ public class Menu
 			};
 			
 			void openBonuses(){
+				prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
+				
 				intermediary.setZ(11);
 				bonuses_layout.setZ(10);
 				bonuses_layout.setVisibility(View.VISIBLE);
@@ -480,6 +501,8 @@ public class Menu
 			}
 		
 			void closeBonuses(){
+				prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
+				
 				intermediary.setZ(0);
 				bonuses_layout.setZ(0);
 				bonuses_layout.setVisibility(View.INVISIBLE);
@@ -492,8 +515,6 @@ public class Menu
 			@Override
 			public boolean onTouch(View p1, MotionEvent p2)
 			{
-				
-				
 				if(p2.getAction()==MotionEvent.ACTION_UP)
 				{
 					
@@ -529,164 +550,166 @@ public class Menu
 			@Override
 			public void run()
 			{
+				btnText.setVisibility(View.INVISIBLE);
+				
 				bonuses_layout.addView( new Canv(prop.context,tmpBonus.cX,tmpBonus.cY,findBonus(tmpBonus.parent).cX,findBonus(tmpBonus.parent).cY,Color.GREEN));
 				
 			}
 		};
 		
 		void loadBonuses(){
-			new Bonus(0,R.drawable.bonus42,"Начало пути..",null,midX,midY);
+			new Bonus(0,R.drawable.bonus42,"Начало пути..",null,midX,midY, "");
 			
-			new Bonus(1,R.drawable.bonus51,"Начало пути..",0,400,0);
-			new Bonus(2,R.drawable.bonus50,"Начало пути..",1,150,-150);
-			new Bonus(3,R.drawable.bonus49,"Начало пути..",1,150,0);
-			new Bonus(4,R.drawable.bonus48,"Начало пути..",1,150,150);
-			new Bonus(5,R.drawable.bonus47,"Начало пути..",2,150,-150);
-			new Bonus(6,R.drawable.bonus46,"Начало пути..",2,150,0);
-			new Bonus(7,R.drawable.bonus52,"Начало пути..",3,150,0);
-			new Bonus(8,R.drawable.bonus53,"Начало пути..",7,150,0);
-			new Bonus(9,R.drawable.bonus54,"Начало пути..",4,150,150);
-			new Bonus(10,R.drawable.bonus55,"Начало пути..",4,150,0);
-			new Bonus(11,R.drawable.bonus56,"Начало пути..",5,150,0);
-			new Bonus(12,R.drawable.bonus57,"Начало пути..",6,150,0);
-			new Bonus(13,R.drawable.bonus58,"Начало пути..",10,150,0);
-			new Bonus(14,R.drawable.bonus59,"Начало пути..",9,150,0);
-			new Bonus(62,R.drawable.bonus91,"Начало пути..",11,150,0);
-			new Bonus(63,R.drawable.bonus92,"Начало пути..",12,150,0);
-			new Bonus(64,R.drawable.bonus93,"Начало пути..",13,150,0);
-			new Bonus(65,R.drawable.bonus94,"Начало пути..",14,150,0);
-			new Bonus(66,R.drawable.bonus95,"Начало пути..",8,150,0);
-			new Bonus(67,R.drawable.bonus96,"Начало пути..",63,150,0);
-			new Bonus(68,R.drawable.bonus97,"Начало пути..",64,150,0);
+			new Bonus(1,R.drawable.bonus51,"Начало пути..",0,400,0,"attackDamageFixed:0.5/bonusGoldPercent:44");
+			new Bonus(2,R.drawable.bonus50,"Начало пути..",1,150,-150,"");
+			new Bonus(3,R.drawable.bonus49,"Начало пути..",1,150,0,"");
+			new Bonus(4,R.drawable.bonus48,"Начало пути..",1,150,150,"");
+			new Bonus(5,R.drawable.bonus47,"Начало пути..",2,150,-150,"");
+			new Bonus(6,R.drawable.bonus46,"Начало пути..",2,150,0,"");
+			new Bonus(7,R.drawable.bonus52,"Начало пути..",3,150,0,"");
+			new Bonus(8,R.drawable.bonus53,"Начало пути..",7,150,0,"");
+			new Bonus(9,R.drawable.bonus54,"Начало пути..",4,150,150,"");
+			new Bonus(10,R.drawable.bonus55,"Начало пути..",4,150,0,"");
+			new Bonus(11,R.drawable.bonus56,"Начало пути..",5,150,0,"");
+			new Bonus(12,R.drawable.bonus57,"Начало пути..",6,150,0,"");
+			new Bonus(13,R.drawable.bonus58,"Начало пути..",10,150,0,"");
+			new Bonus(14,R.drawable.bonus59,"Начало пути..",9,150,0,"");
+			new Bonus(62,R.drawable.bonus91,"Начало пути..",11,150,0,"");
+			new Bonus(63,R.drawable.bonus92,"Начало пути..",12,150,0,"");
+			new Bonus(64,R.drawable.bonus93,"Начало пути..",13,150,0,"");
+			new Bonus(65,R.drawable.bonus94,"Начало пути..",14,150,0,"");
+			new Bonus(66,R.drawable.bonus95,"Начало пути..",8,150,0,"");
+			new Bonus(67,R.drawable.bonus96,"Начало пути..",63,150,0,"");
+			new Bonus(68,R.drawable.bonus97,"Начало пути..",64,150,0,"");
 			
-			new Bonus(15,R.drawable.bonus116,"Начало пути..",0,-400,0);
-			new Bonus(16,R.drawable.bonus117,"Начало пути..",15,-150,-150);
-			new Bonus(17,R.drawable.bonus118,"Начало пути..",15,-150,0);
-			new Bonus(18,R.drawable.bonus119,"Начало пути..",15,-150,150);
-			new Bonus(19,R.drawable.bonus120,"Начало пути..",16,-150,-150);
-			new Bonus(20,R.drawable.bonus121,"Начало пути..",16,-150,0);
-			new Bonus(21,R.drawable.bonus128,"Начало пути..",17,-150,0);
-			new Bonus(22,R.drawable.bonus129,"Начало пути..",21,-150,0);
-			new Bonus(23,R.drawable.bonus130,"Начало пути..",18,-150,150);
-			new Bonus(24,R.drawable.bonus131,"Начало пути..",18,-150,0);
-			new Bonus(25,R.drawable.bonus132,"Начало пути..",19,-150,0);
-			new Bonus(26,R.drawable.bonus133,"Начало пути..",20,-150,0);
-			new Bonus(27,R.drawable.bonus134,"Начало пути..",23,-150,0);
-			new Bonus(28,R.drawable.bonus135,"Начало пути..",24,-150,0);
-			new Bonus(29,R.drawable.bonus136,"Начало пути..",27,-150,0);
-			new Bonus(30,R.drawable.bonus137,"Начало пути..",28,-150,0);
-			new Bonus(31,R.drawable.bonus138,"Начало пути..",25,-150,0);
-			new Bonus(32,R.drawable.bonus139,"Начало пути..",26,-150,0);
-			new Bonus(57,R.drawable.bonus140,"Начало пути..",22,-150,0);
-			new Bonus(58,R.drawable.bonus141,"Начало пути..",29,-150,0);
-			new Bonus(59,R.drawable.bonus142,"Начало пути..",30,-150,0);
-			new Bonus(60,R.drawable.bonus143,"Начало пути..",31,-150,0);
-			new Bonus(61,R.drawable.bonus144,"Начало пути..",32,-150,0);
+			new Bonus(15,R.drawable.bonus116,"Начало пути..",0,-400,0,"");
+			new Bonus(16,R.drawable.bonus117,"Начало пути..",15,-150,-150,"");
+			new Bonus(17,R.drawable.bonus118,"Начало пути..",15,-150,0,"");
+			new Bonus(18,R.drawable.bonus119,"Начало пути..",15,-150,150,"");
+			new Bonus(19,R.drawable.bonus120,"Начало пути..",16,-150,-150,"");
+			new Bonus(20,R.drawable.bonus121,"Начало пути..",16,-150,0,"");
+			new Bonus(21,R.drawable.bonus128,"Начало пути..",17,-150,0,"");
+			new Bonus(22,R.drawable.bonus129,"Начало пути..",21,-150,0,"");
+			new Bonus(23,R.drawable.bonus130,"Начало пути..",18,-150,150,"");
+			new Bonus(24,R.drawable.bonus131,"Начало пути..",18,-150,0,"");
+			new Bonus(25,R.drawable.bonus132,"Начало пути..",19,-150,0,"");
+			new Bonus(26,R.drawable.bonus133,"Начало пути..",20,-150,0,"");
+			new Bonus(27,R.drawable.bonus134,"Начало пути..",23,-150,0,"");
+			new Bonus(28,R.drawable.bonus135,"Начало пути..",24,-150,0,"");
+			new Bonus(29,R.drawable.bonus136,"Начало пути..",27,-150,0,"");
+			new Bonus(30,R.drawable.bonus137,"Начало пути..",28,-150,0,"");
+			new Bonus(31,R.drawable.bonus138,"Начало пути..",25,-150,0,"");
+			new Bonus(32,R.drawable.bonus139,"Начало пути..",26,-150,0,"");
+			new Bonus(57,R.drawable.bonus140,"Начало пути..",22,-150,0,"");
+			new Bonus(58,R.drawable.bonus141,"Начало пути..",29,-150,0,"");
+			new Bonus(59,R.drawable.bonus142,"Начало пути..",30,-150,0,"");
+			new Bonus(60,R.drawable.bonus143,"Начало пути..",31,-150,0,"");
+			new Bonus(61,R.drawable.bonus144,"Начало пути..",32,-150,0,"");
 			
-			new Bonus(33,R.drawable.bonus98,"Начало пути..",0,0,-400);
-			new Bonus(34,R.drawable.bonus99,"Начало пути..",33,-150,-150);
-			new Bonus(35,R.drawable.bonus100,"Начало пути..",33,0,-150);
-			new Bonus(36,R.drawable.bonus101,"Начало пути..",33,150,-150);
-			new Bonus(37,R.drawable.bonus102,"Начало пути..",34,-150,-150);
-			new Bonus(38,R.drawable.bonus103,"Начало пути..",34,0,-150);
-			new Bonus(39,R.drawable.bonus104,"Начало пути..",35,0,-150);
-			new Bonus(40,R.drawable.bonus105,"Начало пути..",36,150,-150);
-			new Bonus(41,R.drawable.bonus106,"Начало пути..",36,0,-150);
-			new Bonus(42,R.drawable.bonus107,"Начало пути..",37,0,-150);
-			new Bonus(43,R.drawable.bonus108,"Начало пути..",39,0,-150);
-			new Bonus(44,R.drawable.bonus109,"Начало пути..",40,0,-150);
+			new Bonus(33,R.drawable.bonus98,"Начало пути..",0,0,-400,"");
+			new Bonus(34,R.drawable.bonus99,"Начало пути..",33,-150,-150,"");
+			new Bonus(35,R.drawable.bonus100,"Начало пути..",33,0,-150,"");
+			new Bonus(36,R.drawable.bonus101,"Начало пути..",33,150,-150,"");
+			new Bonus(37,R.drawable.bonus102,"Начало пути..",34,-150,-150,"");
+			new Bonus(38,R.drawable.bonus103,"Начало пути..",34,0,-150,"");
+			new Bonus(39,R.drawable.bonus104,"Начало пути..",35,0,-150,"");
+			new Bonus(40,R.drawable.bonus105,"Начало пути..",36,150,-150,"");
+			new Bonus(41,R.drawable.bonus106,"Начало пути..",36,0,-150,"");
+			new Bonus(42,R.drawable.bonus107,"Начало пути..",37,0,-150,"");
+			new Bonus(43,R.drawable.bonus108,"Начало пути..",39,0,-150,"");
+			new Bonus(44,R.drawable.bonus109,"Начало пути..",40,0,-150,"");
 			
-			new Bonus(45,R.drawable.bonus110,"Начало пути..",0,0,400);
-			new Bonus(46,R.drawable.bonus111,"Начало пути..",45,-150,150);
-			new Bonus(47,R.drawable.bonus112,"Начало пути..",45,0,150);
-			new Bonus(48,R.drawable.bonus113,"Начало пути..",45,150,150);
-			new Bonus(49,R.drawable.bonus114,"Начало пути..",46,-150,150);
-			new Bonus(50,R.drawable.bonus115,"Начало пути..",46,0,150);
-			new Bonus(51,R.drawable.bonus122,"Начало пути..",47,0,150);
-			new Bonus(52,R.drawable.bonus123,"Начало пути..",48,150,150);
-			new Bonus(53,R.drawable.bonus124,"Начало пути..",48,0,150);
-			new Bonus(54,R.drawable.bonus125,"Начало пути..",49,0,150);
-			new Bonus(55,R.drawable.bonus126,"Начало пути..",51,0,150);
-			new Bonus(56,R.drawable.bonus127,"Начало пути..",52,0,150);
+			new Bonus(45,R.drawable.bonus110,"Начало пути..",0,0,400,"");
+			new Bonus(46,R.drawable.bonus111,"Начало пути..",45,-150,150,"");
+			new Bonus(47,R.drawable.bonus112,"Начало пути..",45,0,150,"");
+			new Bonus(48,R.drawable.bonus113,"Начало пути..",45,150,150,"");
+			new Bonus(49,R.drawable.bonus114,"Начало пути..",46,-150,150,"");
+			new Bonus(50,R.drawable.bonus115,"Начало пути..",46,0,150,"");
+			new Bonus(51,R.drawable.bonus122,"Начало пути..",47,0,150,"");
+			new Bonus(52,R.drawable.bonus123,"Начало пути..",48,150,150,"");
+			new Bonus(53,R.drawable.bonus124,"Начало пути..",48,0,150,"");
+			new Bonus(54,R.drawable.bonus125,"Начало пути..",49,0,150,"");
+			new Bonus(55,R.drawable.bonus126,"Начало пути..",51,0,150,"");
+			new Bonus(56,R.drawable.bonus127,"Начало пути..",52,0,150,"");
 			
-			new Bonus(69,R.drawable.bonus60,"Начало пути..",0,550,550);
-			new Bonus(70,R.drawable.bonus61,"Начало пути..",69,150,0);
-			new Bonus(71,R.drawable.bonus62,"Начало пути..",69,150,150);
-			new Bonus(72,R.drawable.bonus63,"Начало пути..",69,0,150);
-			new Bonus(73,R.drawable.bonus64,"Начало пути..",70,150,150);
-			new Bonus(74,R.drawable.bonus65,"Начало пути..",70,150,0);
-			new Bonus(75,R.drawable.bonus66,"Начало пути..",71,150,150);
-			new Bonus(76,R.drawable.bonus67,"Начало пути..",72,0,150);
-			new Bonus(77,R.drawable.bonus68,"Начало пути..",72,150,150);
-			new Bonus(78,R.drawable.bonus69,"Начало пути..",73,150,150);
-			new Bonus(79,R.drawable.bonus70,"Начало пути..",74,150,150);
-			new Bonus(80,R.drawable.bonus71,"Начало пути..",76,150,150);
-			new Bonus(81,R.drawable.bonus72,"Начало пути..",77,150,150);
+			new Bonus(69,R.drawable.bonus60,"Начало пути..",0,550,550,"");
+			new Bonus(70,R.drawable.bonus61,"Начало пути..",69,150,0,"");
+			new Bonus(71,R.drawable.bonus62,"Начало пути..",69,150,150,"");
+			new Bonus(72,R.drawable.bonus63,"Начало пути..",69,0,150,"");
+			new Bonus(73,R.drawable.bonus64,"Начало пути..",70,150,150,"");
+			new Bonus(74,R.drawable.bonus65,"Начало пути..",70,150,0,"");
+			new Bonus(75,R.drawable.bonus66,"Начало пути..",71,150,150,"");
+			new Bonus(76,R.drawable.bonus67,"Начало пути..",72,0,150,"");
+			new Bonus(77,R.drawable.bonus68,"Начало пути..",72,150,150,"");
+			new Bonus(78,R.drawable.bonus69,"Начало пути..",73,150,150,"");
+			new Bonus(79,R.drawable.bonus70,"Начало пути..",74,150,150,"");
+			new Bonus(80,R.drawable.bonus71,"Начало пути..",76,150,150,"");
+			new Bonus(81,R.drawable.bonus72,"Начало пути..",77,150,150,"");
 			
-			new Bonus(82,R.drawable.bonus73,"Начало пути..",0,-550,-550);
-			new Bonus(83,R.drawable.bonus74,"Начало пути..",82,-150,0);
-			new Bonus(84,R.drawable.bonus75,"Начало пути..",82,-150,-150);
-			new Bonus(85,R.drawable.bonus76,"Начало пути..",82,0,-150);
-			new Bonus(86,R.drawable.bonus77,"Начало пути..",83,-150,-150);
-			new Bonus(87,R.drawable.bonus78,"Начало пути..",83,-150,0);
-			new Bonus(88,R.drawable.bonus79,"Начало пути..",84,-150,-150);
-			new Bonus(89,R.drawable.bonus80,"Начало пути..",85,0,-150);
-			new Bonus(90,R.drawable.bonus81,"Начало пути..",85,-150,-150);
-			new Bonus(91,R.drawable.bonus82,"Начало пути..",86,-150,-150);
-			new Bonus(92,R.drawable.bonus83,"Начало пути..",87,-150,-150);
-			new Bonus(93,R.drawable.bonus84,"Начало пути..",88,-150,-150);
-			new Bonus(94,R.drawable.bonus85,"Начало пути..",89,-150,-150);
-			new Bonus(95,R.drawable.bonus86,"Начало пути..",90,-150,-150);
-			new Bonus(96,R.drawable.bonus87,"Начало пути..",91,-150,-150);
-			new Bonus(97,R.drawable.bonus88,"Начало пути..",92,-150,-150);
-			new Bonus(98,R.drawable.bonus89,"Начало пути..",94,-150,-150);
-			new Bonus(99,R.drawable.bonus90,"Начало пути..",95,-150,-150);
+			new Bonus(82,R.drawable.bonus73,"Начало пути..",0,-550,-550,"");
+			new Bonus(83,R.drawable.bonus74,"Начало пути..",82,-150,0,"");
+			new Bonus(84,R.drawable.bonus75,"Начало пути..",82,-150,-150,"");
+			new Bonus(85,R.drawable.bonus76,"Начало пути..",82,0,-150,"");
+			new Bonus(86,R.drawable.bonus77,"Начало пути..",83,-150,-150,"");
+			new Bonus(87,R.drawable.bonus78,"Начало пути..",83,-150,0,"");
+			new Bonus(88,R.drawable.bonus79,"Начало пути..",84,-150,-150,"");
+			new Bonus(89,R.drawable.bonus80,"Начало пути..",85,0,-150,"");
+			new Bonus(90,R.drawable.bonus81,"Начало пути..",85,-150,-150,"");
+			new Bonus(91,R.drawable.bonus82,"Начало пути..",86,-150,-150,"");
+			new Bonus(92,R.drawable.bonus83,"Начало пути..",87,-150,-150,"");
+			new Bonus(93,R.drawable.bonus84,"Начало пути..",88,-150,-150,"");
+			new Bonus(94,R.drawable.bonus85,"Начало пути..",89,-150,-150,"");
+			new Bonus(95,R.drawable.bonus86,"Начало пути..",90,-150,-150,"");
+			new Bonus(96,R.drawable.bonus87,"Начало пути..",91,-150,-150,"");
+			new Bonus(97,R.drawable.bonus88,"Начало пути..",92,-150,-150,"");
+			new Bonus(98,R.drawable.bonus89,"Начало пути..",94,-150,-150,"");
+			new Bonus(99,R.drawable.bonus90,"Начало пути..",95,-150,-150,"");
 			
-			new Bonus(100,R.drawable.bonus01,"Начало пути..",0,550,-550);
-			new Bonus(101,R.drawable.bonus02,"Начало пути..",100,0,-150);
-			new Bonus(102,R.drawable.bonus03,"Начало пути..",100,150,-150);
-			new Bonus(103,R.drawable.bonus04,"Начало пути..",100,150,0);
-			new Bonus(104,R.drawable.bonus05,"Начало пути..",101,0,-150);
-			new Bonus(105,R.drawable.bonus06,"Начало пути..",101,150,-150);
-			new Bonus(106,R.drawable.bonus07,"Начало пути..",102,150,-150);
-			new Bonus(107,R.drawable.bonus08,"Начало пути..",103,150,-150);
-			new Bonus(108,R.drawable.bonus09,"Начало пути..",103,150,0);
-			new Bonus(109,R.drawable.bonus10,"Начало пути..",104,150,-150);
-			new Bonus(110,R.drawable.bonus11,"Начало пути..",105,150,-150);
-			new Bonus(111,R.drawable.bonus12,"Начало пути..",106,150,-150);
-			new Bonus(112,R.drawable.bonus13,"Начало пути..",107,150,-150);
-			new Bonus(113,R.drawable.bonus14,"Начало пути..",108,150,-150);
-			new Bonus(114,R.drawable.bonus15,"Начало пути..",109,150,-150);
-			new Bonus(115,R.drawable.bonus16,"Начало пути..",110,150,-150);
-			new Bonus(116,R.drawable.bonus17,"Начало пути..",111,150,-150);
-			new Bonus(117,R.drawable.bonus18,"Начало пути..",112,150,-150);
-			new Bonus(118,R.drawable.bonus19,"Начало пути..",113,150,-150);
-			new Bonus(119,R.drawable.bonus20,"Начало пути..",114,150,-150);
-			new Bonus(120,R.drawable.bonus21,"Начало пути..",118,150,-150);
-			new Bonus(121,R.drawable.bonus22,"Начало пути..",116,150,-150);
+			new Bonus(100,R.drawable.bonus01,"Начало пути..",0,550,-550,"");
+			new Bonus(101,R.drawable.bonus02,"Начало пути..",100,0,-150,"");
+			new Bonus(102,R.drawable.bonus03,"Начало пути..",100,150,-150,"");
+			new Bonus(103,R.drawable.bonus04,"Начало пути..",100,150,0,"");
+			new Bonus(104,R.drawable.bonus05,"Начало пути..",101,0,-150,"");
+			new Bonus(105,R.drawable.bonus06,"Начало пути..",101,150,-150,"");
+			new Bonus(106,R.drawable.bonus07,"Начало пути..",102,150,-150,"");
+			new Bonus(107,R.drawable.bonus08,"Начало пути..",103,150,-150,"");
+			new Bonus(108,R.drawable.bonus09,"Начало пути..",103,150,0,"");
+			new Bonus(109,R.drawable.bonus10,"Начало пути..",104,150,-150,"");
+			new Bonus(110,R.drawable.bonus11,"Начало пути..",105,150,-150,"");
+			new Bonus(111,R.drawable.bonus12,"Начало пути..",106,150,-150,"");
+			new Bonus(112,R.drawable.bonus13,"Начало пути..",107,150,-150,"");
+			new Bonus(113,R.drawable.bonus14,"Начало пути..",108,150,-150,"");
+			new Bonus(114,R.drawable.bonus15,"Начало пути..",109,150,-150,"");
+			new Bonus(115,R.drawable.bonus16,"Начало пути..",110,150,-150,"");
+			new Bonus(116,R.drawable.bonus17,"Начало пути..",111,150,-150,"");
+			new Bonus(117,R.drawable.bonus18,"Начало пути..",112,150,-150,"");
+			new Bonus(118,R.drawable.bonus19,"Начало пути..",113,150,-150,"");
+			new Bonus(119,R.drawable.bonus20,"Начало пути..",114,150,-150,"");
+			new Bonus(120,R.drawable.bonus21,"Начало пути..",118,150,-150,"");
+			new Bonus(121,R.drawable.bonus22,"Начало пути..",116,150,-150,"");
 			
-			new Bonus(122,R.drawable.bonus23,"Начало пути..",0,-550,550);
-			new Bonus(123,R.drawable.bonus24,"Начало пути..",122,0,150);
-			new Bonus(124,R.drawable.bonus25,"Начало пути..",122,-150,150);
-			new Bonus(125,R.drawable.bonus26,"Начало пути..",122,-150,0);
-			new Bonus(126,R.drawable.bonus27,"Начало пути..",123,0,150);
-			new Bonus(127,R.drawable.bonus28,"Начало пути..",123,-150,150);
-			new Bonus(128,R.drawable.bonus29,"Начало пути..",124,-150,150);
-			new Bonus(129,R.drawable.bonus30,"Начало пути..",125,-150,150);
-			new Bonus(130,R.drawable.bonus31,"Начало пути..",125,-150,0);
-			new Bonus(131,R.drawable.bonus32,"Начало пути..",126,-150,150);
-			new Bonus(132,R.drawable.bonus33,"Начало пути..",127,-150,150);
-			new Bonus(133,R.drawable.bonus34,"Начало пути..",128,-150,150);
-			new Bonus(134,R.drawable.bonus35,"Начало пути..",129,-150,150);
-			new Bonus(135,R.drawable.bonus36,"Начало пути..",130,-150,150);
-			new Bonus(136,R.drawable.bonus37,"Начало пути..",131,-150,150);
-			new Bonus(137,R.drawable.bonus38,"Начало пути..",132,-150,150);
-			new Bonus(138,R.drawable.bonus39,"Начало пути..",133,-150,150);
-			new Bonus(139,R.drawable.bonus40,"Начало пути..",134,-150,150);
-			new Bonus(140,R.drawable.bonus41,"Начало пути..",135,-150,150);
-			new Bonus(141,R.drawable.bonus43,"Начало пути..",136,-150,150);
-			new Bonus(142,R.drawable.bonus44,"Начало пути..",138,-150,150);
-			new Bonus(143,R.drawable.bonus45,"Начало пути..",140,-150,150);
+			new Bonus(122,R.drawable.bonus23,"Начало пути..",0,-550,550,"");
+			new Bonus(123,R.drawable.bonus24,"Начало пути..",122,0,150,"");
+			new Bonus(124,R.drawable.bonus25,"Начало пути..",122,-150,150,"");
+			new Bonus(125,R.drawable.bonus26,"Начало пути..",122,-150,0,"");
+			new Bonus(126,R.drawable.bonus27,"Начало пути..",123,0,150,"");
+			new Bonus(127,R.drawable.bonus28,"Начало пути..",123,-150,150,"");
+			new Bonus(128,R.drawable.bonus29,"Начало пути..",124,-150,150,"");
+			new Bonus(129,R.drawable.bonus30,"Начало пути..",125,-150,150,"");
+			new Bonus(130,R.drawable.bonus31,"Начало пути..",125,-150,0,"");
+			new Bonus(131,R.drawable.bonus32,"Начало пути..",126,-150,150,"");
+			new Bonus(132,R.drawable.bonus33,"Начало пути..",127,-150,150,"");
+			new Bonus(133,R.drawable.bonus34,"Начало пути..",128,-150,150,"");
+			new Bonus(134,R.drawable.bonus35,"Начало пути..",129,-150,150,"");
+			new Bonus(135,R.drawable.bonus36,"Начало пути..",130,-150,150,"");
+			new Bonus(136,R.drawable.bonus37,"Начало пути..",131,-150,150,"");
+			new Bonus(137,R.drawable.bonus38,"Начало пути..",132,-150,150,"");
+			new Bonus(138,R.drawable.bonus39,"Начало пути..",133,-150,150,"");
+			new Bonus(139,R.drawable.bonus40,"Начало пути..",134,-150,150,"");
+			new Bonus(140,R.drawable.bonus41,"Начало пути..",135,-150,150,"");
+			new Bonus(141,R.drawable.bonus43,"Начало пути..",136,-150,150,"");
+			new Bonus(142,R.drawable.bonus44,"Начало пути..",138,-150,150,"");
+			new Bonus(143,R.drawable.bonus45,"Начало пути..",140,-150,150,"");
 			
 		}
 		
@@ -699,7 +722,7 @@ public class Menu
 		LayoutParams p1=new LayoutParams(100,100);
 		RelativeLayout settingsLayout;
 		public MusicVolume musicVolume;
-		
+		public Language lang;
 		
 		Settings(){
 			set=new ImageView(prop.context);
@@ -716,10 +739,12 @@ public class Menu
 			settingsLayout.setTranslationZ(1);
 			prop.activity.runOnUiThread(r1);
 			musicVolume= new MusicVolume();
-			new Languge();
+			lang=new Language();
 		}
 		
 		public void closeSettings(){
+			prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
+			
 			settingsLayout.setVisibility(View.INVISIBLE);
 			settingsIsOpen=false;
 			set.setZ(0);
@@ -748,6 +773,8 @@ public class Menu
 					set.setZ(11);
 					settingsLayout.setVisibility(View.VISIBLE);
 					settingsIsOpen=true;
+					prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
+					
 					}
 				return true;
 			}
@@ -766,13 +793,11 @@ public class Menu
 
 	};
 	
-	class Languge{
+	class Language{
 		TextView text;
 		TextView btn_text;
 		ImageView picture;
-		SoundPool sp;
-		int t;
-		Languge(){
+		Language(){
 			
 			text=new TextView(prop.context);
 			text.setGravity(Gravity.RIGHT);
@@ -801,24 +826,24 @@ public class Menu
 			btn_text.setTextColor(Color.argb(255,100,100,255));
 			btn_text.setTypeface(prop.ttf);
 			btn_text.setText(prop.words.get(Words.words.LANGUAGE));
-			
-			sp=new SoundPool(10,AudioManager.STREAM_MUSIC,0);
-			t=sp.load(prop.context,R.raw.music01,1);
-			
+		
 			settingsLayout.addView(text);
 			settingsLayout.addView(picture);
 			settingsLayout.addView(btn_text);
 		}
 		void reLang(){
-			text.setText(prop.words.get(Words.words.SETT_LANG));
-			btn_text.setText(prop.words.get(Words.words.LANGUAGE));
-			prop.shop.reLang();
+			reLangT();
 			prop.btn_continue.reLang();
 			prop.Btn_exit_game.reLang();
 			prop.Btn_exit_menu.reLang();
-			prop.Btn_play.reLang();
 		}
 		
+		void reLangT(){
+			prop.Btn_play.reLang();
+			text.setText(prop.words.get(Words.words.SETT_LANG));
+			btn_text.setText(prop.words.get(Words.words.LANGUAGE));
+			prop.shop.reLang();
+		}
 			OnTouchListener t1=new OnTouchListener(){
 
 				@Override
@@ -839,7 +864,8 @@ public class Menu
 
 				@Override
 				public void run()
-				{sp.play(t,1f,1f,1,5,1f);
+				{
+					prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
 					
 					reLang();
 					musicVolume.reLang();
@@ -919,7 +945,6 @@ public class Menu
 					if(p2.getAction()==MotionEvent.ACTION_MOVE){
 						if(barsLayout.getTranslationX()+p2.getX()>barsLayout.getTranslationX()
 						   &&barsLayout.getTranslationX()+p2.getX()<barsLayout.getTranslationX()+1200){
-						//point.setTranslationX(barsLayout.getTranslationX()+p2.getX());
 						volume=p2.getX()/1200;
 						prop.activity.runOnUiThread(r4);
 						}

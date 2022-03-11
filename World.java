@@ -102,10 +102,7 @@ public class World
 					
 						 check(prop);
 						Thread.sleep(1000);
-					 }catch(Exception e){
-							 files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-						 
-					}
+					 }catch(Exception i){}
 				}
 			}
 		};

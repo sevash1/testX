@@ -8,13 +8,8 @@ import android.widget.ImageView.*;
 import android.view.*;
 import android.media.*;
 
-public class Player implements Entity
+public class Player 
 {
-	@Override
-	public int getEntityType()
-	{
-		return PLAYER;
-	}
 	
 	public static enum type{
 		MENU,
@@ -30,6 +25,11 @@ public class Player implements Entity
 		JUMP,
 		ATTACK
 		}
+		
+		float attackDamagePercent=0f;
+		float attackDamageFixed=0f;
+		float bonusGoldPercent=0f;
+		float bonusGoldFixed=0f;
 	
 		public float max_health=100;
 		public float health=100;
@@ -49,8 +49,6 @@ public class Player implements Entity
 	
 	public int anim_stage=0;
 	public active_anim a_anim;
-	float playerPosX=0;
-	float playerPosY=0;
 	float screenW=0;
 	float screenH=0;
 	Thread thread1;
@@ -75,19 +73,16 @@ public class Player implements Entity
 			player.setTranslationY((screenH/2)-64*5);
 		prop.activity.runOnUiThread(run1);
 		thread1=new Thread(run2);
-		thread1.setDaemon(true);
 		thread1.start();
 		}
 		
 		else if(type==Player.type.WORLD){
-			this.playerPosX=prop.playerPosX;
-			this.playerPosY=prop.playerPosY;
 			load_textures();
 			player.setTranslationX((screenW/2)-64*2);
 			player.setTranslationY((screenH/2)-64*2);
+			player.setZ(1);
 			prop.playerAndUi.addView(player);
 			thread1=new Thread(run3);
-			thread1.setDaemon(true);
 			thread1.start();
 			prop.setPlayer(this);
 		}
@@ -238,7 +233,6 @@ public class Player implements Entity
 		else if(length<32000){
 			o=2;
 		}
-		if(o!=0){
 			prop.music.setOnCompletionListener(new MediaPlayer.OnCompletionListener(){
 					@Override
 					public void onCompletion(MediaPlayer mp){
@@ -250,11 +244,10 @@ public class Player implements Entity
 							playM();
 						}
 						});
-		}
-		else playM();
-		
 	}
 	
+	long time1=0,time2=0,deltaTime=0,
+    time3=0;
 	
 	Runnable run2=new Runnable(){
 		
@@ -292,52 +285,60 @@ public class Player implements Entity
 		}
 		};
 		
-		public boolean attacked=false;
+		
+		Skeleton skel;
 	void attack(){
-			for(Skeleton skel:prop.skeletons){
+		prop.sounds.sp.play(prop.sounds.s2,1f,1f,1,0,1f);
+			for(int i=0;i<prop.skeletons.size();i++){
+				skel=(Skeleton)prop.skeletons.get(i);
 				if(Math.sqrt(Math.pow((player.getTranslationX()-(skel.iv.getTranslationX()-prop.world.getScrollX())),2)
 						  +Math.pow((player.getTranslationY()-(skel.iv.getTranslationY()-prop.world.getScrollY())),2))<200){
-			attacked=true;
-		}
-			
-		else attacked=false;
-		}
-		
+				skel.sendDamage(1+attackDamageFixed);		 
+	     	    }
+		    }
 	}
+	
+	
 		
 	Runnable run3=new Runnable(){
 
 		@Override
 		public void run()
 		{
-			
 			while(true){
 				if(Game_stage.EXIT==prop.stage.getStage()) 
 					return;
 				
 				
 				try{
-					Thread.sleep(125);
+					time1=System.currentTimeMillis();
+					Thread.sleep(8);
+					time2=System.currentTimeMillis();
+					deltaTime=time2-time1;
+					time3+=deltaTime;
+					for(Skeleton skel:prop.skeletons)
+						skel.update();
 					}
-				catch(Exception e) {continue;}
+				catch(Exception e) {e.printStackTrace();}
+				if(time3>120){
+					time3=0;
 					if(prop.stage.getStage()==Game_stage.WORLD){
-						
+					
 						updateAnim();
 						if(anim_stage>anim.size()-2) anim_stage=0;
 						prop.joystick.updateRotate();
 						prop.activity.runOnUiThread(run4);
 						
+						for(Skeleton skel:prop.forAdd)
+							prop.skeletons.add(skel);
+						prop.forAdd.clear();
+						for(Skeleton skel:prop.forRemove)
+							prop.skeletons.remove(skel);
+						prop.forRemove.clear();
+						
 						if(a_anim==active_anim.ATTACK){
-							attack();
-							if(attacked&&(anim_stage==10||anim_stage==5||anim_stage==17))
-								
-								for(Skeleton skel:prop.skeletons)
-								if(skel.isLife){
-					
-								skel.sendDamage(1);
-								}
-								
-							
+							if(anim_stage==10||anim_stage==5||anim_stage==17)
+								attack();
 							if(anim_stage>12&&anim_stage<16){
 								if(player.getRotationY()==180)
 									prop.joystick.attackX=-0.4f;
@@ -362,7 +363,7 @@ public class Player implements Entity
 						}
 						anim_stage++;
 					}
-				
+				}
 			}
 		}
 

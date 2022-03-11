@@ -16,7 +16,6 @@ public class Btn_continue
 	LayoutParams params=new LayoutParams(210*2,60*2);
 	TextView tv;
 	main_properties prop;
-	Thread worldThread;
 
 	Btn_continue(main_properties prop){
 		this.prop=prop;
@@ -24,7 +23,6 @@ public class Btn_continue
 		this.context=prop.context;
 		this.screenW=prop.screenW;
 		this.screenH=prop.screenH;
-		this.worldThread=prop.worldThread;
 		btn=new ImageView(prop.context);
 		tv=new TextView(prop.context);
 		btn.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.btns_background,prop.options)));
@@ -58,6 +56,8 @@ public class Btn_continue
 		@Override
 		public void onClick(View p1)
 		{
+			prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
+			
 				prop.bl.setVisibility(View.GONE);
 				prop.stage.setStage_in_world(Game_stage.NOT_PAUSE);
 				prop.joystick.lay.setVisibility(View.VISIBLE);

@@ -145,6 +145,7 @@ public class Inventory
 		@Override
 		public void run()
 		{
+			if(item==null)return;
 			if(ground.getVisibility()==View.INVISIBLE)
 				descriptionL.setVisibility(View.INVISIBLE);
 			else
@@ -236,10 +237,14 @@ public class Inventory
 		}
 	};
 	public void closeInventory(){
+		prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
+		
 		prop.activity.runOnUiThread(run);
 	}
 	
 	public void openInventory(){
+		prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
+		
 		prop.onUi(run2);
 	}
 	
@@ -672,7 +677,6 @@ public class Inventory
 		@Override
 		public boolean onTouch(View p1, MotionEvent p2)
 		{
-			try{
 				if(p2.getAction()==MotionEvent.ACTION_UP){
 					if(item==null)return true;
 					if(ground.getVisibility()==View.INVISIBLE)return true;
@@ -693,9 +697,6 @@ public class Inventory
 					it.setOnTouchListener(aT);
 					prop.onUi(r5);
 				}
-			}catch(Exception e){
-				files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-			}
 			return true;
 		}
 	};

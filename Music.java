@@ -3,6 +3,16 @@ import android.media.*;
 
 public class Music
 {
+	SoundPool sp;
+	int s1,s2,s3;
+	Music(main_properties prop){
+		prop.sounds=this;
+		sp=new SoundPool(10,AudioManager.STREAM_MUSIC,0);
+		s1=sp.load(prop.context,R.raw.fx292,1);
+		s2=sp.load(prop.context,R.raw.sfx_sword,1);
+		
+	}
+	
 	public static  void load(main_properties prop){
 		prop.addMusic(R.raw.music01);
 		prop.addMusic(R.raw.music02);

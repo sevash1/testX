@@ -35,6 +35,12 @@ public class Words
 		lang=l;
 	}
 	
+	public void setLanguage(String l){
+		if(l.contentEquals("Russian")) lang=language.RU;
+		if(l.contentEquals("Английский")) lang=language.EN;
+		prop.menu.settings.lang.reLangT();
+	}
+	
 	public String get(words w){
 		if(lang==language.RU)return getRu(w);
 		else if(lang==language.EN)return getEn(w);

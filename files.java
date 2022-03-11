@@ -2,52 +2,26 @@ package sevash.livingSword;
 import java.io.*;
 import android.util.*;
 import java.util.*;
+import android.app.*;
 
 public class files
 {
 	
-	static void writeFile(final main_properties prop, final String sfile,final String[] args) {
-	
-		if(sfile=="error.txt"){
-
-
-			try {
-
-
-				File file = new File(prop.activity.getExternalFilesDir("").toString(), sfile);
-				try {
-					file.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				BufferedWriter bw = new BufferedWriter(new FileWriter(file,true));
-				bw.write(args[0]+"\n");
-
-				bw.close();
-
-			} catch (Exception e) {
-
-			}
-			}
-		}
-		
-		
-		static void writeFile(final main_properties prop, final String dir,final String sfile,final String[] args) {
+		static void writeFile(final main_properties prop) {
 			new Thread(){
 				public void run(){
 				
-			if(sfile.contentEquals("f.txt")){
 			try {
-				File file = new File(dir,sfile);
-				try {
-					if(!file.exists()){
-					file.createNewFile();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
+				File file = new File(prop.activity.getExternalFilesDir(""),"/f.txt");
+				try{	
+				if(!file.exists())
+					   file.createNewFile();	
+				}catch(Exception e){
+				 e.printStackTrace();
 				}
 				BufferedWriter bw = new BufferedWriter(new FileWriter(file));
 				bw.write("ver: 0.1\n");
+				bw.write("language: "+prop.words.get(Words.words.LANGUAGE)+"\n");
 				bw.write("player_position_x: "+String.valueOf(prop.playerPosX)+"\n");
 				bw.write("player_position_y: "+String.valueOf(prop.playerPosY)+"\n");
 				bw.write("exp: "+String.valueOf(prop.menu.playerLevel.points)+"\n");
@@ -71,49 +45,9 @@ public class files
 				bw.write("\n");
 				bw.close();
 				return;
-			} catch (Exception ignore) {}
-		}
-		
-		if(sfile=="error.txt"){
-			
-		
-			try {
-
-
-				File file = new File(prop.activity.getExternalFilesDir(""), sfile);
-				try {
-					file.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				BufferedWriter bw = new BufferedWriter(new FileWriter(file,true));
-				bw.write(args[0]+"\n");
-
-				bw.close();
-
-			} catch (Exception e) {
-				
+			} catch (Exception e) { 
+				e.printStackTrace();
 			}
-		}
-		else{
-			try{
-				File file = new File(dir, sfile);
-				try {
-					file.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				BufferedWriter bw = new BufferedWriter(new FileWriter(file,true));
-					for(int h=0;h<args.length;h++)
-				bw.write(args[h]);
-
-				bw.close();
-
-			} catch (Exception e) {
-			
-			}
-		}
-
 				}}.start();
 		}
 		
@@ -135,7 +69,9 @@ public class files
 					bw.write(text[0]+" "+text[1]+" "+text[2]+"\n");
 					bw.close();
 					return;
-				} catch (Exception ignore) {}
+				} catch (Exception e) {
+					e.printStackTrace();		
+				}
 			}
 		}
 		public static boolean check(String dir1, String dir2,String s,main_properties prop){
@@ -148,9 +84,8 @@ public class files
 					else return false;
 					}
 					catch(Exception e){
-						files.writeFile(prop,prop.activity.getExternalFilesDir("").toString(),"error.txt",(new String[]{e.toString()}));
-					
-						return false;}
+						e.printStackTrace();
+					}
 					}
 					return false;
 		}
@@ -171,14 +106,20 @@ public class files
                 inputStream.close();
 			}
         } catch (Exception e) {
-
+			e.printStackTrace();
 		}
     }
 		
-	public static void readFile(List list1,String fileName) {
+	public static void readFile(Activity activity, List list1,String fileName) {
         try {
-			
-            FileInputStream inputStream = new FileInputStream(new File(fileName));
+			File file = new File(fileName);
+			try{	
+				if(!file.exists())
+					file.createNewFile();	
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+            FileInputStream inputStream = new FileInputStream(file);
 
             if (inputStream != null) {
                 InputStreamReader isr = new InputStreamReader(inputStream);
@@ -191,7 +132,7 @@ public class files
                 inputStream.close();
 				}
         } catch (Exception e) {
-			
+			e.printStackTrace();
           }
     }
 	

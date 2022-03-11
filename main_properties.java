@@ -21,17 +21,18 @@ public class main_properties
 	public float screenH=0;
 	public BitmapFactory.Options options;
 	public Typeface ttf;
-	public Thread worldThread;
 	public Game_stage stage;
 	public RelativeLayout bl;
-	public Runnable worldThreadRun;
 	public MediaPlayer music;
 	public Player player;
 	public Joystick joystick;
 	public Money money;
 	public RelativeLayout grass;
 	public Btn_attack attack;
-	public List skeletons;
+	public List skeletons=new ArrayList<Skeleton>();
+	public List forRemove=new ArrayList<Skeleton>();
+	public List forAdd=new ArrayList<Skeleton>();
+	
 	public Btn_shield shield;
 	public Btn_roll roll;
 	public RelativeLayout playerAndUi;
@@ -50,7 +51,10 @@ public class main_properties
 	public Btn_exit_menu Btn_exit_menu;
 	public Btn_exit_game Btn_exit_game;
 	public Btn_play Btn_play;
-	
+	public String lang;
+	public Music sounds;
+	public long deltaTime=0;
+	public Mob mob;
 	
 	public main_properties(
 	RelativeLayout main,
@@ -62,11 +66,8 @@ public class main_properties
 	float screenH,
 	BitmapFactory.Options options,
 	Typeface ttf,
-	Thread worldThread,
 	Game_stage stage,
-	RelativeLayout bl,
-	Runnable run,
-	List skeletons){
+	RelativeLayout bl){
 		this.prop=this;
 		this.main=main;
 	this.menuLayout=menuLayout;
@@ -77,12 +78,8 @@ public class main_properties
 		this.screenH=screenH;
 		this.options=options;
 		this.ttf=ttf;
-		this.worldThread=worldThread;
 		this.stage=stage;
 		this.bl=bl;
-		this.worldThreadRun=run;
-		this.skeletons=skeletons;
-
 	}
 	public void setPlayer(Player player){
 		this.player=player;

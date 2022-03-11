@@ -73,6 +73,8 @@ public class Shop
 	
 	
 	public void openShop(){
+		prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
+		
 		prop.vanishGameButtons();
 		prop.activity.runOnUiThread(prop.money.r2);
 		prop.activity.runOnUiThread(run);
@@ -101,7 +103,6 @@ public class Shop
 				prop.menuLayout.addView(shop,params3);
 			
 			isOpen=true;
-			// TODO: Implement this method
 		}
 
 
@@ -118,7 +119,6 @@ public class Shop
 				prop.menuLayout.removeView(shop);
 
 			isOpen=false;
-			// TODO: Implement this method
 		}
 	};
 	
@@ -139,6 +139,8 @@ public class Shop
 		@Override
 		public boolean onTouch(View p1, MotionEvent p2)
 		{
+			prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
+
 			closeShop();
 			return true;
 		}
@@ -164,7 +166,6 @@ public class Shop
 					shopItems.setScrollY((int)(y-p2.getY()));
 				}
 			}
-			// TODO: Implement this method
 			return true;
 		}
 
@@ -381,7 +382,6 @@ public class Shop
 			@Override
 			public void run()
 			{
-				
 				buyed.setAlpha(1);
 				buyed.setY(al);
 			}
@@ -394,6 +394,7 @@ public class Shop
 			@Override
 			public void run()
 			{
+				
 				buyed.setAlpha(0);
 				buyed.setY(65);
 			}
@@ -440,6 +441,8 @@ public class Shop
 			@Override
 			public void onClick(View p1)
 			{
+				prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
+				
 				if(item==null) return;
 				if(!prop.inv.addItem("shop",item.copy(),0)){
 				new Thread(r6).start();
