@@ -17,6 +17,8 @@ public class Menu
 	Avatar avatar;
 	PlayerLevel playerLevel;
 	Bonuses bonuses;
+	Menu.Player playerDat;
+	Shop avShop;
 	
 	Menu(main_properties prop){
 		prop.setMenu(this);
@@ -34,7 +36,8 @@ public class Menu
 		Music.load(prop);
 		settings =new Settings();
 		new Btn_play(prop);
-	
+	    new Player();
+		avShop=new Shop(prop,1);
 	}
 	
 	class Avatar{
@@ -43,7 +46,6 @@ public class Menu
 		Random r=new Random();
 	
 		Avatar(){
-			Item.loadAvatars(prop);
 			
 			background=new ImageView(prop.context);
 			background.setImageResource(R.drawable.background3);
@@ -56,6 +58,7 @@ public class Menu
 			icon.setX(background.getX()+25);
 			icon.setY(background.getY()+25);
 			icon.setScaleType(ScaleType.FIT_XY);
+			icon.setOnTouchListener(t1);
 			
 			prop.menuLayout.addView(background,200,200);
 			prop.menuLayout.addView(icon,150,150);	
@@ -63,13 +66,19 @@ public class Menu
 			
 				}
 		
-		Runnable r1=new Runnable(){
+		OnTouchListener t1=new OnTouchListener(){
 
 			@Override
-			public void run()
+			public boolean onTouch(View p1, MotionEvent p2)
 			{
-				
-			}
+				if(p2.getAction()==MotionEvent.ACTION_UP){
+					if(!playerDat.isOpen)
+					    playerDat.open();
+					else
+					   playerDat.close();
+					}
+				return true;
+			}	
 	};
 	}
 	
@@ -176,10 +185,32 @@ public class Menu
 		float midX=0;
 		float midY=0;
 		boolean isOpen=false;
-		TextView btnText;;
+		TextView btnText;
+		TextView studied;
+		TextView notStudied;
+		
 		Bonuses(){
 			midX=prop.screenW/2;
 			midY=prop.screenH/2;
+			
+			studied=new TextView(prop.context);
+			studied.setText(prop.words.get(Words.words.STUDIED));
+			studied.setGravity(Gravity.CENTER);
+			studied.setTextSize(9);
+			studied.setAlpha(0);
+			studied.setZ(5);
+			studied.setLayoutParams(new LayoutParams(250,50));
+			studied.setTextColor(Color.GREEN);
+			studied.setTypeface(prop.ttf);
+			notStudied=new TextView(prop.context);
+			notStudied.setText(prop.words.get(Words.words.NOT_STUDIED));
+			notStudied.setGravity(Gravity.CENTER);
+			notStudied.setTextSize(9);
+			notStudied.setZ(5);
+			notStudied.setAlpha(0);
+			notStudied.setLayoutParams(new LayoutParams(250,50));
+			notStudied.setTextColor(Color.RED);
+			notStudied.setTypeface(prop.ttf);
 			
 			bonuses=this;
 			intermediary=new ImageView(prop.context);
@@ -212,7 +243,7 @@ public class Menu
 			btnText.setTextColor(Color.YELLOW);
 			btnText.setX(250);
 			btnText.setLayoutParams(new LayoutParams(200,50));
-			btnText.setText("изучить");
+			btnText.setText(prop.words.get(Words.words.STUDY));
 			btnText.setOnTouchListener(t3);
 			
 			name=new TextView(prop.context);
@@ -241,12 +272,20 @@ public class Menu
 			loadBonuses();
 			
 			bonuses_layout.addView(description_layout);
-			
+			bonuses_layout.addView(studied);
+			bonuses_layout.addView(notStudied);
 			for(Bonus bonus:bonusList)
 			bonuses_layout.addView(bonus.picture);
 			prop.menuLayout.addView(intermediary,100,100);
 			prop.menuLayout.addView(bonuses_layout);
 			}
+			
+		void reLang(){
+			btnText.setText(prop.words.get(Words.words.STUDY));
+			notStudied.setText(prop.words.get(Words.words.NOT_STUDIED));
+			studied.setText(prop.words.get(Words.words.STUDIED));
+			
+		}
 			
 		OnTouchListener t2=new OnTouchListener(){
 
@@ -321,7 +360,12 @@ public class Menu
 				else btnText.setVisibility(View.VISIBLE);
 				description_layout.setVisibility(View.VISIBLE);
 				
-			   }
+				studied.setX(description_layout.getX()-100);
+				studied.setY(description_layout.getY());
+				notStudied.setX(description_layout.getX()-100);
+				notStudied.setY(description_layout.getY());
+				
+				}
 		};
 			
 			Bonus findBonus(ImageView picture){
@@ -467,7 +511,9 @@ public class Menu
 				prop.onUi(r3);
 			else
 				r3.run();
-				tmpBonus.isReceived=true;
+			tmpBonus.isReceived=true;
+			new Thread(r9).start();
+			
 		}
 			
 			
@@ -538,12 +584,80 @@ public class Menu
 				if(p2.getAction()==MotionEvent.ACTION_UP)
 				{
 					if(findBonus(tmpBonus.parent).isReceived)
-					update(tmpBonus.id);
+					    update(tmpBonus.id);
+					else
+						new Thread(r6).start();
 					
 				}
 				return true;
 			}
 		};
+		
+		Runnable r6=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				try{
+					prop.activity.runOnUiThread(r7);
+					Thread.sleep(1000);
+					prop.activity.runOnUiThread(r8);
+				}
+				catch(Exception ignore){}
+			}
+		};
+
+		Runnable r7=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				notStudied.setAlpha(255);
+			}
+		};
+
+		Runnable r8=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				notStudied.setAlpha(0);
+			}
+		};
+		
+		Runnable r9=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				try{
+					prop.activity.runOnUiThread(r10);
+					Thread.sleep(1000);
+					prop.activity.runOnUiThread(r11);
+				}
+				catch(Exception ignore){}
+			}
+		};
+
+		Runnable r10=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				studied.setAlpha(255);
+			}
+		};
+
+		Runnable r11=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				studied.setAlpha(0);
+			}
+		};
+		
+		
 		
 		Runnable r3=new Runnable(){
 
@@ -733,7 +847,7 @@ public class Menu
 			set.setOnTouchListener(t1);
 			settingsLayout=new RelativeLayout(prop.context);
 			settingsLayout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT));
-			settingsLayout.setBackgroundColor(Color.argb(192,110,110,110));
+			settingsLayout.setBackgroundResource(R.drawable.background3);
 			settingsLayout.setOnTouchListener(t2);
 			settingsLayout.setVisibility(View.INVISIBLE);
 			settingsLayout.setTranslationZ(1);
@@ -805,7 +919,7 @@ public class Menu
 			text.setTranslationX(140);
 			text.setTranslationY(prop.screenH/3.5f);
 			text.setLayoutParams(new LayoutParams(300,50));
-			text.setTextColor(Color.BLUE);
+			text.setTextColor(Color.YELLOW);
 			text.setTypeface(prop.ttf);
 			text.setText(prop.words.get(Words.words.SETT_LANG));
 			
@@ -814,7 +928,7 @@ public class Menu
 			picture.setY(text.getY()-25);
 			picture.setLayoutParams(new LayoutParams(500,100));
 			picture.setScaleType(ScaleType.FIT_XY);
-			picture.setImageResource(R.drawable.btn);
+			picture.setImageResource(R.drawable.btn_v20);
 			picture.setOnTouchListener(t1);
 			
 			btn_text=new TextView(prop.context);
@@ -823,7 +937,7 @@ public class Menu
 			btn_text.setTranslationX(picture.getX());
 			btn_text.setTranslationY(picture.getY());
 			btn_text.setLayoutParams(picture.getLayoutParams());
-			btn_text.setTextColor(Color.argb(255,100,100,255));
+			btn_text.setTextColor(Color.YELLOW);
 			btn_text.setTypeface(prop.ttf);
 			btn_text.setText(prop.words.get(Words.words.LANGUAGE));
 		
@@ -840,6 +954,7 @@ public class Menu
 		
 		void reLangT(){
 			prop.Btn_play.reLang();
+			bonuses.reLang();
 			text.setText(prop.words.get(Words.words.SETT_LANG));
 			btn_text.setText(prop.words.get(Words.words.LANGUAGE));
 			prop.shop.reLang();
@@ -890,7 +1005,7 @@ public class Menu
 			text.setTranslationX(140);
 			text.setTranslationY(prop.screenH/9);
 			text.setLayoutParams(new LayoutParams(300,50));
-			text.setTextColor(Color.BLUE);
+			text.setTextColor(Color.YELLOW);
 			text.setTypeface(prop.ttf);
 		text.setText(prop.words.get(Words.words.MUSIC));
 		
@@ -908,7 +1023,7 @@ public class Menu
 			barsLayout.setOnTouchListener(t3);
 		
 			point=new ImageView(prop.context);
-			point.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.black_bar,prop.options)));
+			point.setBackgroundColor(Color.WHITE);
 			point.setScaleType(ScaleType.FIT_XY);
 			point.setLayoutParams(new LayoutParams(70,10));
 			point.setRotation(90);
@@ -919,7 +1034,7 @@ public class Menu
 		}
 		
 		public void updatePoint(){
-			point.setTranslationX(500+1200*volume);
+			prop.onUi(r4);
 			if(prop.music!=null)
 			prop.music.setVolume(volume,volume);
 			
@@ -933,7 +1048,7 @@ public class Menu
 				@Override
 				public void run()
 				{
-					updatePoint();
+					point.setTranslationX(barsLayout.getX()+1200*volume);
 				}
 			};
 		
@@ -942,13 +1057,19 @@ public class Menu
 				@Override
 				public boolean onTouch(View p1, MotionEvent p2)
 				{
+					if(barsLayout.getTranslationX()+p2.getX()<barsLayout.getTranslationX())
+					   volume=0;
+					if(barsLayout.getTranslationX()+p2.getX()>barsLayout.getTranslationX()+1200)
+						volume=1;
+					
 					if(p2.getAction()==MotionEvent.ACTION_MOVE){
 						if(barsLayout.getTranslationX()+p2.getX()>barsLayout.getTranslationX()
 						   &&barsLayout.getTranslationX()+p2.getX()<barsLayout.getTranslationX()+1200){
-						volume=p2.getX()/1200;
-						prop.activity.runOnUiThread(r4);
+							
+				        volume=p2.getX()/1200;
 						}
 					}
+					updatePoint();
 					return true;
 				}
 
@@ -969,5 +1090,85 @@ public class Menu
 			
 	}
 	
+	}
+	
+	private class Player{
+	RelativeLayout backg;
+	boolean isOpen=false;
+	TextView changeAvatarBtn;
+		View changeAvatarBtnS;
+		Player(){
+			backg=new RelativeLayout(prop.context);
+			backg.setBackgroundResource(R.drawable.background3);
+			backg.setLayoutParams(new LayoutParams((int)(prop.screenW*0.9),(int)(prop.screenH*0.9)));
+		    backg.setX(prop.screenW*0.05f);
+			backg.setY(prop.screenH*0.05f);
+			backg.setZ(3);
+			backg.setVisibility(View.INVISIBLE);
+			playerDat=this;
+			
+			changeAvatarBtn=new TextView(prop.context);
+			changeAvatarBtn.setBackgroundResource(R.drawable.btn);
+			changeAvatarBtn.setGravity(Gravity.CENTER);
+			changeAvatarBtn.setTypeface(prop.ttf);
+			changeAvatarBtn.setTextSize(8);
+			changeAvatarBtn.setTextColor(Color.YELLOW);
+			changeAvatarBtn.setX(100);
+			changeAvatarBtn.setY(100);
+			changeAvatarBtn.setLayoutParams(new LayoutParams(200,50));
+			changeAvatarBtn.setText("поменять аватарку");
+			backg.addView(changeAvatarBtn);
+			
+			changeAvatarBtnS=new View(prop.context);
+			changeAvatarBtnS.setBackgroundResource(R.drawable.coin_01d);
+			changeAvatarBtnS.setX(changeAvatarBtn.getLayoutParams().width+110);
+			changeAvatarBtnS.setY(100);
+			changeAvatarBtnS.setLayoutParams(new LayoutParams(50,50));
+			backg.addView(changeAvatarBtnS);
+			changeAvatarBtnS.setOnTouchListener(t1);
+			
+			
+			prop.menuLayout.addView(backg);
+			
+		}
+		
+		OnTouchListener t1=new OnTouchListener(){
+
+			@Override
+			public boolean onTouch(View p1, MotionEvent p2)
+			{
+				if(p2.getAction()==MotionEvent.ACTION_UP){
+					avShop.openOrClose();
+				}
+				return true;
+			}	
+		};
+		
+	    void open(){
+		isOpen=true;
+		prop.onUi(r1);
+	    }
+	    void close(){
+		isOpen=false;
+		prop.onUi(r2);
+	    }
+		
+		Runnable r1=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				backg.setVisibility(View.VISIBLE);	
+			}	
+		};
+		
+		Runnable r2=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				backg.setVisibility(View.INVISIBLE);
+			}	
+		};
 	}
 }

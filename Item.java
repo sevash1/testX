@@ -224,13 +224,93 @@ public class Item
 		new Item(prop,84,R.drawable.sword_03d,4,prop.words.get(Words.words.armor01e),"",new String[]{"sword"});
 		new Item(prop,85,R.drawable.sword_03e,4,prop.words.get(Words.words.armor01e),"",new String[]{"sword"});
 		new Item(prop,86,R.drawable.wood_01a,4,prop.words.get(Words.words.armor01e),"",new String[]{""});
-		
+	
+		loadAvatars(prop);
 		}
 		
 	public static void loadAvatars(main_properties prop){
-		for(int i=0x7f02010f;i<=0x7f020160;i++){
-			new Item(prop,"ava",36,i,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
-			
-		}
+		new Item(prop,"ava",36,R.drawable.icon01,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon02,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon03,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon04,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon05,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon06,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon07,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon08,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon09,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon10,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon11,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon12,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon13,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon14,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon15,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon16,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon17,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon18,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon19,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon20,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon21,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon22,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon23,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon24,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon25,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon26,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon27,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon28,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon29,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon30,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon31,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon32,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon33,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon34,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon35,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon36,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon37,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon38,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon39,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon40,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon41,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon42,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon43,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon44,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon45,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon46,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon47,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon48,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon49,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon50,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon51,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon52,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon53,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon54,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon55,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon56,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon57,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon58,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon59,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon60,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon61,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon62,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon63,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon64,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon65,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon66,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon67,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon68,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon69,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon70,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon71,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon72,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon73,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon74,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon75,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon76,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon77,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon78,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon79,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon80,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon81,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		new Item(prop,"ava",36,R.drawable.icon82,4,prop.words.get(Words.words.armor01e),"",new String[]{"necklace"});
+		
 	}
 }

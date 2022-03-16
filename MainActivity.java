@@ -166,8 +166,11 @@ public class MainActivity extends Activity
 							prop.playerPosY=prop.playerPosY+prop.joystick.ratioY*deltaTime;	
 					}}
 				
-					if(last_playerPosX==prop.playerPosX&&last_playerPosY==prop.playerPosY){}
+					if(last_playerPosX==prop.playerPosX&&last_playerPosY==prop.playerPosY){
+						prop.playerMove=false;
+					}
 					else {
+						prop.playerMove=true;
 						last_playerPosX=prop.playerPosX;
 						last_playerPosY=prop.playerPosY;
 						grass_layout.setScrollX((int)(prop.playerPosX-((int)(prop.playerPosX/256))*256+256*6));
@@ -181,7 +184,7 @@ public class MainActivity extends Activity
 					if(time5>1000){
 						time5=0;
 						files.writeFile(prop);
-						coord="X:"+(int)prop.playerPosX+"\n"+"Y:"+(int)prop.playerPosY+"\n"+String.valueOf(deltaTime)+"\n"+fps+"\n"+String.valueOf(prop.skeletons.size());
+					coord="X:"+(int)prop.playerPosX+"\n"+"Y:"+(int)prop.playerPosY+"\n"+String.valueOf(deltaTime)+"\n"+fps+"\n"+String.valueOf(prop.skeletons.size()+"\n"+(Math.sqrt(Math.pow(prop.world.getScrollX()+((Skeleton)prop.skeletons.get(0)).posX,2))));
 						fps=0;
 						Log.d("seva",String.valueOf(
 						Runtime.getRuntime().totalMemory()/1048576)+"/"+
@@ -256,7 +259,7 @@ public class MainActivity extends Activity
 				new Words(prop);
 				new Music(prop);
 				Item.loadItems(prop);
-				new Shop(prop);
+				new Shop(prop,0);
 				new Inventory(prop);
 			    new Player(prop,Player.type.MENU);
 			    new Player(prop,Player.type.WORLD);
@@ -385,8 +388,17 @@ public class MainActivity extends Activity
 				return;
 			}
 			if(prop.inv.isOpen){
-
 				prop.inv.closeInventory();
+				return;
+			}
+			
+			if(prop.menu.avShop.isOpen){
+				prop.menu.avShop.openOrClose();
+				return;
+			}
+			
+			if(prop.menu.playerDat.isOpen){
+				prop.menu.playerDat.close();
 				return;
 			}
 			

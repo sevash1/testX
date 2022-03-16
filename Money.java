@@ -46,74 +46,7 @@ public class Money
 		setType(type);
 		}
 		
-	float posX=0;
-	float posY=0;
-	float endX=0;
-	float endY=0;
-	float rX=0;
-	float rY=0;
-	float count=0;
-	
-	 Money(main_properties prop,String s, float x, float y){
-		pic1=new ImageView(prop.context);
-		pic1.setLayoutParams(params);
-		pic1.setX(x-prop.world.getScrollX());
-		pic1.setY(y-prop.world.getScrollY());
-		pic1.setScaleType(ScaleType.FIT_XY);
-		pic1.setImageResource(R.drawable.coin_01d);
 		
-		this.prop=prop;
-		 posX=pic1.getX();
-		 posY=pic1.getY();
-		 endX=prop.screenW;
-		 rX=(endX-posX)/100;
-		 rY=(-posY)/100;
-			new Thread(r4).start();
-	}
-	
-	static void drop(main_properties prop,String s,float x, float y,float count){
-		prop.money.addMoney(count);
-		new Money(prop,s,x,y);
-	}
-	
-	Runnable r4=new Runnable(){
-
-		@Override
-		public void run()
-		{
-			prop.onUi(r6);
-			new Thread(r1).start();
-			for(int i=0; i<100;i++){
-			    try{
-				  Thread.sleep(10+1);
-			    }catch(Exception e){}
-			    posX+=rX;
-				posY+=rY;
-				prop.onUi(r5);
-			}
-			
-			}
-	};
-	
-	Runnable r5=new Runnable(){
-
-		@Override
-		public void run()
-		{
-			pic1.setX(posX);
-			pic1.setY(posY);
-		}
-	};
-		
-	Runnable r6=new Runnable(){
-
-		@Override
-		public void run()
-		{
-			prop.playerAndUi.addView(pic1);
-		}
-	};
-	
 		public void setType(Type type){
 			if(type==Type.MENU){
 				prop.activity.runOnUiThread(run2);
@@ -201,6 +134,9 @@ public class Money
 			}	
 		};
 		
+		public void showMoney(){
+			new Thread(r1).start();
+		}
 		
 	Runnable r1=new Runnable(){
 

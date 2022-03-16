@@ -8,7 +8,6 @@ import android.view.*;
 
 public class Btn_continue 
 {
-	RelativeLayout world;
 	Context context;
 	float screenW=0;
 	float screenH=0;
@@ -19,7 +18,6 @@ public class Btn_continue
 
 	Btn_continue(main_properties prop){
 		this.prop=prop;
-		this.world=prop.menuLayout;
 		this.context=prop.context;
 		this.screenW=prop.screenW;
 		this.screenH=prop.screenH;

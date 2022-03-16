@@ -31,8 +31,8 @@ public class Player
 		float bonusGoldPercent=0f;
 		float bonusGoldFixed=0f;
 	
-		public float max_health=100;
-		public float health=100;
+		public float max_health=20;
+		public float health=20;
 	main_properties prop;
 	RelativeLayout menu;
 	RelativeLayout world;
@@ -286,19 +286,24 @@ public class Player
 		};
 		
 		
-		Skeleton skel;
+		Skeleton skel1;
 	void attack(){
 		prop.sounds.sp.play(prop.sounds.s2,1f,1f,1,0,1f);
 			for(int i=0;i<prop.skeletons.size();i++){
-				skel=(Skeleton)prop.skeletons.get(i);
-				if(Math.sqrt(Math.pow((player.getTranslationX()-(skel.iv.getTranslationX()-prop.world.getScrollX())),2)
-						  +Math.pow((player.getTranslationY()-(skel.iv.getTranslationY()-prop.world.getScrollY())),2))<200){
-				skel.sendDamage(1+attackDamageFixed);		 
-	     	    }
+				skel1=(Skeleton)prop.skeletons.get(i);
+				if(prop.distanceToPlayer(skel1.posX,skel1.posY)<200)
+				{skel1.sendDamage(1+attackDamageFixed);		 
+	     	    sendDamage(1);
+				}
 		    }
 	}
 	
-	
+	void sendDamage(float count){
+		if(health-count<0)health=0;
+		else
+			health-=count;
+		prop.healthBar.update();
+	}
 		
 	Runnable run3=new Runnable(){
 
@@ -316,8 +321,8 @@ public class Player
 					time2=System.currentTimeMillis();
 					deltaTime=time2-time1;
 					time3+=deltaTime;
-					for(Skeleton skel:prop.skeletons)
-						skel.update();
+						for(Skeleton skel2:prop.skeletons)
+						skel2.update();
 					}
 				catch(Exception e) {e.printStackTrace();}
 				if(time3>120){
@@ -329,11 +334,11 @@ public class Player
 						prop.joystick.updateRotate();
 						prop.activity.runOnUiThread(run4);
 						
-						for(Skeleton skel:prop.forAdd)
-							prop.skeletons.add(skel);
+						for(Skeleton skel3:prop.forAdd)
+							prop.skeletons.add(skel3);
 						prop.forAdd.clear();
-						for(Skeleton skel:prop.forRemove)
-							prop.skeletons.remove(skel);
+						for(Object skel4:prop.forRemove)
+							prop.skeletons.remove(skel4);
 						prop.forRemove.clear();
 						
 						if(a_anim==active_anim.ATTACK){

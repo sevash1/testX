@@ -21,9 +21,14 @@ public class Shop
 	List itemPictures=new ArrayList<ImageView>();
 	TextView buyed;
 	TextView notBuyed;
+	int s=0;
+	int shop_lenght=0;
 	
-	Shop(main_properties prop){
+	Shop(main_properties prop, int s){
 		this.prop=prop;
+		this.s=s;
+	if(s==0) shop_lenght=15;
+	else if(s==1) shop_lenght=9;
 	shop=new RelativeLayout(prop.context);
 	shop.setTranslationZ(10);
 	shopItems=new RelativeLayout(prop.context);
@@ -43,7 +48,7 @@ public class Shop
 		
 	ImageView in;
 		for(int i=0;i<10;i++){
-			for(int j=0;j<35;j++){
+			for(int j=0;j<10*shop_lenght;j++){
 				in=new ImageView(prop.context);
 				in.setImageResource(R.drawable.cell01);
 				in.setX(200+i*106);
@@ -55,19 +60,32 @@ public class Shop
 			}
 		}
 		ImageView it;
+		if(s==0)
 		for(int i=0;i<prop.items.size();i++){
 			    it=new ImageView(prop.context);
 				it.setX(200+3+(i%10)*106);
 				it.setY(100+3+(i/10)*106);
 				it.setZ(4);
 			    it.setOnTouchListener(t2);
-				it.setImageDrawable(((ImageView)((Item)prop.items.get(i)).picture).getDrawable());
+			    it.setImageResource(((Item)prop.items.get(i)).pictureInt);
 				itemPictures.add(it);
 				shopItems.addView(it,Item.params1);
-				
 				}
+		else{
+			for(int i=0;i<prop.icons.size();i++){
+			    it=new ImageView(prop.context);
+				it.setX(200+3+(i%10)*106);
+				it.setY(100+3+(i/10)*106);
+				it.setZ(4);
+			    it.setOnTouchListener(t2);
+				it.setImageResource(((Item)prop.icons.get(i)).pictureInt);
+				itemPictures.add(it);
+				shopItems.addView(it,Item.params1);
+				}
+		}
 	ti=new TargetItem();
-	prop.setShop(this);
+	if(s==0)
+	  prop.setShop(this);
 		
 	}
 	
@@ -122,6 +140,34 @@ public class Shop
 		}
 	};
 	
+	void openOrClose(){
+		if(s==1){
+			if(!isOpen)
+			  prop.onUi(r1);
+			else
+			prop.onUi(r2);
+		}
+	}
+	
+	Runnable r1=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			prop.menuLayout.addView(shop);
+			isOpen=true;
+		}
+	};
+	
+	Runnable r2=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			prop.menuLayout.removeView(shop);
+			isOpen=false;
+		}
+	};
 	
 	OnTouchListener t1=new OnTouchListener(){
 
@@ -139,9 +185,14 @@ public class Shop
 		@Override
 		public boolean onTouch(View p1, MotionEvent p2)
 		{
+			if(p2.getAction()==MotionEvent.ACTION_UP){
+				
 			prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
-
-			closeShop();
+			if(s==0)
+			   closeShop();
+			else
+				openOrClose();
+				}
 			return true;
 		}
 
@@ -232,6 +283,7 @@ public class Shop
 			priceL.setBackgroundColor(Color.argb(192,64,64,240));
 			lay.addView(priceL);
 			
+			if(s==0){
 			descriptionL=new RelativeLayout(prop.context);
 			descriptionL.setLayoutParams(new LayoutParams(715,600));
 			descriptionL.setTranslationX(15);
@@ -262,7 +314,7 @@ public class Shop
 			descT.setTypeface(prop.ttf);
 			descT.setShadowLayer(20,5,5,Color.argb(255,166,166,255));
 			descriptionL.addView(descT);
-			
+			}
 			
 			ImageView btn_buy=new ImageView(prop.context);
 			btn_buy.setX(25);
@@ -342,7 +394,7 @@ public class Shop
 			
 	void setItem(ImageView t){
 		it=t;
-		item=findItem(prop,t,itemPictures,item);
+		item=findItem(prop,t,itemPictures,item,s);
 		tmpName=item.name; 
 		tmpPrice=item.price;
 		prop.onUi(r4);
@@ -411,7 +463,6 @@ public class Shop
 							prop.activity.runOnUiThread(r7);
 					Thread.sleep(1000);
 								prop.activity.runOnUiThread(r8);
-							Thread.sleep(8);
 						}
 					catch(Exception ignore){}
 			}
@@ -477,8 +528,8 @@ public class Shop
 					price.setTextColor(Color.GREEN);
 				else
 					price.setTextColor(Color.RED);
-				
-				name.setText(item.name);
+				if(s==0)
+				   name.setText(item.name);
 				price.setText(String.valueOf(item.price));
 		}
 	};
@@ -486,11 +537,14 @@ public class Shop
 	}
 	
 	
-	static Item findItem(main_properties prop,ImageView pic,List il,Item item){
+	static Item findItem(main_properties prop,ImageView pic,List il,Item item,int s){
 		int i=0;
 		for(ImageView item1:il){
 			if(item1==pic){
-				return (Item)prop.items.get(i);
+				if(s==0)
+				   return (Item)prop.items.get(i);
+				else
+					return (Item)prop.icons.get(i);
 			}
 			i++;
 		}

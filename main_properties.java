@@ -32,7 +32,7 @@ public class main_properties
 	public List skeletons=new ArrayList<Skeleton>();
 	public List forRemove=new ArrayList<Skeleton>();
 	public List forAdd=new ArrayList<Skeleton>();
-	
+	public Random rand=new Random();
 	public Btn_shield shield;
 	public Btn_roll roll;
 	public RelativeLayout playerAndUi;
@@ -55,6 +55,8 @@ public class main_properties
 	public Music sounds;
 	public long deltaTime=0;
 	public Mob mob;
+	public Player_health healthBar;
+	public boolean playerMove=false;
 	
 	public main_properties(
 	RelativeLayout main,
@@ -135,6 +137,13 @@ public class main_properties
 	public void onUi(Runnable r4){
 		this.r4=r4;
 		activity.runOnUiThread(r3);
+	}
+	
+	public float distanceToPlayer(float x, float y){
+		
+		return (float)Math.sqrt(Math.pow(prop.world.getScrollX()+x,2)
+				  +Math.pow(prop.world.getScrollY()+y,2));		
+	
 	}
 	
 	

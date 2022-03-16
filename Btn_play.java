@@ -25,7 +25,7 @@ public class Btn_play
 		this.screenH=prop.screenH;
 		btn=new ImageView(prop.context);
 		tv=new TextView(prop.context);
-		btn.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.btn_play,prop.options)));
+		btn.setImageResource(R.drawable.btn_v20);
 		btn.setLayoutParams(params);
 		btn.setScaleType(ScaleType.FIT_XY);
 		btn.setTranslationX((screenW/2)-105*4);

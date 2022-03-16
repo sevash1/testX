@@ -40,7 +40,7 @@ public class Player_health
 		progress.setTranslationX(65);
 		progress.setTranslationY(10);
 		progress.setTranslationZ(1023);
-		
+		progress.setPivotX(0);
 		back=new ImageView(prop.context);
 		back.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.black_bar,prop.options)));
 		back.setLayoutParams(params3);
@@ -58,7 +58,6 @@ public class Player_health
 		border.setTranslationZ(1023);
 
 		tv=new TextView(prop.context);
-		tv.setText("100"+" | "+"100");
 		tv.setGravity(Gravity.LEFT);
 		tv.setTextSize(4);
 		tv.setTranslationX(882);
@@ -67,12 +66,12 @@ public class Player_health
 		tv.setTextColor(Color.RED);
 		tv.setTypeface(prop.ttf);
 		tv.setLayoutParams(params1);
-		
+		run0.run();
 		prop.playerAndUi.addView(back);
 		prop.playerAndUi.addView(progress);
 		prop.playerAndUi.addView(border);
 		prop.playerAndUi.addView(tv);
-		
+		prop.healthBar=this;
 	}
 	
 	
@@ -81,9 +80,14 @@ public class Player_health
 		@Override
 		public void run()
 		{
+			tv.setText(String.valueOf((int)prop.player.health)+" | "
+					   +String.valueOf((int)prop.player.max_health));
+			
 			progress.setScaleX(prop.player.health/prop.player.max_health);
 		}
-
-
 	};
+	
+	void update(){
+		prop.onUi(run0);
+	}
 }
