@@ -19,6 +19,7 @@ public class Menu
 	Bonuses bonuses;
 	Menu.Player playerDat;
 	Shop avShop;
+	String percent="%";
 	
 	Menu(main_properties prop){
 		prop.setMenu(this);
@@ -37,8 +38,7 @@ public class Menu
 		settings =new Settings();
 		new Btn_play(prop);
 	    new Player();
-		avShop=new Shop(prop,1);
-	}
+		}
 	
 	class Avatar{
 		ImageView icon;
@@ -350,7 +350,7 @@ public class Menu
 													   name.getLineCount()*name.getLineHeight()));
 				
 				description.setY(name.getY()+name.getLineHeight()*name.getLineCount()+10);
-				description.setText(tmpBonus.description);
+				//description.setText(tmpBonus.description);
 				description.setLayoutParams(new LayoutParams(description.getLayoutParams().width,
 													  description.getLineCount()*description.getLineHeight()));
 				
@@ -359,6 +359,9 @@ public class Menu
 			    if(tmpBonus.isReceived) btnText.setVisibility(View.INVISIBLE);
 				else btnText.setVisibility(View.VISIBLE);
 				description_layout.setVisibility(View.VISIBLE);
+				descB.removeView(tmpBonus.upgradesL);
+				tmpBonus.upgradesL.setY(name.getY()+name.getLineHeight()*name.getLineCount()+10);
+				descB.addView(tmpBonus.upgradesL);
 				
 				studied.setX(description_layout.getX()-100);
 				studied.setY(description_layout.getY());
@@ -437,7 +440,7 @@ public class Menu
 			
 		class Bonus{
 			ImageView picture;
-			String description="nullo\nn\nn\nn";
+			String description="";//"nullo\nn\nn\nn";
 			String name="";
 			Bonus lastBonus;
 			float cX;
@@ -445,19 +448,23 @@ public class Menu
 			int parent;
 			int id;
 			boolean isReceived=false;
-			String upgrades="";
+			RelativeLayout upgradesL;
+			String upgrades; 
 			
 			Bonus(int id,int pictureInt, String name, Object obj,float x,float y, String upgrades){
 				this.name=name;
 				this.id=id;
 				this.upgrades=upgrades;
+				this.upgradesL=TextGroup(upgrades);
 				picture=new ImageView(prop.context);
 				picture.setImageResource(pictureInt);
 				picture.setScaleType(ScaleType.FIT_XY);
 				picture.setLayoutParams(params1);
 				picture.setOnTouchListener(t2);
 				picture.setZ(1);
-				if(id==0){description="начало";
+				
+				if(id==0){
+					description="начало";
 				this.name="аааааааааааааапппачччхххиииииииииииииииииииииииииaxaxaxaxaxaxaxaxaxaxdи";
 				}
 				if(obj==null){
@@ -515,7 +522,36 @@ public class Menu
 			new Thread(r9).start();
 			
 		}
+		
+		TextView text(String text,int color,float x, float y){
+			TextView temp=new TextView(prop.context);
+			temp.setText(text);
+			temp.setTextColor(color);
+			temp.setTextSize(8);
+			temp.setLayoutParams(new LayoutParams(-1,30));
+			temp.setX(x);
+			temp.setY(y);
+			temp.setTypeface(prop.ttf);
+			return temp;
+		}
+		
+		RelativeLayout TextGroup(String text){
+			RelativeLayout temp=new RelativeLayout(prop.context);
+			temp.setLayoutParams(new LayoutParams(-1,-1));
+			int i=0;
+			for(String s1:text.split("/")){
+				if(s1.contentEquals("")||s1==null)continue;
+				String[] s2=s1.split(":");
+				if(s2[0].contains("Percent"))
+				   temp.addView(text("+"+s2[1]+" %",Color.YELLOW,15,30*i));
+				else
+					temp.addView(text("+"+s2[1],Color.YELLOW,15,30*i));
+				temp.addView(text(s2[0],Color.GREEN,80,30*i));
+				i++;
+			}
 			
+			return temp;
+		}
 			
 			OnTouchListener touch=new OnTouchListener(){
 
@@ -1096,7 +1132,10 @@ public class Menu
 	RelativeLayout backg;
 	boolean isOpen=false;
 	TextView changeAvatarBtn;
-		View changeAvatarBtnS;
+	View changeAvatarBtnS;
+	View close;
+	Inventory iconsInv;
+	
 		Player(){
 			backg=new RelativeLayout(prop.context);
 			backg.setBackgroundResource(R.drawable.background3);
@@ -1105,7 +1144,21 @@ public class Menu
 			backg.setY(prop.screenH*0.05f);
 			backg.setZ(3);
 			backg.setVisibility(View.INVISIBLE);
+			backg.setOnTouchListener(t2);
 			playerDat=this;
+			
+			close=new View(prop.context);
+			close.setBackgroundResource(R.drawable.delete);
+			close.setTranslationX(backg.getX()-100);
+			close.setTranslationY(backg.getY()*3);
+			close.setTranslationZ(3);
+			close.setAlpha(192);
+			close.setOnTouchListener(t3);
+			close.setVisibility(View.INVISIBLE);	
+			prop.menuLayout.addView(close,80,80);
+			
+			avShop=new Shop(prop,1);
+			iconsInv=new Inventory(prop,1);
 			
 			changeAvatarBtn=new TextView(prop.context);
 			changeAvatarBtn.setBackgroundResource(R.drawable.btn);
@@ -1117,6 +1170,7 @@ public class Menu
 			changeAvatarBtn.setY(100);
 			changeAvatarBtn.setLayoutParams(new LayoutParams(200,50));
 			changeAvatarBtn.setText("поменять аватарку");
+			changeAvatarBtn.setOnTouchListener(t4);
 			backg.addView(changeAvatarBtn);
 			
 			changeAvatarBtnS=new View(prop.context);
@@ -1158,7 +1212,9 @@ public class Menu
 			@Override
 			public void run()
 			{
-				backg.setVisibility(View.VISIBLE);	
+				backg.setVisibility(View.VISIBLE);
+				close.setVisibility(View.VISIBLE);	
+				
 			}	
 		};
 		
@@ -1168,7 +1224,48 @@ public class Menu
 			public void run()
 			{
 				backg.setVisibility(View.INVISIBLE);
+				close.setVisibility(View.INVISIBLE);	
+				
 			}	
 		};
+	
+	OnTouchListener t2=new OnTouchListener(){
+
+		@Override
+		public boolean onTouch(View p1,MotionEvent p2)
+		{
+			return true;
+		}
+
+	};
+	
+		OnTouchListener t3=new OnTouchListener(){
+
+			@Override
+			public boolean onTouch(View p1, MotionEvent p2)
+			{
+				if(p2.getAction()==MotionEvent.ACTION_UP){
+
+					prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
+					close();
+				}
+				return true;
+			}
+
+
+		};
+		
+		OnTouchListener t4=new OnTouchListener(){
+
+			@Override
+			public boolean onTouch(View p1, MotionEvent p2)
+			{
+				if(p2.getAction()==MotionEvent.ACTION_UP){
+					iconsInv.openInventory();
+				}
+				return true;
+			}	
+		};
+	
 	}
 }

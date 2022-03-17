@@ -19,22 +19,26 @@ public class Inventory
 	LayoutParams params3=new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
 	LayoutParams params4=new LayoutParams(96+48,96+48);
 	LayoutParams params5=new LayoutParams(90+45,90+45);
-	Boolean[][] z=new Boolean[10][5];
+	Boolean[][] z=new Boolean[10][9];
 	Item[] armItems=new Item[8];
 	List items=new ArrayList<Item>();
-	List armorL=new ArrayList<ImageView>();
 	SlotsPos[] slots=new SlotsPos[8];
 	RelativeLayout lay;
 	ImageView ground;
-	ImageView[][] in=new ImageView[10][10];
 	OnTouchListener[] TList=new OnTouchListener[8];
 	int lastSlot=0;
 	RelativeLayout descriptionL;
 	TextView name;
 	TextView descT;
+	int s=0;
+	float yy=0;
+	int invLength=1;
 
-	Inventory(main_properties prop){
+	Inventory(main_properties prop,int s){
 		this.prop=prop;
+		this.s=s;
+		if(s==0) invLength=5;
+		else invLength=9;
 		inv=new ImageView(prop.context);
 		inv.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.wood_01a,prop.options)));
 		inv.setLayoutParams(params1);
@@ -42,10 +46,16 @@ public class Inventory
 		inv.setTranslationZ(0);
 		inv.setOnTouchListener(touch);
 		inven=new RelativeLayout(prop.context);
-		inven.setTranslationZ(2);
+		inven.setTranslationZ(4);
 		inven.setVisibility(View.INVISIBLE);
-		inven.setBackgroundColor(Color.argb(64,0,0,0));
-		inven.setOnTouchListener(t2);
+		if(s==0)
+	    	inven.setBackgroundColor(Color.argb(64,0,0,0));
+		else
+			inven.setBackgroundColor(Color.argb(64,255,255,255));
+		if(s==0)
+		    inven.setOnTouchListener(t2);
+		else
+			inven.setOnTouchListener(t5);
 		inven.setLayoutParams(params3);
 		ground=new ImageView(prop.context);
 		ground.setImageResource(R.drawable.cellbig_02);
@@ -57,44 +67,64 @@ public class Inventory
 		ground.setLayoutParams(params1);
 		inven.addView(ground);
 		for(int i=0;i<10;i++){
-			for(int j=0;j<5;j++){
-				z[i][j]=true;
-				in[i][j]=new ImageView(prop.context);
-				in[i][j].setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.cell01,prop.options)));
-			in[i][j].setTranslationX(200+i*106);
-				in[i][j].setTranslationY(200+j*106);
-				in[i][j].setTranslationZ(9999);
-				in[i][j].setAlpha(192);
-				armorL.add(in[i][j]);
-				inven.addView(in[i][j],params1);
+			for(int j=0;j<invLength;j++){
+				  z[i][j]=true;
+				View in=new View(prop.context);
+				in.setBackgroundResource(R.drawable.cell01);
+			    in.setTranslationX(200+i*106);
+				in.setTranslationY(200+j*106);
+				in.setTranslationZ(9999);
+				in.setAlpha(192);
+				inven.addView(in,params1);
 			}
 		}
+		if(s==0){
 		ImageView del=new ImageView(prop.context);
-		del.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.cell01,prop.options)));
+		del.setBackgroundResource(R.drawable.cell01);
+		del.setImageResource(R.drawable.delete);
 		del.setTranslationX(200+9*106);
 		del.setTranslationY(200-106);
 		del.setTranslationZ(9999);
 		del.setAlpha(192);
 		del.setOnTouchListener(t3);
 		inven.addView(del,params1);
-		ImageView del1=new ImageView(prop.context);
-		del1.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.delete,prop.options)));
-		del1.setTranslationX(200+9*106+8);
-		del1.setTranslationY(200-106+8);
-		del1.setTranslationZ(9999);
-		del1.setAlpha(192);
-		inven.addView(del1,80,80);
+		}
+		else{
+			View close=new View(prop.context);
+			close.setBackgroundResource(R.drawable.delete);
+			close.setTranslationX(20);
+			close.setTranslationY(prop.screenH*0.3f);
+			close.setTranslationZ(3);
+			close.setAlpha(192);
+			close.setOnTouchListener(t4);
+			inven.addView(close,80,80);
+			
+		}
 		
 		descriptionL=new RelativeLayout(prop.context);
+		if(s==0){
 		descriptionL.setLayoutParams(new LayoutParams(1000,200));
 		descriptionL.setTranslationX(prop.screenW/12);
 		descriptionL.setTranslationY(prop.screenH-300);
+		}
+		else{
+			descriptionL.setLayoutParams(new LayoutParams((int)(prop.screenW*0.25),(int)(prop.screenH*0.7)));
+			descriptionL.setTranslationX(prop.screenW*0.7f);
+			descriptionL.setTranslationY(prop.screenH*0.15f);
+			
+		}
 		descriptionL.setBackgroundColor(Color.argb(192,150,160,240));
+	if(s==0)
 		descriptionL.setVisibility(View.INVISIBLE);
 		inven.addView(descriptionL);
 		
 		name=new TextView(prop.context);
-		name.setText(" Продолжить ");
+		if(s==0){
+		    name.setText(" Продолжить ");
+			}
+		else{
+			name.setText(" Выбоерите иконку ");
+			}
 		name.setGravity(Gravity.CENTER);
 		name.setTextSize(18);
 		name.setTranslationX(15);
@@ -106,17 +136,28 @@ public class Inventory
 		descriptionL.addView(name);
 
 		descT=new TextView(prop.context);
-		descT.setText(" Продолжить ");
+		if(s==0){
+		    descT.setText(" Продолжить ");
+		}
+			else{
+				descT.setText(" Поменять ");
+				descT.setBackgroundResource(R.drawable.btn_v20);
+			}
 		descT.setGravity(Gravity.LEFT);
 		descT.setTextSize(8);
 		descT.setTranslationX(15);
 		descT.setTranslationY(100);
-		descT.setLayoutParams(new LayoutParams(685,LayoutParams.MATCH_PARENT));
+		if(s==0)
+		   descT.setLayoutParams(new LayoutParams(685,LayoutParams.MATCH_PARENT));
+		else
+			descT.setLayoutParams(new LayoutParams(685,100));
 		descT.setTextColor(Color.YELLOW);
 		descT.setTypeface(prop.ttf);
 		descT.setShadowLayer(20,5,5,Color.argb(255,166,166,255));
 		descriptionL.addView(descT);
 		
+		
+		if(s==0){
 		slot_0();
 		slot_1();
 		slot_2();
@@ -125,6 +166,8 @@ public class Inventory
 		slot_5();
 		slot_6();
 		slot_7();
+		}
+		
 		TList[0]=tA0;
 			TList[1]=tA1;
 			TList[2]=tA2;
@@ -133,11 +176,14 @@ public class Inventory
 			TList[5]=tA5;
 			TList[6]=tA6;
 			TList[7]=tA7;
-		prop.setInventory(this);
-		
+			
+		if(s==0){
+		   prop.setInventory(this);
 		switchToMenu();
-		
-		
+		}
+		else{
+			prop.menuLayout.addView(inven);
+		}
 	}
 	
 	Runnable r5=new Runnable(){
@@ -150,7 +196,10 @@ public class Inventory
 				descriptionL.setVisibility(View.INVISIBLE);
 			else
 				descriptionL.setVisibility(View.VISIBLE);
-			name.setText(item.name);
+			if(s==0)
+			   name.setText(item.name);
+			else
+				name.setBackgroundResource(item.pictureInt);
 		}
 	};
 
@@ -193,6 +242,40 @@ public class Inventory
 
 		
 	};
+	
+	OnTouchListener t4=new OnTouchListener(){
+
+		@Override
+		public boolean onTouch(View p1, MotionEvent p2)
+		{
+			if(p2.getAction()==MotionEvent.ACTION_UP){
+				closeInventory();		
+			}
+			return true;
+		}
+	};
+	
+	OnTouchListener t5=new OnTouchListener(){
+
+		@Override
+		public boolean onTouch(View p1,MotionEvent p2)
+		{
+		    if(p2.getAction()==MotionEvent.ACTION_DOWN){
+				yy=inven.getScrollY()+p2.getY();
+
+			}
+			if(p2.getAction()==MotionEvent.ACTION_MOVE){
+				if(((inven.getScrollY()+yy)-(p2.getY()+p1.getTranslationY())>(-350+invLength*106))
+				   ||(inven.getScrollY()+yy)-(p2.getY()+p1.getTranslationY())<-150) return true;
+				inven.setScrollY((int)(yy-p2.getY()));
+			}
+			
+			return true;
+		}
+
+	};
+	
+	
 	
 	Runnable r4=new Runnable(){
 
@@ -249,7 +332,8 @@ public class Inventory
 	}
 	
 	void switchToMenu(){
-		prop.onUi(run3);
+	   if(s==0)
+		  prop.onUi(run3);
 	}
 	
 	void switchToWorld(){
@@ -319,7 +403,7 @@ public class Inventory
  int x=0;
  int y=0;
  boolean freeSlot(){
-	 for(int i=0;i<5;i++){
+	 for(int i=0;i<invLength;i++){
 		 for(int j=0;j<10;j++){
 			 if(z[j][i]){
 				 x=j;
@@ -330,6 +414,15 @@ public class Inventory
 	 }
 	 return false;
  }
+ 
+	Runnable r8=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			inven.addView(ivv);
+		}
+ };
  
 	ImageView ivv;
 	public boolean addItem(String from, Item item,int p){
@@ -343,14 +436,15 @@ public class Inventory
 			armItems[p]=item;
 			item.armSlot=p;
 			ivv.setOnTouchListener(aT);
-			inven.addView(ivv);
+		    inven.addView(ivv);
 			return true;
 		}
 		
 		if(!freeSlot())return false;
+		if(s==0){
 		if(prop.money.money_count-item.price<0&&from.contentEquals("shop"))return false;
 		if(from.contentEquals("shop"))prop.money.addMoney(-item.price);
-		
+		}
 		ivv=item.picture;
 		ivv.setImageResource(item.pictureInt);
 		ivv.setLayoutParams(params2);
@@ -362,7 +456,10 @@ public class Inventory
 		item.slotX=x;
 		item.slotY=y;
 		z[x][y]=false;
-		inven.addView(ivv);
+		if(p==0)
+			prop.onUi(r8);
+		else
+		    inven.addView(ivv);
 		return true;
 	}
  
@@ -371,6 +468,7 @@ public class Inventory
  Item item;
  
 	void setItem(ImageView t,int f){
+		if(s==0){
 		if(f==0)
 		for(Item item1:items){
 			if(item1==null)continue;
@@ -387,8 +485,26 @@ public class Inventory
 					it=item.picture;
 				}
 			}
+		}
+		else{
+			for(Item item1:prop.icons){
+				if(item1==null)continue;
+				if(item1.picture==t){
+					item=item1;
+					prop.onUi(r1);
+				}
+			}
+		}
 	}
 	
+	Runnable r1=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			name.setBackgroundResource(item.pictureInt);
+		}	
+	};
 	
 	View pp=null;
 	OnTouchListener t1=new OnTouchListener(){
@@ -401,7 +517,8 @@ public class Inventory
 				params0=params1;
 				tmpItem=item;
 				setItem((ImageView)p1,0);
-				prop.activity.runOnUiThread(r2);
+				if(s==0)
+				   prop.activity.runOnUiThread(r2);
 				prop.onUi(r5);
 			}
 			return true;
@@ -419,7 +536,8 @@ public class Inventory
 					params0=params4;
 					tmpItem=item;
 					setItem((ImageView)p1,1);
-					prop.activity.runOnUiThread(r2);
+					if(s==0)
+					   prop.activity.runOnUiThread(r2);
 					prop.onUi(r5);
 				}
 			return true;
@@ -500,7 +618,7 @@ public class Inventory
  
  void slot_0(){
 	 ImageView ground=new ImageView(prop.context);
-	 ground.setImageDrawable(in[0][0].getDrawable());
+	 ground.setBackgroundResource(R.drawable.cell01);
 	 ground.setTranslationX(prop.screenW-prop.screenW*3/10);
 	 ground.setTranslationY(prop.screenH*2/10);
 	 slots[0]=new SlotsPos(prop.screenW-prop.screenW*3/10,
@@ -521,7 +639,7 @@ public class Inventory
  }
  void slot_1(){
 	 ImageView ground=new ImageView(prop.context);
-	 ground.setImageDrawable(in[0][0].getDrawable());
+	 ground.setBackgroundResource(R.drawable.cell01);
 	 ground.setTranslationX(prop.screenW-prop.screenW*3/10);
 	 ground.setTranslationY(prop.screenH*4/10);
 	 slots[1]=new SlotsPos(prop.screenW-prop.screenW*3/10,
@@ -538,12 +656,11 @@ public class Inventory
 	 arm.setTranslationZ(9999);
 	 arm.setImageAlpha(48);
 	 arm.setLayoutParams(params5);
-	 armorL.add(ground);
-	 inven.addView(arm);
+	  inven.addView(arm);
  }
  void slot_2(){
 	 ImageView ground=new ImageView(prop.context);
-	 ground.setImageDrawable(in[0][0].getDrawable());
+	 ground.setBackgroundResource(R.drawable.cell01);
 	 ground.setTranslationX(prop.screenW-prop.screenW*4/10);
 	 ground.setTranslationY(prop.screenH*6/10);
 	 slots[2]=new SlotsPos(prop.screenW-prop.screenW*4/10,
@@ -564,7 +681,7 @@ public class Inventory
  }
  void slot_3(){
 	 ImageView ground=new ImageView(prop.context);
-	 ground.setImageDrawable(in[0][0].getDrawable());
+	 ground.setBackgroundResource(R.drawable.cell01);
 	 ground.setTranslationX(prop.screenW-prop.screenW*2/10);
 	 ground.setTranslationY(prop.screenH*4/10);
 	 slots[3]=new SlotsPos(prop.screenW-prop.screenW*2/10,
@@ -585,7 +702,7 @@ public class Inventory
  }
  void slot_4(){
 	 ImageView ground=new ImageView(prop.context);
-	 ground.setImageDrawable(in[0][0].getDrawable());
+	 ground.setBackgroundResource(R.drawable.cell01);
 	 ground.setTranslationX(prop.screenW-prop.screenW*2/10);
 	 ground.setTranslationY(prop.screenH*6/10);
 	 slots[4]=new SlotsPos(prop.screenW-prop.screenW*2/10,
@@ -606,7 +723,7 @@ public class Inventory
  }
 	void slot_5(){
 		ImageView ground=new ImageView(prop.context);
-		ground.setImageDrawable(in[0][0].getDrawable());
+		ground.setBackgroundResource(R.drawable.cell01);
 		ground.setTranslationX(prop.screenW-prop.screenW*4/10);
 		ground.setTranslationY(prop.screenH*4/10);
 		slots[5]=new SlotsPos(prop.screenW-prop.screenW*4/10,
@@ -627,7 +744,7 @@ public class Inventory
 	}
 	void slot_6(){
 		ImageView ground=new ImageView(prop.context);
-		ground.setImageDrawable(in[0][0].getDrawable());
+		ground.setBackgroundResource(R.drawable.cell01);
 		ground.setTranslationX(prop.screenW-prop.screenW*2/10);
 		ground.setTranslationY(prop.screenH*2/10)
 			;slots[6]=new SlotsPos(prop.screenW-prop.screenW*2/10,
@@ -649,7 +766,7 @@ public class Inventory
 	
 	void slot_7(){
 		ImageView ground=new ImageView(prop.context);
-		ground.setImageDrawable(in[0][0].getDrawable());
+		ground.setBackgroundResource(R.drawable.cell01);
 		ground.setTranslationX(prop.screenW-prop.screenW*4/10);
 		ground.setTranslationY(prop.screenH*2/10);
 		slots[7]=new SlotsPos(prop.screenW-prop.screenW*4/10,

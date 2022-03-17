@@ -260,7 +260,7 @@ public class MainActivity extends Activity
 				new Music(prop);
 				Item.loadItems(prop);
 				new Shop(prop,0);
-				new Inventory(prop);
+				new Inventory(prop,0);
 			    new Player(prop,Player.type.MENU);
 			    new Player(prop,Player.type.WORLD);
 			
@@ -391,16 +391,20 @@ public class MainActivity extends Activity
 				prop.inv.closeInventory();
 				return;
 			}
+			if(prop.menu.playerDat.iconsInv.isOpen){
+				prop.menu.playerDat.iconsInv.closeInventory();
+			}
 			
 			if(prop.menu.avShop.isOpen){
 				prop.menu.avShop.openOrClose();
 				return;
 			}
-			
+				
 			if(prop.menu.playerDat.isOpen){
 				prop.menu.playerDat.close();
 				return;
 			}
+			
 			
 		last_back_pressed_time2=System.currentTimeMillis();
 		if(last_back_pressed_time2-last_back_pressed_time1<2000){
@@ -449,24 +453,33 @@ public class MainActivity extends Activity
 
 				}
 				
-				if(s2[0].contentEquals("player_position_y:")){
+				else if(s2[0].contentEquals("player_position_y:")){
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 					prop.playerPosY=(Float.parseFloat(s2[1]));
 
 				}
-				if(s2[0].contentEquals("money:")){
+				else if(s2[0].contentEquals("money:")){
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 					prop.money.setMoneyCount(Float.parseFloat(s2[1]));
 
 				}
 				
-				if(s2[0].contentEquals("musicVolume:")){
+				else if(s2[0].contentEquals("musicVolume:")){
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 					prop.menu.settings.musicVolume.volume=(Float.parseFloat(s2[1]));
 					prop.menu.settings.musicVolume.updatePoint();
 				}
 					
-				if(s2[0].contentEquals("inven:")){
+				else if(s2[0].contentEquals("icons:")){
+					if(s2.length==1)continue;	
+					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
+					for(String s3:s2[1].split("/")){
+						if(s3.contentEquals("NaN") || s3.contentEquals("")||s3==null) continue;
+						  
+					}
+				}
+				
+				else if(s2[0].contentEquals("inven:")){
 					if(s2.length==1)continue;
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 					for(String s3:s2[1].split("/")){
@@ -477,13 +490,13 @@ public class MainActivity extends Activity
 					}
 				}
 	
-				if(s2[0].contentEquals("language:")){
+				else if(s2[0].contentEquals("language:")){
 					if(s2.length==1)continue;
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 					prop.words.setLanguage(s2[1]);
 				}
 				
-					if(s2[0].contentEquals("bonuses:")){
+				else if(s2[0].contentEquals("bonuses:")){
 						if(s2.length==1)continue;	
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 					for(String s3:s2[1].split("/")){
@@ -491,12 +504,12 @@ public class MainActivity extends Activity
 							prop.menu.bonuses.update(Integer.parseInt(s3));
 							}
 				}
-					if(s2[0].contentEquals("exp:")){
+				else if(s2[0].contentEquals("exp:")){
 						prop.menu.playerLevel.points=Double.parseDouble(s2[1]);
 						prop.menu.playerLevel.pointsOnThisLevel=prop.menu.playerLevel.points;
 						prop.menu.playerLevel.update();
 						}
-					if(s2[0].contentEquals("armor:")){
+				else if(s2[0].contentEquals("armor:")){
 						if(s2.length==1)continue;
 						
 							if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;

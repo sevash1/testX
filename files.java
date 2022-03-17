@@ -27,6 +27,11 @@ public class files
 				bw.write("exp: "+String.valueOf(prop.menu.playerLevel.points)+"\n");
 				bw.write("money: "+String.valueOf(prop.money.money_count)+"\n");
 				bw.write("musicVolume: "+String.valueOf(prop.menu.settings.musicVolume.volume)+"\n");
+				bw.write("icons: ");
+				for(Item item:prop.iconsBuyed){
+					bw.write(String.valueOf(item.id)+"/");
+				}
+				bw.write("\n");
 				bw.write("inven: ");
 				for(Item item:prop.inv.items){
 					bw.write(String.valueOf(item.id)+":"+String.valueOf(item.count)+"/");

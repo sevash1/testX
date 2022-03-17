@@ -48,7 +48,7 @@ public class Shop
 		
 	ImageView in;
 		for(int i=0;i<10;i++){
-			for(int j=0;j<10*shop_lenght;j++){
+			for(int j=0;j<shop_lenght;j++){
 				in=new ImageView(prop.context);
 				in.setImageResource(R.drawable.cell01);
 				in.setX(200+i*106);
@@ -210,7 +210,7 @@ public class Shop
 					break;
 				}
 				case MotionEvent.ACTION_MOVE:{
-						if((y-p2.getY())>(34*106-350)
+						if((y-p2.getY())>(shop_lenght*106-350)
 							
 						   ||(y-(p2.getY())<-150))return true;
 						
@@ -316,21 +316,17 @@ public class Shop
 			descriptionL.addView(descT);
 			}
 			
-			ImageView btn_buy=new ImageView(prop.context);
-			btn_buy.setX(25);
-			btn_buy.setY(225);
-			btn_buy.setImageResource(R.drawable.btns_background);
-			btn_buy.setLayoutParams(new LayoutParams(250,50));
 			buy=new TextView(prop.context);
 			buy.setText(prop.words.get(Words.words.BUY));
+			buy.setBackgroundResource(R.drawable.btns_background);
 			buy.setGravity(Gravity.CENTER);
 			buy.setTextSize(9);
-			buy.setTranslationX(btn_buy.getX());
-			buy.setTranslationY(btn_buy.getY());
+			buy.setTranslationX(25);
+			buy.setTranslationY(225);
 			buy.setLayoutParams(new LayoutParams(250,50));
 			buy.setTextColor(Color.YELLOW);
 			buy.setTypeface(prop.ttf);
-			btn_buy.setOnClickListener(c1);
+			buy.setOnClickListener(c1);
 			buyed=new TextView(prop.context);
 			buyed.setText(prop.words.get(Words.words.BUYED));
 			buyed.setGravity(Gravity.CENTER);
@@ -370,7 +366,6 @@ public class Shop
 			price.setTextColor(Color.RED);
 			price.setTypeface(prop.ttf);
 			
-			priceL.addView(btn_buy);
 			priceL.addView(buy);
 			priceL.addView(price);
 			priceL.addView(gold);
@@ -495,14 +490,19 @@ public class Shop
 				prop.sounds.sp.play(prop.sounds.s1,1f,1f,1,0,1f);
 				
 				if(item==null) return;
-				if(!prop.inv.addItem("shop",item.copy(),0)){
-				new Thread(r6).start();
-				return;
-				}else{
-					prop.onUi(r4);
+				if(s==0)
+				  if(!prop.inv.addItem("shop",item.copy(),0)){
+				     new Thread(r6).start();
+				     return;
+				  }else{
+					prop.onUi(r4);		
+				    al=65;
+			        t=true;
+				  }
+				if(s==1){
+						prop.iconsBuyed.add(item.copy());
+					prop.menu.playerDat.iconsInv.addItem("",(Item)prop.iconsBuyed.get(prop.iconsBuyed.size()-1),1);
 					
-				al=65;
-				t=true;
 				}
 			}
 

@@ -57,6 +57,7 @@ public class main_properties
 	public Mob mob;
 	public Player_health healthBar;
 	public boolean playerMove=false;
+	public List iconsBuyed=new ArrayList<Item>();
 	
 	public main_properties(
 	RelativeLayout main,
