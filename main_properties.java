@@ -58,6 +58,7 @@ public class main_properties
 	public Player_health healthBar;
 	public boolean playerMove=false;
 	public List iconsBuyed=new ArrayList<Item>();
+	public boolean menuLoadComplete=false;
 	
 	public main_properties(
 	RelativeLayout main,
@@ -186,13 +187,42 @@ public class main_properties
 			
 		}
 	};
-	Item findItem(int id){
+	Item findItem(int id, int t){
+		if(t==0)
 		for(Item item1:items){
 			if(item1.id==id){
 				 return new Item(this," ",item1.id,item1.pictureInt,item1.price,item1.name,item1.description,item1.dat);
-	
+			}
+		}
+		else{
+			for(Item item1:icons){
+				if(item1.id==id){
+					iv=block(item1.picture);
+					if(menuLoadComplete){
+						onUi(r5);
+					} else r5.run();
+					return new Item(this," ",item1.id,item1.pictureInt,item1.price,item1.name,item1.description,item1.dat);
+				}
 			}
 		}
 		return null;
 	}
+	ImageView block(ImageView iv){
+		for(Item item1:icons){
+			if(item1.picture==iv){
+				return item1.picture;
+			}
+		}
+	return null;
+	}
+	int n=0;
+	ImageView iv;
+	Runnable r5=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			prop.menu.avShop.shopItems.removeView(iv);
+		}	
+	};
 }

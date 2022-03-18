@@ -74,11 +74,11 @@ public class Shop
 		else{
 			for(int i=0;i<prop.icons.size();i++){
 			    it=new ImageView(prop.context);
+				it=((Item)prop.icons.get(i)).picture;
 				it.setX(200+3+(i%10)*106);
 				it.setY(100+3+(i/10)*106);
 				it.setZ(4);
 			    it.setOnTouchListener(t2);
-				it.setImageResource(((Item)prop.icons.get(i)).pictureInt);
 				itemPictures.add(it);
 				shopItems.addView(it,Item.params1);
 				}
@@ -492,21 +492,46 @@ public class Shop
 				if(item==null) return;
 				if(s==0)
 				  if(!prop.inv.addItem("shop",item.copy(),0)){
-				     new Thread(r6).start();
-				     return;
+					  new Thread(r6).start();
+					  return;
 				  }else{
 					prop.onUi(r4);		
 				    al=65;
 			        t=true;
 				  }
 				if(s==1){
-						prop.iconsBuyed.add(item.copy());
-					prop.menu.playerDat.iconsInv.addItem("",(Item)prop.iconsBuyed.get(prop.iconsBuyed.size()-1),1);
+					for(Item it:prop.iconsBuyed){
+						if(it.id==item.id){
+							new Thread(r6).start();
+							return;	
+						}
+					}
+					prop.iconsBuyed.add(item.copy());
 					
+					if(!prop.menu.playerDat.iconsInv.addItem("shop",(Item)prop.iconsBuyed.get(prop.iconsBuyed.size()-1),1)){
+						prop.iconsBuyed.remove(prop.iconsBuyed.size()-1);
+						new Thread(r6).start();
+						return;	
+				}else{
+					prop.onUi(r9);
+						
+				    al=65;
+			        t=true;
+				}
 				}
 			}
 
 	};
+	
+		Runnable r9=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				shopItems.removeView(item.picture);
+
+			}
+		};
 	
 		Runnable r3=new Runnable(){
 

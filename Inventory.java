@@ -121,36 +121,44 @@ public class Inventory
 		name=new TextView(prop.context);
 		if(s==0){
 		    name.setText(" Продолжить ");
+			name.setLayoutParams(new LayoutParams(685,LayoutParams.WRAP_CONTENT));
+			name.setTranslationX(15);
+			name.setTranslationY(20);
+			name.setTextSize(18);
+			name.setTextColor(Color.GREEN);
+			name.setTypeface(prop.ttf);
+			name.setShadowLayer(20,5,5,Color.argb(255,166,166,255));
+			
 			}
 		else{
-			name.setText(" Выбоерите иконку ");
+			name.setLayoutParams(new LayoutParams(400,400));
+			name.setTranslationX(100);
+			name.setTranslationY(100);
+			
 			}
 		name.setGravity(Gravity.CENTER);
-		name.setTextSize(18);
-		name.setTranslationX(15);
-		name.setTranslationY(20);
-		name.setLayoutParams(new LayoutParams(685,LayoutParams.WRAP_CONTENT));
-		name.setTextColor(Color.GREEN);
-		name.setTypeface(prop.ttf);
-		name.setShadowLayer(20,5,5,Color.argb(255,166,166,255));
 		descriptionL.addView(name);
 
 		descT=new TextView(prop.context);
 		if(s==0){
 		    descT.setText(" Продолжить ");
+			descT.setGravity(Gravity.LEFT);
+			descT.setTranslationY(100);
+			descT.setTextSize(8);
+			descT.setLayoutParams(new LayoutParams(685,LayoutParams.MATCH_PARENT));
+			
 		}
 			else{
-				descT.setText(" Поменять ");
+				descT.setText(" Выберите иконку ");
+				descT.setGravity(Gravity.CENTER);
+				descT.setTranslationY(prop.screenH*0.55f);
+				descT.setTextSize(12);
 				descT.setBackgroundResource(R.drawable.btn_v20);
-			}
-		descT.setGravity(Gravity.LEFT);
-		descT.setTextSize(8);
+				descT.setLayoutParams(new LayoutParams(660,100));
+				descT.setOnClickListener(c1);
+				descT.setClickable(false);
+				}
 		descT.setTranslationX(15);
-		descT.setTranslationY(100);
-		if(s==0)
-		   descT.setLayoutParams(new LayoutParams(685,LayoutParams.MATCH_PARENT));
-		else
-			descT.setLayoutParams(new LayoutParams(685,100));
 		descT.setTextColor(Color.YELLOW);
 		descT.setTypeface(prop.ttf);
 		descT.setShadowLayer(20,5,5,Color.argb(255,166,166,255));
@@ -186,6 +194,16 @@ public class Inventory
 		}
 	}
 	
+	OnClickListener c1=new OnClickListener(){
+
+		@Override
+		public void onClick(View p1)
+		{
+			prop.menu.avatar.iconN=item.id;
+			prop.menu.avatar.icon.setImageResource(item.pictureInt);
+		}	
+	};
+	
 	Runnable r5=new Runnable(){
 
 		@Override
@@ -196,11 +214,8 @@ public class Inventory
 				descriptionL.setVisibility(View.INVISIBLE);
 			else
 				descriptionL.setVisibility(View.VISIBLE);
-			if(s==0)
 			   name.setText(item.name);
-			else
-				name.setBackgroundResource(item.pictureInt);
-		}
+			}
 	};
 
 	
@@ -441,12 +456,10 @@ public class Inventory
 		}
 		
 		if(!freeSlot())return false;
-		if(s==0){
 		if(prop.money.money_count-item.price<0&&from.contentEquals("shop"))return false;
 		if(from.contentEquals("shop"))prop.money.addMoney(-item.price);
-		}
+
 		ivv=item.picture;
-		ivv.setImageResource(item.pictureInt);
 		ivv.setLayoutParams(params2);
 		ivv.setX(203+106*x);
 		ivv.setY(203+106*y);
@@ -458,11 +471,23 @@ public class Inventory
 		z[x][y]=false;
 		if(p==0)
 			prop.onUi(r8);
-		else
-		    inven.addView(ivv);
+		else{
+			if(prop.menuLoadComplete)
+				prop.onUi(r9);
+			else r9.run();
+			}
 		return true;
 	}
  
+	Runnable r9=new Runnable(){
+
+		@Override
+		public void run()
+		{
+			inven.removeView(ivv);
+		    inven.addView(ivv);
+		}	
+	};
 	
  ImageView it;
  Item item;
@@ -487,7 +512,7 @@ public class Inventory
 			}
 		}
 		else{
-			for(Item item1:prop.icons){
+			for(Item item1:prop.iconsBuyed){
 				if(item1==null)continue;
 				if(item1.picture==t){
 					item=item1;
@@ -503,6 +528,9 @@ public class Inventory
 		public void run()
 		{
 			name.setBackgroundResource(item.pictureInt);
+			descT.setText("поменять");
+			descT.setClickable(true);
+			
 		}	
 	};
 	
@@ -519,7 +547,6 @@ public class Inventory
 				setItem((ImageView)p1,0);
 				if(s==0)
 				   prop.activity.runOnUiThread(r2);
-				prop.onUi(r5);
 			}
 			return true;
 			
@@ -536,9 +563,7 @@ public class Inventory
 					params0=params4;
 					tmpItem=item;
 					setItem((ImageView)p1,1);
-					if(s==0)
-					   prop.activity.runOnUiThread(r2);
-					prop.onUi(r5);
+				 prop.activity.runOnUiThread(r2);
 				}
 			return true;
 		}

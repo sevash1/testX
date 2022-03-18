@@ -266,7 +266,6 @@ public class MainActivity extends Activity
 			
 				new Menu(prop);
 				abc();
-				
 				prop.loadBar.addPoint();
 				coords=new TextView(context);
 				prop.loadBar.addPoint();
@@ -287,6 +286,7 @@ public class MainActivity extends Activity
 				playerAndUi.setVisibility(View.GONE);
 				prop.loadBar.addPoint();
 				runOnUiThread(run5);
+			prop.menuLoadComplete=true;
 				prop.loadBar.addPoint();
 				world=new RelativeLayout(context);
 				prop.loadBar.addPoint();
@@ -461,7 +461,6 @@ public class MainActivity extends Activity
 				else if(s2[0].contentEquals("money:")){
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 					prop.money.setMoneyCount(Float.parseFloat(s2[1]));
-
 				}
 				
 				else if(s2[0].contentEquals("musicVolume:")){
@@ -469,13 +468,21 @@ public class MainActivity extends Activity
 					prop.menu.settings.musicVolume.volume=(Float.parseFloat(s2[1]));
 					prop.menu.settings.musicVolume.updatePoint();
 				}
+				
+				else if(s2[0].contentEquals("icon:")){
+					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
+					prop.menu.avatar.icon.setImageResource(prop.findItem(Integer.parseInt(s2[1]),1).pictureInt);
+					prop.menu.avatar.iconN=prop.findItem(Integer.parseInt(s2[1]),1).id;
+				}
 					
 				else if(s2[0].contentEquals("icons:")){
 					if(s2.length==1)continue;	
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 					for(String s3:s2[1].split("/")){
 						if(s3.contentEquals("NaN") || s3.contentEquals("")||s3==null) continue;
-						  
+						prop.iconsBuyed.add(prop.findItem(Integer.parseInt(s3),1));
+						prop.menu.playerDat.iconsInv.addItem("",(Item)prop.iconsBuyed.get(prop.iconsBuyed.size()-1),1);
+						
 					}
 				}
 				
@@ -486,7 +493,7 @@ public class MainActivity extends Activity
 						if(s3.contentEquals("NaN") || s3.contentEquals("")||s3==null) continue;
 						String[] s4=s3.split(":");
 						if(s4[0]==null||s4[0].contentEquals("NaN")||s4[0].contentEquals(""))continue;
-						prop.inv.addItem("inventory",prop.findItem(Integer.parseInt(s4[0])),0);
+						prop.inv.addItem("inventory",prop.findItem(Integer.parseInt(s4[0]),0),0);
 					}
 				}
 	
@@ -519,7 +526,7 @@ public class MainActivity extends Activity
 								String[] s5=s4[1].split(":");
 								if(s5[0]==null)continue;
 								
-								prop.inv.addItem("armF",prop.findItem(Integer.parseInt(s5[0])),Integer.parseInt(s4[0]));
+								prop.inv.addItem("armF",prop.findItem(Integer.parseInt(s5[0]),0),Integer.parseInt(s4[0]));
 							}
 						}
 						

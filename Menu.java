@@ -44,7 +44,8 @@ public class Menu
 		ImageView icon;
 		ImageView background;
 		Random r=new Random();
-	
+		int iconN=87;
+		
 		Avatar(){
 			
 			background=new ImageView(prop.context);
@@ -54,10 +55,10 @@ public class Menu
 			background.setScaleType(ScaleType.FIT_XY);
 			
 			icon=new ImageView(prop.context);
-			icon.setImageResource(((Item)prop.icons.get(r.nextInt(prop.icons.size()-1))).pictureInt);
 			icon.setX(background.getX()+25);
 			icon.setY(background.getY()+25);
 			icon.setScaleType(ScaleType.FIT_XY);
+			icon.setImageResource(((Item)prop.icons.get(0)).pictureInt);
 			icon.setOnTouchListener(t1);
 			
 			prop.menuLayout.addView(background,200,200);
@@ -65,6 +66,7 @@ public class Menu
 			prop.avatar=this;
 			
 				}
+				
 		
 		OnTouchListener t1=new OnTouchListener(){
 
@@ -177,7 +179,6 @@ public class Menu
 		float y=0;
 		RelativeLayout description_layout;
 		RelativeLayout descB;
-		TextView description;
 		TextView name;
 		LayoutParams params1=new LayoutParams(100,100);
 		List bonusList=new ArrayList<Bonus>();
@@ -188,6 +189,7 @@ public class Menu
 		TextView btnText;
 		TextView studied;
 		TextView notStudied;
+		RelativeLayout tmpDesc;
 		
 		Bonuses(){
 			midX=prop.screenW/2;
@@ -257,15 +259,7 @@ public class Menu
 			          +btnText.getLayoutParams().height+20);
 			name.setY(25);
 			
-			description=new TextView(prop.context);
-			description.setTypeface(prop.ttf);
-			description.setTextColor(Color.WHITE);
-			description.setTextSize(8);
-			description.setX(25);
-			description.setY(name.getY()+15);
-			
 			descB.addView(name,description_layout.getLayoutParams().width-75,100);
-			descB.addView(description,description_layout.getLayoutParams().width-50,100);
 			description_layout.addView(descB);
 			description_layout.addView(btnText);
 			
@@ -349,20 +343,17 @@ public class Menu
 				name.setLayoutParams(new LayoutParams(name.getLayoutParams().width,
 													   name.getLineCount()*name.getLineHeight()));
 				
-				description.setY(name.getY()+name.getLineHeight()*name.getLineCount()+10);
-				//description.setText(tmpBonus.description);
-				description.setLayoutParams(new LayoutParams(description.getLayoutParams().width,
-													  description.getLineCount()*description.getLineHeight()));
-				
-				descB.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,(int)(
-							   description.getY()+description.getLineCount()*description.getLineHeight()+50)));
-			    if(tmpBonus.isReceived) btnText.setVisibility(View.INVISIBLE);
+				if(tmpBonus.isReceived) btnText.setVisibility(View.INVISIBLE);
 				else btnText.setVisibility(View.VISIBLE);
 				description_layout.setVisibility(View.VISIBLE);
 				descB.removeView(tmpBonus.upgradesL);
 				tmpBonus.upgradesL.setY(name.getY()+name.getLineHeight()*name.getLineCount()+10);
-				descB.addView(tmpBonus.upgradesL);
-				
+				if(tmpDesc!=null)
+					descB.removeView(tmpDesc);
+				tmpDesc=tmpBonus.upgradesL;
+				descB.addView(tmpDesc);
+				descB.setLayoutParams(new LayoutParams(descB.getLayoutParams().width,
+				                      (int)tmpDesc.getY()+tmpDesc.getLayoutParams().height));
 				studied.setX(description_layout.getX()-100);
 				studied.setY(description_layout.getY());
 				notStudied.setX(description_layout.getX()-100);
@@ -440,7 +431,7 @@ public class Menu
 			
 		class Bonus{
 			ImageView picture;
-			String description="";//"nullo\nn\nn\nn";
+			String description="";
 			String name="";
 			Bonus lastBonus;
 			float cX;
@@ -535,21 +526,33 @@ public class Menu
 			return temp;
 		}
 		
+		String getTranslate(String str){
+			String s=str;
+			
+			if(s.contentEquals("bonusGoldPercent"))
+				s="дополнительное золото";
+			else if(s.contentEquals("attackDamageFixed"))
+				s="урон";
+			
+			return s;
+		}
+		
 		RelativeLayout TextGroup(String text){
 			RelativeLayout temp=new RelativeLayout(prop.context);
-			temp.setLayoutParams(new LayoutParams(-1,-1));
 			int i=0;
+			TextView tv;
 			for(String s1:text.split("/")){
 				if(s1.contentEquals("")||s1==null)continue;
 				String[] s2=s1.split(":");
 				if(s2[0].contains("Percent"))
-				   temp.addView(text("+"+s2[1]+" %",Color.YELLOW,15,30*i));
+				   temp.addView(text("+"+s2[1]+"%",Color.YELLOW,15,30*i));
 				else
 					temp.addView(text("+"+s2[1],Color.YELLOW,15,30*i));
-				temp.addView(text(s2[0],Color.GREEN,80,30*i));
+				tv=text(getTranslate(s2[0]),Color.GREEN,80,30*i);
+				temp.addView(tv);
 				i++;
 			}
-			
+			temp.setLayoutParams(new LayoutParams(-1,(i+1)*30));
 			return temp;
 		}
 			
