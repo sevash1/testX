@@ -20,7 +20,6 @@ public class Skeleton
 	RelativeLayout layForg;
 	RelativeLayout layTextures;
 	ImageView hp;
-	Thread th;
 	int anim_etap=0;
 	public float max_health=3;
 	float health=3;
@@ -72,12 +71,11 @@ public class Skeleton
 		hp.setX(layTextures.getX()+alignHpX);
 		hp.setY(layTextures.getY());
 		hp.setZ(12f);
-		
 		layForg.addView(layTextures);
 		layForg.addView(hp);
-		th=new Thread(run2);
 		prop.activity.runOnUiThread(run6);
 		prop.forAdd.add(this);
+		prop.forAddRuns.add(run2);
 	}
 	
 	public void update(){
@@ -92,7 +90,6 @@ public class Skeleton
 		layForg.setScrollY(scrY);
 		if(stop&&f){
 		prop.activity.runOnUiThread(run9);
-		prop.forRemove.add(this);
 		f=false;
 		}
 	}
@@ -103,30 +100,29 @@ public class Skeleton
 		public void run()
 		{
 			prop.playerAndUi.addView(layForg,LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
-		    th.start();
 		}	
 	};
 	
 	
 	
 	public void sendDamage(float count){
-			if(!isLife)return;
-	if(health-count<0)health=0;
-	else
-		health=health-count;
+		if(!isLife)return;
+		if(health-count<0)health=0;
+		else
+			health=health-count;
 		checkHealth();
 	}
 
 	
 	void checkHealth(){
 			prop.activity.runOnUiThread(run0);
-		if(health<=0){
+		if(health<=0&&isLife){
 			isLife=false;
 			prop.menu.playerLevel.addExp((float)(prop.rand.nextInt(maxExp-minExp)+minExp));
 			deathCoin(1f+0.01f*prop.player.bonusGoldPercent,
 			          layTextures.getX()+150,
 					  layTextures.getY()+150);	
-			new Thread(run10).start();
+			prop.forAddRuns.add(run10);
 			new Skeleton(prop,prop.rand.nextInt(2000)-1000,prop.rand.nextInt(1000)-000);
 			new Skeleton(prop,prop.rand.nextInt(2000)-1000,prop.rand.nextInt(1000)-000);
 			new Skeleton(prop,prop.rand.nextInt(2000)-1000,prop.rand.nextInt(1000)-000);
@@ -146,57 +142,54 @@ public class Skeleton
 
 		
 	};
-	
+	long time1=0;
 	
 	Runnable run2=new Runnable(){
 
 		@Override
 		public void run()
 		{
-			while(true){
-				if(Game_stage.EXIT==prop.stage.getStage())
-					return;		
-			
-				try{
-					Thread.sleep(250);
-							if(prop.stage.getStage()==Game_stage.WORLD){
-						
-						if(prop.rand.nextInt(10)==0&&isLife){
-							layTextures.setScrollY(300);
-							lengthX=prop.rand.nextInt(400)-200;
-							lengthY=prop.rand.nextInt(400)-200;
-							length=(Math.abs(lengthX)+Math.abs(lengthY));
-							rX=lengthX/length;
-							rY=lengthY/length;
-						}
+			if(prop.stage.getStage()==Game_stage.WORLD){
+				time1+=prop.deltaTime;
+				if(time1>250){
+					time1=0;
+					if(prop.rand.nextInt(10)==0&&isLife){
+						layTextures.setScrollY(300);
+						lengthX=prop.rand.nextInt(400)-200;
+						lengthY=prop.rand.nextInt(400)-200;
+						length=(Math.abs(lengthX)+Math.abs(lengthY));
+						rX=lengthX/length;
+						rY=lengthY/length;
+					}
 					layTextures.setScrollX(anim_etap*300);
 					if(layTextures.getScrollY()==600&&anim_etap>=3){
 						return;
 					}
 					anim_etap++;
 					if(anim_etap>3)anim_etap=0;
-					
-					}
-				}catch(Exception e){e.printStackTrace();}
-				
+				}
 			}
-			
 		}
-
-		
 	};
 	
+	long time10=0;
 	Runnable run10=new Runnable(){
 
 		@Override
 		public void run()
 		{
-				try{
-					Thread.sleep(10000);
-				}catch(Exception e){}
-			stop=true;
+			if(prop.stage.getStage()==Game_stage.WORLD){
+				time10+=prop.deltaTime;
+				if(time10>10000){
+					time10=0;		
+					stop=true;
+					prop.forRemoveRuns.add(run2);
+					prop.forRemoveRuns.add(run10);
+					prop.forRemove.add(this);
 				}
-		};
+			}
+		}
+	};
 	
 	Runnable run9=new Runnable(){
 
@@ -207,7 +200,6 @@ public class Skeleton
 			prop.playerAndUi.removeView(pic1);
 			
 		}
-
 
 	};
 	
@@ -231,25 +223,31 @@ public class Skeleton
 		endX=prop.screenW;
 		coinRX=(endX-coinPosX)/100;
 		coinRY=(-coinPosY)/100;
-		new Thread(r4).start();
+		prop.forAddRuns.add(r4);
 	}
 	
+	
+	long time4=0;
+	int t=0;
 	Runnable r4=new Runnable(){
 
 		@Override
 		public void run()
 		{
-			prop.onUi(r6);
-			for(int i=0; i<100;i++){
-			    try{
-					Thread.sleep(10+1);
-			    }catch(Exception e){}
-			    coinPosX+=coinRX;
-				coinPosY+=coinRY;
-				prop.onUi(r5);
+			if(prop.stage.getStage()==Game_stage.WORLD){
+				time4+=prop.deltaTime;
+				if(time4>10){
+					time4-=10;
+					t++;
+					coinPosX+=coinRX;
+				    coinPosY+=coinRY;
+					prop.onUi(r5);
+				}
+				if(t>100){
+				prop.money.showMoney();
+				prop.forRemoveRuns.add(r4);
+				}
 			}
-			prop.money.showMoney();
-
 		}
 	};
 	

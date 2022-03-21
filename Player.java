@@ -51,7 +51,6 @@ public class Player
 	public active_anim a_anim;
 	float screenW=0;
 	float screenH=0;
-	Thread thread1;
 	public LayoutParams params1=new LayoutParams(256,256);
 	
 	Player(main_properties prop, Player.type type){
@@ -72,8 +71,6 @@ public class Player
 			player.setTranslationX((screenW/2)-64*2);
 			player.setTranslationY((screenH/2)-64*5);
 		prop.activity.runOnUiThread(run1);
-		thread1=new Thread(run2);
-		thread1.start();
 		}
 		
 		else if(type==Player.type.WORLD){
@@ -82,8 +79,6 @@ public class Player
 			player.setTranslationY((screenH/2)-64*2);
 			player.setZ(1);
 			prop.playerAndUi.addView(player);
-			thread1=new Thread(run3);
-			thread1.start();
 			prop.setPlayer(this);
 		}
 		
@@ -246,34 +241,24 @@ public class Player
 						});
 	}
 	
-	long time1=0,time2=0,deltaTime=0,
-    time3=0;
+	long time1=0,time3=0;
 	
 	Runnable run2=new Runnable(){
 		
 		@Override
 		public void run()
 		{
-			
-			while(true){
-				if(Game_stage.EXIT==prop.stage.getStage())
-					return;
-				
-				try{
-					Thread.sleep(250);
-					}catch(Exception e){continue;}
-					if(prop.stage.getStage()==Game_stage.MENU){
-						prop.activity.runOnUiThread(run5);
-					s++;
-					if(s>14) s=0;
-					
-						
-					}
-				
+		    if(prop.stage.getStage()==Game_stage.MENU){
+			time1+=prop.deltaTime;
+				if(time1>250){
+				time1=0;
+				prop.activity.runOnUiThread(run5);
+			    s++;
+			    if(s>14) s=0;				
+			}	
 			}
 		}
-			
-		};
+	};
 		
 	Runnable run5=new Runnable(){
 
@@ -309,65 +294,44 @@ public class Player
 
 		@Override
 		public void run()
-		{
-			while(true){
-				if(Game_stage.EXIT==prop.stage.getStage()) 
-					return;
+		{	
+			if(prop.stage.getStage()==Game_stage.WORLD){
+				time3+=prop.deltaTime;
 				
-				
-				try{
-					time1=System.currentTimeMillis();
-					Thread.sleep(8);
-					time2=System.currentTimeMillis();
-					deltaTime=time2-time1;
-					time3+=deltaTime;
-						for(Skeleton skel2:prop.skeletons)
+			for(Skeleton skel2:prop.skeletons)
 						skel2.update();
-					}
-				catch(Exception e) {e.printStackTrace();}
-				if(time3>120){
-					time3=0;
-					if(prop.stage.getStage()==Game_stage.WORLD){
 					
-						updateAnim();
-						if(anim_stage>anim.size()-2) anim_stage=0;
-						prop.joystick.updateRotate();
-						prop.activity.runOnUiThread(run4);
+			if(time3>120){
+				time3=0;
+				updateAnim();
+				if(anim_stage>anim.size()-2) anim_stage=0;
+				prop.joystick.updateRotate();
+				prop.activity.runOnUiThread(run4);	
+				
 						
-						for(Skeleton skel3:prop.forAdd)
-							prop.skeletons.add(skel3);
-						prop.forAdd.clear();
-						for(Object skel4:prop.forRemove)
-							prop.skeletons.remove(skel4);
-						prop.forRemove.clear();
-						
-						if(a_anim==active_anim.ATTACK){
-							if(anim_stage==10||anim_stage==5||anim_stage==17)
-								attack();
-							if(anim_stage>12&&anim_stage<16){
-								if(player.getRotationY()==180)
-									prop.joystick.attackX=-0.4f;
-								else prop.joystick.attackX=0.4f;
-							}else prop.joystick.attackX=0f;
-							}
-							
-						if(prop.player.a_anim==Player.active_anim.SHIELD){
-							if(anim_stage==anim.size()-2)anim_stage-=2;
-						}
-						if(prop.player.a_anim==Player.active_anim.ROLL){
-							
-							if(anim_stage>anim.size()-3){
-								
-								prop.roll.isActive=false;
-								if(prop.joystick.joystick_pressed)
-									prop.player.a_anim=Player.active_anim.RUN;
-								else
-								    prop.player.a_anim=Player.active_anim.IDLE;
-						
-						}
-						}
-						anim_stage++;
+				if(a_anim==active_anim.ATTACK){
+					if(anim_stage==10||anim_stage==5||anim_stage==17)
+						attack();
+					if(anim_stage>12&&anim_stage<16){
+						if(player.getRotationY()==180)
+							prop.joystick.attackX=-0.4f;
+						else prop.joystick.attackX=0.4f;
+					}else prop.joystick.attackX=0f;
 					}
+							
+				if(prop.player.a_anim==Player.active_anim.SHIELD){
+					if(anim_stage==anim.size()-2)anim_stage-=2;
+				}
+				if(prop.player.a_anim==Player.active_anim.ROLL){			
+					if(anim_stage>anim.size()-3){			
+						prop.roll.isActive=false;
+						if(prop.joystick.joystick_pressed)
+							prop.player.a_anim=Player.active_anim.RUN;
+						else
+						    prop.player.a_anim=Player.active_anim.IDLE;		
+					}
+				}
+				anim_stage++;
 				}
 			}
 		}
@@ -382,11 +346,7 @@ public class Player
 			player.setImageBitmap((Bitmap)anim.get(anim_stage));
 			
 		}
-
-		
 	};
-	
-	
 	
 	int live_skels=0;
 	

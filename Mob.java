@@ -11,7 +11,6 @@ public class Mob
 {
 	main_properties prop;
 	Bitmap hpBar;
-	
 	ImageView idle;
 	View move;
 	View death;

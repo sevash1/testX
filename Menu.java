@@ -19,7 +19,7 @@ public class Menu
 	Bonuses bonuses;
 	Menu.Player playerDat;
 	Shop avShop;
-	String percent="%";
+	Power power;
 	
 	Menu(main_properties prop){
 		prop.setMenu(this);
@@ -38,6 +38,7 @@ public class Menu
 		settings =new Settings();
 		new Btn_play(prop);
 	    new Player();
+		power=new Power();
 		}
 	
 	class Avatar{
@@ -875,6 +876,7 @@ public class Menu
 		LayoutParams p1=new LayoutParams(100,100);
 		RelativeLayout settingsLayout;
 		public MusicVolume musicVolume;
+		public EffectsVolume effectsVolume;
 		public Language lang;
 		
 		Settings(){
@@ -892,6 +894,7 @@ public class Menu
 			settingsLayout.setTranslationZ(1);
 			prop.activity.runOnUiThread(r1);
 			musicVolume= new MusicVolume();
+			effectsVolume= new EffectsVolume();
 			lang=new Language();
 		}
 		
@@ -949,39 +952,32 @@ public class Menu
 	class Language{
 		TextView text;
 		TextView btn_text;
-		ImageView picture;
+	
 		Language(){
 			
 			text=new TextView(prop.context);
 			text.setGravity(Gravity.RIGHT);
 			text.setTextSize(12);
 			text.setTranslationX(140);
-			text.setTranslationY(prop.screenH/3.5f);
+			text.setTranslationY(prop.screenH*0.3f);
 			text.setLayoutParams(new LayoutParams(300,50));
 			text.setTextColor(Color.YELLOW);
 			text.setTypeface(prop.ttf);
 			text.setText(prop.words.get(Words.words.SETT_LANG));
 			
-			picture=new ImageView(prop.context);
-			picture.setX(text.getX()+500);
-			picture.setY(text.getY()-25);
-			picture.setLayoutParams(new LayoutParams(500,100));
-			picture.setScaleType(ScaleType.FIT_XY);
-			picture.setImageResource(R.drawable.btn_v20);
-			picture.setOnTouchListener(t1);
-			
 			btn_text=new TextView(prop.context);
 			btn_text.setGravity(Gravity.CENTER);
 			btn_text.setTextSize(16);
-			btn_text.setTranslationX(picture.getX());
-			btn_text.setTranslationY(picture.getY());
-			btn_text.setLayoutParams(picture.getLayoutParams());
+			btn_text.setBackgroundResource(R.drawable.btn_v20);
+			btn_text.setOnTouchListener(t1);
+			btn_text.setX(text.getX()+500);
+			btn_text.setY(text.getY()-25);
+			btn_text.setLayoutParams(new LayoutParams(500,100));
 			btn_text.setTextColor(Color.YELLOW);
 			btn_text.setTypeface(prop.ttf);
 			btn_text.setText(prop.words.get(Words.words.LANGUAGE));
 		
 			settingsLayout.addView(text);
-			settingsLayout.addView(picture);
 			settingsLayout.addView(btn_text);
 		}
 		void reLang(){
@@ -1042,7 +1038,7 @@ public class Menu
 			text.setGravity(Gravity.RIGHT);
 			text.setTextSize(12);
 			text.setTranslationX(140);
-			text.setTranslationY(prop.screenH/9);
+			text.setTranslationY(prop.screenH*0.1f);
 			text.setLayoutParams(new LayoutParams(300,50));
 			text.setTextColor(Color.YELLOW);
 			text.setTypeface(prop.ttf);
@@ -1053,12 +1049,12 @@ public class Menu
 			bar.setScaleType(ScaleType.FIT_XY);
 			bar.setLayoutParams(new LayoutParams(1200,10));
 			bar.setTranslationX(525);
-			bar.setTranslationY(prop.screenH/9);
+			bar.setTranslationY(prop.screenH*0.1f);
 			
 			barsLayout=new RelativeLayout(prop.context);
 			barsLayout.setLayoutParams(new LayoutParams(1200,70));
 			barsLayout.setTranslationX(500);
-			barsLayout.setTranslationY(prop.screenH/9-30);
+			barsLayout.setTranslationY(prop.screenH*0.1f-30);
 			barsLayout.setOnTouchListener(t3);
 		
 			point=new ImageView(prop.context);
@@ -1067,7 +1063,7 @@ public class Menu
 			point.setLayoutParams(new LayoutParams(70,10));
 			point.setRotation(90);
 			point.setTranslationX(900);
-			point.setTranslationY(prop.screenH/9);
+			point.setTranslationY(prop.screenH*0.1f);
 			
 		prop.activity.runOnUiThread(r3);
 		}
@@ -1129,6 +1125,103 @@ public class Menu
 			
 	}
 	
+	class EffectsVolume{
+		TextView text;
+		ImageView bar;
+		ImageView point;
+		RelativeLayout barsLayout;
+		LayoutParams params1=new LayoutParams(1200,10);
+		float volume=0;
+
+
+		EffectsVolume(){
+			text=new TextView(prop.context);
+			text.setGravity(Gravity.RIGHT);
+			text.setTextSize(12);
+			text.setTranslationX(140);
+			text.setTranslationY(prop.screenH*0.2f);
+			text.setLayoutParams(new LayoutParams(300,50));
+			text.setTextColor(Color.YELLOW);
+			text.setTypeface(prop.ttf);
+			text.setText(prop.words.get(Words.words.MUSIC));
+
+			bar=new ImageView(prop.context);
+			bar.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.red_bar,prop.options)));
+			bar.setScaleType(ScaleType.FIT_XY);
+			bar.setLayoutParams(new LayoutParams(1200,10));
+			bar.setTranslationX(525);
+			bar.setTranslationY(prop.screenH*0.2f);
+
+			barsLayout=new RelativeLayout(prop.context);
+			barsLayout.setLayoutParams(new LayoutParams(1200,70));
+			barsLayout.setTranslationX(500);
+			barsLayout.setTranslationY(prop.screenH*0.2f-30);
+			barsLayout.setOnTouchListener(t3);
+
+			point=new ImageView(prop.context);
+			point.setBackgroundColor(Color.WHITE);
+			point.setScaleType(ScaleType.FIT_XY);
+			point.setLayoutParams(new LayoutParams(70,10));
+			point.setRotation(90);
+			point.setTranslationX(900);
+			point.setTranslationY(prop.screenH*0.2f);
+
+			prop.activity.runOnUiThread(r3);
+		}
+
+		public void updatePoint(){
+			prop.onUi(r4);
+			if(prop.music!=null)
+				prop.music.setVolume(volume,volume);
+
+		}
+		void reLang(){
+			text.setText(prop.words.get(Words.words.MUSIC));
+
+		}
+		Runnable r4=new Runnable(){
+
+			@Override
+			public void run()
+			{
+				point.setTranslationX(barsLayout.getX()+1200*volume);
+			}
+		};
+
+		OnTouchListener t3=new OnTouchListener(){
+
+			@Override
+			public boolean onTouch(View p1, MotionEvent p2)
+			{
+				if(barsLayout.getTranslationX()+p2.getX()<barsLayout.getTranslationX())
+					volume=0;
+				if(barsLayout.getTranslationX()+p2.getX()>barsLayout.getTranslationX()+1200)
+					volume=1;
+
+				if(p2.getAction()==MotionEvent.ACTION_MOVE){
+					if(barsLayout.getTranslationX()+p2.getX()>barsLayout.getTranslationX()
+					   &&barsLayout.getTranslationX()+p2.getX()<barsLayout.getTranslationX()+1200){
+
+				        volume=p2.getX()/1200;
+					}
+				}
+				updatePoint();
+				return true;
+			}
+		};
+
+		Runnable r3=new Runnable(){
+			@Override
+			public void run()
+			{
+				settingsLayout.addView(text);
+				settingsLayout.addView(bar);
+				settingsLayout.addView(point);
+				settingsLayout.addView(barsLayout);
+			}
+
+		};
+	}
 	}
 	
 	private class Player{
@@ -1167,7 +1260,7 @@ public class Menu
 			changeAvatarBtn.setBackgroundResource(R.drawable.btn);
 			changeAvatarBtn.setGravity(Gravity.CENTER);
 			changeAvatarBtn.setTypeface(prop.ttf);
-			changeAvatarBtn.setTextSize(8);
+			changeAvatarBtn.setTextSize(6);
 			changeAvatarBtn.setTextColor(Color.YELLOW);
 			changeAvatarBtn.setX(100);
 			changeAvatarBtn.setY(100);
@@ -1270,5 +1363,221 @@ public class Menu
 			}	
 		};
 	
+	}
+	
+	class Power{
+		
+		Health health;
+		Damage damage;
+		AttackSpeed attackSpeed;
+		Regen regen;
+		
+		Power(){
+			
+			health=new Health(playerDat.changeAvatarBtn.getY());
+			damage=new Damage(health.lay.getY());
+			attackSpeed=new AttackSpeed(damage.lay.getY());
+			regen=new Regen(attackSpeed.lay.getY());
+		}
+		
+		class PowerDef{
+			float startValue=0;
+			float value=0;
+			float upgradeValue=1;
+			int level=0;
+			String postfix="";
+			String nameS="";
+			String[] names={"Здоровье",
+			                "Урон",
+							"СкоростьАтаки",
+							"Регенерация"};
+			RelativeLayout lay;
+			TextView name;
+			View left;
+			TextView valueText;
+			View right;
+			ImageView ar;
+			TextView nextValueText;
+			TextView upgradeValueText;
+			ImageView upgradeBtn;
+			LayoutParams params1=new LayoutParams(700,100);
+			LayoutParams params2=new LayoutParams(50,60);
+			LayoutParams params3=new LayoutParams(80,50);
+			LayoutParams params4=new LayoutParams(50,50);
+			LayoutParams params5=new LayoutParams(120,50);
+			LayoutParams params6=new LayoutParams(140,50);
+			
+			void load(float padding, int nameN){
+				lay(padding);
+				nameS=names[nameN];
+				
+				lay.addView(name(nameN));
+				lay.addView(left());
+				lay.addView(valueText());
+				lay.addView(right());
+				lay.addView(ar());
+				lay.addView(upgradeValueText());
+				lay.addView(nextValueText());
+				lay.addView(upgradeBtn());
+				playerDat.backg.addView(lay);
+			}
+		
+		OnClickListener c1=new OnClickListener(){
+
+			@Override
+			public void onClick(View p1)
+			{
+					upValue();
+			}
+		};
+		
+		void upLevels(int count){
+			for(int i=0;i<count;i++)upValue();
+		}
+		
+		void upValue(){
+			level++;
+			value+=upgradeValue;
+			valueText.setText(String.format("%.1f",startValue+value));
+			nextValueText.setText(String.format("%.1f",startValue+value+upgradeValue));
+			
+		}
+		
+			RelativeLayout lay(float padding){
+				lay=new RelativeLayout(prop.context);
+				lay.setLayoutParams(params1);
+				lay.setX(playerDat.changeAvatarBtn.getX());
+				lay.setY(padding+110f);
+				return lay;
+			};
+			TextView name(int nameN){
+				name = new TextView(prop.context);
+				name.setGravity(Gravity.RIGHT|Gravity.CENTER_VERTICAL);
+				name.setTypeface(prop.ttf);
+				name.setTextSize(8);
+				name.setTextColor(Color.YELLOW);
+				name.setX(0);
+				name.setY(40);
+				name.setLayoutParams(params6);
+				name.setText(names[nameN]);
+				return name;
+			};
+			View left(){
+				left=new View(prop.context);
+				left.setBackgroundResource(R.drawable.arrowsleft2);
+				left.setLayoutParams(params2);
+				left.setX(name.getX()+name.getLayoutParams().width+10);
+				left.setY(40);
+				return left;
+			};
+			TextView valueText(){
+				valueText = new TextView(prop.context);
+				valueText.setGravity(Gravity.CENTER);
+				valueText.setTypeface(prop.ttf);
+				valueText.setTextSize(8);
+				valueText.setTextColor(Color.YELLOW);
+				valueText.setX(left.getX()+left.getLayoutParams().width+10);
+				valueText.setY(40);
+				valueText.setLayoutParams(params3);
+				valueText.setText(String.format("%.1f",startValue+value));
+				return valueText;
+			};
+			View right(){
+				right=new View(prop.context);
+				right.setBackgroundResource(R.drawable.arrowright2);
+				right.setLayoutParams(params2);
+				right.setX(valueText.getX()+valueText.getLayoutParams().width+10);
+				right.setY(40);
+				return right;
+			};
+			ImageView ar(){
+				ar=new ImageView(prop.context);
+				ar.setLayoutParams(params5);
+				ar.setX(right.getX()+right.getLayoutParams().width+20);
+				ar.setY(40);
+				ar.setAlpha(255);
+				ar.setImageAlpha(255);
+				ar.setScaleType(ScaleType.FIT_XY);
+				ar.setBackgroundResource(R.drawable.arrow01);
+				ar.setImageResource(R.drawable.arrow01);
+				ar.setColorFilter(Color.argb(255,80,255,80));
+				return ar;
+			};
+			TextView nextValueText(){
+				nextValueText = new TextView(prop.context);
+				nextValueText.setGravity(Gravity.CENTER);
+				nextValueText.setTypeface(prop.ttf);
+				nextValueText.setTextSize(8);
+				nextValueText.setTextColor(Color.argb(255,80,255,80));
+				nextValueText.setX(ar.getX()+ar.getLayoutParams().width+15);
+				nextValueText.setY(40);
+				nextValueText.setLayoutParams(params3);
+				nextValueText.setText(String.format("%.1f",startValue+value+upgradeValue));
+				return nextValueText;
+			};
+			TextView upgradeValueText(){
+				upgradeValueText = new TextView(prop.context);
+				upgradeValueText.setGravity(Gravity.CENTER|Gravity.BOTTOM);
+				upgradeValueText.setTypeface(prop.ttf);
+				upgradeValueText.setTextSize(6);
+				upgradeValueText.setTextColor(Color.argb(255,80,255,80));
+				upgradeValueText.setX(ar.getX());
+				upgradeValueText.setY(0);
+				upgradeValueText.setLayoutParams(params3);
+				upgradeValueText.setText("+"+String.valueOf(upgradeValue));
+				return upgradeValueText;
+			};
+			ImageView upgradeBtn(){
+				upgradeBtn=new ImageView(prop.context);
+				upgradeBtn.setLayoutParams(params4);
+				upgradeBtn.setX(nextValueText.getX()+nextValueText.getLayoutParams().width+30);
+				upgradeBtn.setY(40);
+				upgradeBtn.setImageResource(R.drawable.upgrade);
+				upgradeBtn.setBackgroundResource(R.drawable.cellbig_02);
+				upgradeBtn.setColorFilter(Color.GREEN);
+				upgradeBtn.setOnClickListener(c1);
+				return upgradeBtn;
+			};
+
+		}
+		
+		class Health extends PowerDef{
+			
+			Health(float padding){
+				postfix="ед.";
+				startValue=20;
+				load(padding,0);
+			}
+		}
+		
+		class Damage extends PowerDef{
+			
+			Damage(float padding){
+				postfix="ед.";
+				startValue=1;
+				upgradeValue=0.2f;
+				load(padding,1);
+			}
+		}
+		
+		class AttackSpeed extends PowerDef{
+			
+			AttackSpeed(float padding){
+				postfix="";
+				startValue=2;
+				upgradeValue=0.1f;
+				load(padding,2);
+			}
+		}
+		
+		class Regen extends PowerDef{
+			
+			Regen(float padding){
+				postfix="ед./5сек";
+				startValue=1;
+				upgradeValue=0.3f;
+				load(padding,3);
+			}
+		}
 	}
 }

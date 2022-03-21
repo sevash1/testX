@@ -32,6 +32,9 @@ public class main_properties
 	public List skeletons=new ArrayList<Skeleton>();
 	public List forRemove=new ArrayList<Skeleton>();
 	public List forAdd=new ArrayList<Skeleton>();
+	public List forRemoveRuns=new ArrayList<Runnable>();
+	public List forAddRuns=new ArrayList<Runnable>();
+	
 	public Random rand=new Random();
 	public Btn_shield shield;
 	public Btn_roll roll;
@@ -53,12 +56,13 @@ public class main_properties
 	public Btn_play Btn_play;
 	public String lang;
 	public Music sounds;
-	public long deltaTime=0;
 	public Mob mob;
 	public Player_health healthBar;
 	public boolean playerMove=false;
 	public List iconsBuyed=new ArrayList<Item>();
 	public boolean menuLoadComplete=false;
+	public List runs=new ArrayList<Runnable>();
+	public long deltaTime=0;
 	
 	public main_properties(
 	RelativeLayout main,
@@ -70,7 +74,6 @@ public class main_properties
 	float screenH,
 	BitmapFactory.Options options,
 	Typeface ttf,
-	Game_stage stage,
 	RelativeLayout bl){
 		this.prop=this;
 		this.main=main;
@@ -82,7 +85,6 @@ public class main_properties
 		this.screenH=screenH;
 		this.options=options;
 		this.ttf=ttf;
-		this.stage=stage;
 		this.bl=bl;
 	}
 	public void setPlayer(Player player){

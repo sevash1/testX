@@ -32,6 +32,7 @@ public class Joystick
 	public boolean joystick_pressed=false;
 	public RelativeLayout lay;
 	float centr=0;
+	float bX=0,bY=0,jX=0,jY=0;
 
 	Joystick(main_properties prop){
 		this.prop=prop;
@@ -43,22 +44,25 @@ public class Joystick
 		joystick.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.joystick,prop.options)));
 		joystick.setLayoutParams(params);
 		joystick.setScaleType(ScaleType.FIT_XY);
+		jX=200;
+		jY=screenH/1.6f;
 		joystick.setTranslationX(200);
 		joystick.setTranslationY(screenH/1.6f);
 		
 		lay=new RelativeLayout(prop.context);
-		lay.setLayoutParams(new LayoutParams((int)prop.screenW/2,(int)(prop.screenH/1.3)));
+		lay.setLayoutParams(new LayoutParams(-1,-1));
 		lay.setOnTouchListener(touch);
-		lay.setTranslationY(prop.screenH/3);
 
 		border=new ImageView(prop.context);
 		border.setImageBitmap(Bitmap.createBitmap(BitmapFactory.decodeResource(prop.activity.getResources(),R.drawable.joystick_border,prop.options)));
 		border.setLayoutParams(params);
 		border.setScaleType(ScaleType.FIT_XY);
+		bX=200;
+		bY=screenH/1.6f;
 		border.setTranslationX(200);
 		border.setTranslationY(screenH/1.6f);
 		
-		centr=screenH/3f-95;
+		centr=-95;
 		cd_hide=new Thread(run);
 		border.setVisibility(View.INVISIBLE);
 		joystick.setVisibility(View.INVISIBLE);
@@ -74,13 +78,13 @@ public class Joystick
 
 		@Override
 		public boolean onTouch(View p1, MotionEvent m)
-		{
-				if(m.getX()<0||m.getY()<0||m.getX()>lay.getWidth()||m.getY()>lay.getHeight())return false;
-
+		{	
 				switch(m.getAction()){
-					
-							
+									
 					case MotionEvent.ACTION_DOWN:{
+							if(m.getX()>prop.screenW*0.5f||m.getY()<0.3f){
+								return true;
+							}
 							if(joystick_pressed)break;
 							if(Float.isNaN(m.getX())||Float.isNaN(m.getY()))break;
 							joystick_downX=m.getX();

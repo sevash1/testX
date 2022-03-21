@@ -37,17 +37,16 @@ public class MainActivity extends Activity
 	TextView coords;
 	String coord="";
 	boolean run1_c=false;
-	long time1=0,time2=0,deltaTime=0;
-	long time5=0;
-	long last_back_pressed_time1=0;
-	long last_back_pressed_time2=0;
+	long time1=0,time2=0;
+	long deltaTime=0, time5=0;
+	Long last_back_pressed_time1=0l;
+	Long last_back_pressed_time2=0l;
 	float last_playerPosX=0;
 	float last_playerPosY=0;
 	int fps=0;
 	Thread thread;
 	Context context;
 	boolean isPause=false;
-	Game_stage stage;
 	RelativeLayout pause_lay;
 	Thread thread9;
 	Activity activity;
@@ -67,6 +66,7 @@ public class MainActivity extends Activity
 				|View.SYSTEM_UI_FLAG_IMMERSIVE
 				|View.SYSTEM_UI_FLAG_FULLSCREEN
 				|View.DRAWING_CACHE_QUALITY_HIGH
+				|View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
 				|View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 				|View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
 				|View.SYSTEM_UI_FLAG_LAYOUT_STABLE
@@ -106,12 +106,11 @@ public class MainActivity extends Activity
 		@Override
 		public void run()
 		{
-			while(stage.getStage()!=Game_stage.EXIT)
-				
-			while(stage.getStage()==Game_stage.WORLD){
-				if(Game_stage.EXIT==prop.stage.getStage()) 
-					return;
-				
+			prop.runs.add(r1);
+			prop.runs.add(prop.player.run2);
+			prop.runs.add(prop.player.run3);
+			
+			while(prop.stage.getStage()!=Game_stage.EXIT){
 				try{
 					fps++;
 					time1=System.currentTimeMillis();
@@ -119,83 +118,115 @@ public class MainActivity extends Activity
 					time2=System.currentTimeMillis();
 					deltaTime=time2-time1;
 					prop.deltaTime=deltaTime;
-					}
-				catch(Exception e){	e.printStackTrace();
-				}
-						
-					if(prop.player.a_anim==Player.active_anim.ATTACK){
-					   if(!prop.joystick.joystick_pressed
-					&&!Float.isNaN(prop.joystick.attackX)){
-					 prop.playerPosX=prop.playerPosX+prop.joystick.attackX*deltaTime;
-					}
-					else if(prop.attack.pressed
-					&&!Float.isNaN(prop.joystick.attackX)){
-				prop.playerPosX=prop.playerPosX+prop.joystick.attackX*deltaTime;
-						}
-						}
-						
-					if(prop.player.a_anim==Player.active_anim.SHIELD){
-						
-					}
 					
-					if(prop.player.a_anim==Player.active_anim.IDLE){
-						if(prop.joystick.ratioX==0&&prop.joystick.ratioY==0
-							||(Float.isNaN(prop.joystick.ratioX)
-							||Float.isNaN(prop.joystick.ratioY)
-						   ||Float.isNaN(prop.playerPosX)
-						   ||Float.isNaN(prop.playerPosY))){}
-							}
-					if(prop.player.a_anim==Player.active_anim.ROLL){
-						if(prop.joystick.ratioX==0&&prop.joystick.ratioY==0
-						   ||(Float.isNaN(prop.joystick.ratioX)
-						   ||Float.isNaN(prop.joystick.ratioY)
-						   ||Float.isNaN(prop.playerPosX)
-						   ||Float.isNaN(prop.playerPosY))){}else{
-							prop.playerPosX=prop.playerPosX+prop.joystick.ratioX*deltaTime;
-							prop.playerPosY=prop.playerPosY+prop.joystick.ratioY*deltaTime;
+			        for(Runnable run:prop.runs)
+						run.run();		
+					
+					for(Runnable run:prop.forAddRuns){
+						prop.runs.add(run);
+						}
+					prop.forAddRuns.clear();
 
-						}}
+					for(Runnable run:prop.forRemoveRuns){
+						prop.runs.remove(run);
+						}
+					prop.forRemoveRuns.clear();
 					
-						if(prop.player.a_anim==Player.active_anim.RUN){
-						if(prop.joystick.ratioX==0&&prop.joystick.ratioY==0
-						   ||(Float.isNaN(prop.joystick.ratioX)
-						   ||Float.isNaN(prop.joystick.ratioY)
-						   ||Float.isNaN(prop.playerPosX)
-						   ||Float.isNaN(prop.playerPosY))){}else{
-							prop.playerPosX=prop.playerPosX+prop.joystick.ratioX*deltaTime;
-							prop.playerPosY=prop.playerPosY+prop.joystick.ratioY*deltaTime;	
-					}}
-				
-					if(last_playerPosX==prop.playerPosX&&last_playerPosY==prop.playerPosY){
-						prop.playerMove=false;
-					}
-					else {
-						prop.playerMove=true;
-						last_playerPosX=prop.playerPosX;
-						last_playerPosY=prop.playerPosY;
-						grass_layout.setScrollX((int)(prop.playerPosX-((int)(prop.playerPosX/256))*256+256*6));
-						grass_layout.setScrollY((int)(prop.playerPosY-((int)(prop.playerPosY/256))*256+256*3));
-						prop.world.setScrollX((int)(prop.playerPosX));
-						prop.world.setScrollY((int)(prop.playerPosY));
 						
+					for(Skeleton skel3:prop.forAdd){
+						prop.skeletons.add(skel3);
 					}
+					prop.forAdd.clear();
+
+					for(Skeleton skel4:prop.forRemove){
+						prop.skeletons.remove(skel4);
+					}
+					prop.forRemove.clear();
 					
-				time5+=deltaTime;
-					if(time5>1000){
-						time5=0;
-						files.writeFile(prop);
-					coord="X:"+(int)prop.playerPosX+"\n"+"Y:"+(int)prop.playerPosY+"\n"+String.valueOf(deltaTime)+"\n"+fps+"\n"+String.valueOf(prop.skeletons.size()+"\n"+(Math.sqrt(Math.pow(prop.world.getScrollX()+((Skeleton)prop.skeletons.get(0)).posX,2))));
-						fps=0;
-						Log.d("seva",String.valueOf(
-						Runtime.getRuntime().totalMemory()/1048576)+"/"+
-						String.valueOf(Runtime.getRuntime().freeMemory()/1048576));
-						runOnUiThread(run3);
-					
-						}}
-	
+						
+				}catch(Exception e){e.printStackTrace();}
+			}
 		}
-		};
+	};
 		
+	Runnable r1 = new Runnable(){
+		@Override
+		public void run()
+		{
+			time5+=prop.deltaTime;
+			
+			if(prop.stage.getStage()==Game_stage.WORLD){
+				
+			if(prop.player.a_anim==Player.active_anim.ATTACK){
+				if(!prop.joystick.joystick_pressed
+				   &&!Float.isNaN(prop.joystick.attackX)){
+					prop.playerPosX=prop.playerPosX+prop.joystick.attackX*deltaTime;
+				}
+				else if(prop.attack.pressed
+						&&!Float.isNaN(prop.joystick.attackX)){
+					prop.playerPosX=prop.playerPosX+prop.joystick.attackX*deltaTime;
+				}
+			}
+
+			else if(prop.player.a_anim==Player.active_anim.SHIELD){
+
+			}
+
+			else if(prop.player.a_anim==Player.active_anim.IDLE){
+				if(prop.joystick.ratioX==0&&prop.joystick.ratioY==0
+				   ||(Float.isNaN(prop.joystick.ratioX)
+				   ||Float.isNaN(prop.joystick.ratioY)
+				   ||Float.isNaN(prop.playerPosX)
+				   ||Float.isNaN(prop.playerPosY))){}
+			}
+			else if(prop.player.a_anim==Player.active_anim.ROLL){
+				if(prop.joystick.ratioX==0&&prop.joystick.ratioY==0
+				   ||(Float.isNaN(prop.joystick.ratioX)
+				   ||Float.isNaN(prop.joystick.ratioY)
+				   ||Float.isNaN(prop.playerPosX)
+				   ||Float.isNaN(prop.playerPosY))){}else{
+					prop.playerPosX=prop.playerPosX+prop.joystick.ratioX*deltaTime;
+					prop.playerPosY=prop.playerPosY+prop.joystick.ratioY*deltaTime;
+
+				}}
+
+			else if(prop.player.a_anim==Player.active_anim.RUN){
+				if(prop.joystick.ratioX==0&&prop.joystick.ratioY==0
+				   ||(Float.isNaN(prop.joystick.ratioX)
+				   ||Float.isNaN(prop.joystick.ratioY)
+				   ||Float.isNaN(prop.playerPosX)
+				   ||Float.isNaN(prop.playerPosY))){}else{
+					prop.playerPosX=prop.playerPosX+prop.joystick.ratioX*deltaTime;
+					prop.playerPosY=prop.playerPosY+prop.joystick.ratioY*deltaTime;	
+				}}
+
+			if(last_playerPosX==prop.playerPosX&&last_playerPosY==prop.playerPosY){
+				prop.playerMove=false;
+			}
+			else {
+				prop.playerMove=true;
+				last_playerPosX=prop.playerPosX;
+				last_playerPosY=prop.playerPosY;
+				grass_layout.setScrollX((int)(prop.playerPosX-((int)(prop.playerPosX/256))*256+256*6));
+				grass_layout.setScrollY((int)(prop.playerPosY-((int)(prop.playerPosY/256))*256+256*3));
+				prop.world.setScrollX((int)(prop.playerPosX));
+				prop.world.setScrollY((int)(prop.playerPosY));
+
+			}
+
+			if(time5>1000){
+				time5=0;
+				files.writeFile(prop);
+				coord="X:"+(int)prop.playerPosX+"\n"+"Y:"+(int)prop.playerPosY+"\n"+String.valueOf(deltaTime)+"\n"+fps+"\n"+String.valueOf(prop.skeletons.size()+"\n"+(Math.sqrt(Math.pow(prop.world.getScrollX()+((Skeleton)prop.skeletons.get(0)).posX,2))));
+				fps=0;
+				Log.d("seva",String.valueOf(
+						  Runtime.getRuntime().totalMemory()/1048576)+"/"+
+					  String.valueOf(Runtime.getRuntime().freeMemory()/1048576));
+				runOnUiThread(run3);
+				}
+			}
+		}
+	};
 		
 	Runnable run1=new Runnable(){
 
@@ -252,11 +283,11 @@ public class MainActivity extends Activity
 			}
 			thread =new Thread(run);
 				Typeface face=Typeface.createFromAsset(getAssets(), "fonts/blazma_regular.ttf"); 
-				stage=new Game_stage(Game_stage.MENU);
 				DisplayMetrics dm=new DisplayMetrics();
 				getWindowManager().getDefaultDisplay().getRealMetrics(dm);
-				prop=new main_properties(main,menu,playerAndUi,context,activity,dm.widthPixels,dm.heightPixels,op,face,stage,pause_lay);
-				new Words(prop);
+				prop=new main_properties(main,menu,playerAndUi,context,activity,dm.widthPixels,dm.heightPixels,op,face,pause_lay);
+			    prop.stage=new Game_stage(Game_stage.MENU);
+			    new Words(prop);
 				new Music(prop);
 				Item.loadItems(prop);
 				new Shop(prop,0);
@@ -374,7 +405,7 @@ public class MainActivity extends Activity
 	@Override
 	public void onBackPressed()
 	{
-		if(stage.getStage()==Game_stage.MENU){
+		if(prop.stage.getStage()==Game_stage.MENU){
 			if(prop.shop.isOpen){
 				prop.shop.closeShop();
 				return;
@@ -418,7 +449,7 @@ public class MainActivity extends Activity
 		
 		}
 		
-		else if(stage.getStage()==Game_stage.WORLD){
+		else if(prop.stage.getStage()==Game_stage.WORLD){
 			if(prop.stage.getStage_in_world()==Game_stage.NOT_PAUSE){
 				if(prop.inv.isOpen){
 					prop.inv.closeInventory();
@@ -467,6 +498,30 @@ public class MainActivity extends Activity
 					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
 					prop.menu.settings.musicVolume.volume=(Float.parseFloat(s2[1]));
 					prop.menu.settings.musicVolume.updatePoint();
+				}
+				
+				else if(s2[0].contentEquals("effectsVolume:")){
+					if(s2[1].contentEquals("NaN") || s2[1].contentEquals("")||s2[1]==null) continue;
+					prop.menu.settings.effectsVolume.volume=(Float.parseFloat(s2[1]));
+					prop.menu.settings.effectsVolume.updatePoint();
+				}
+				
+				else if(s2[0].contains("power:")){
+					String a="\\{";
+					String b="\\}";
+					String s3[]=s2[0].split(a);
+					String s4[]=s3[1].split(b);
+					for(String s5:s4[0].split(",")){
+						String[] s6=s5.split(":");
+						if(s6[0].contentEquals("Здоровье")) 
+							prop.menu.power.health.upLevels(Integer.parseInt(s6[1]));
+						else if(s6[0].contentEquals("Урон")) 
+							prop.menu.power.damage.upLevels(Integer.parseInt(s6[1]));
+						else if(s6[0].contentEquals("СкоростьАтаки")) 
+							prop.menu.power.attackSpeed.upLevels(Integer.parseInt(s6[1]));
+						else if(s6[0].contentEquals("Регенерация")) 
+							prop.menu.power.regen.upLevels(Integer.parseInt(s6[1]));
+					}
 				}
 				
 				else if(s2[0].contentEquals("icon:")){

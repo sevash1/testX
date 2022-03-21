@@ -27,6 +27,13 @@ public class files
 				bw.write("exp: "+String.valueOf(prop.menu.playerLevel.points)+"\n");
 				bw.write("money: "+String.valueOf(prop.money.money_count)+"\n");
 				bw.write("musicVolume: "+String.valueOf(prop.menu.settings.musicVolume.volume)+"\n");
+				bw.write("effectsVolume: "+String.valueOf(prop.menu.settings.effectsVolume.volume)+"\n");
+				bw.write("power:{"
+				                  +prop.menu.power.health.nameS+":"+String.valueOf(prop.menu.power.health.level+",")
+						 		  +prop.menu.power.damage.nameS+":"+String.valueOf(prop.menu.power.damage.level+",")
+							  	  +prop.menu.power.attackSpeed.nameS+":"+String.valueOf(prop.menu.power.attackSpeed.level+",")
+								  +prop.menu.power.regen.nameS+":"+String.valueOf(prop.menu.power.regen.level)
+								  +"}\n");
 				bw.write("icon: "+String.valueOf(prop.menu.avatar.iconN)+"\n");
 				bw.write("icons: ");
 				for(Item item:prop.iconsBuyed){
